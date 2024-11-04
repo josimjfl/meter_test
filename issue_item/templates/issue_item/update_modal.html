@@ -1,0 +1,223 @@
+
+
+<div class="modal fade" id="issue-update-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content bg-info">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Update Issued Meter</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body bg-light">
+
+
+
+<div class="row">
+    {% csrf_token %}
+  <form>
+  <div class="row">
+    <div class="form-group col-md-2 col-sm-6">
+      <input type="" name="" id="id" hidden>
+      <label for="meter_no">Mete No</label>
+      <input class="form-control float-right enter_btn" type="" name="" id="meter_no" autofocus>
+    </div>
+    <div class="form-group col-md-2 col-sm-6">
+      <label for="reading">Reading</label>
+      <input class="form-control float-right enter_btn" type="" name="" id="reading">
+    </div>
+    <div class="form-group col-md-2 col-sm-6">
+      <label for="main_seal">Main Seal</label>
+      <input onblur="checkSealLength(this)" class="form-control float-right enter_btn" type="" name="" id="main_seal" minlength="8">
+    </div>
+    <div class="form-group col-md-2 col-sm-6">
+      <label for="cmo">CMO No</label>
+      <input class="form-control float-right enter_btn" type="" name="" id="cmo">
+    </div>
+    <div class="form-group col-md-2 col-sm-6">
+      <label for="body_seal1">Body Seal</label>
+      <input class="form-control float-right" type="" name="" id="body_seal1">
+    </div>
+    <div class="form-group col-md-2 col-sm-6">
+      <label for="body_seal2">Body Seal</label>
+      <input class="form-control float-right" type="" name="" id="body_seal2">
+    </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-2 col-sm-6">
+      <label for="item_no">Item</label>
+       <select class="form-control:focus form-control" id="item_no" name="item_no" style="width:150px" required>
+          <option></option>
+          {% for i in item %}
+          <option value="{{i.item_no}}">{{ i.item_no }}</option>
+          {% endfor %}
+          </select>
+    </div>
+      <div class="form-group col-md-2 col-sm-6">
+      <label for="manufacturer">Manufacturer</label>
+       <select class="form-control:focus form-control" id="manufacturer" name="manufacturer" style="width:150px" required>
+          <option></option>
+            {% for any in mfg %}
+          <option value="{{ any.name }}">{{ any.name }}</option>
+            {% endfor %}
+          </select>
+    </div>
+
+    <div class="form-group col-md-2 col-sm-6">
+      <label for="received_by">Received By</label>
+      <select class="form-control:focus form-control" id="received_by" name="received_by" style="" required>
+          <option></option>
+            {% for any in employee %}
+          <option value="{{ any.training_id }}-  {{any.get_full_name}}, {{ any.designation }}">{{ any.training_id }}-  {{any.get_full_name}}, {{ any.designation }}</option>
+            {% endfor %}
+          </select>
+    </div>
+    <div class="form-group col-md-2 col-sm-6">
+      <label for="total_j31">TotalJ-31</label>
+      <input class="form-control float-right" type="number" name="" id="total_j31">
+    </div>
+    <div class="form-group col-md-2 col-sm-6">
+      <label for="save">.</label>
+      <button class="btn btn-primary form-control float-right align-bottom enter_btn" type="submit" name="" id="save_update">Update</button> 
+      </div>
+    <div class="form-group col-md-2 col-sm-6">
+      <label for="save">.</label>
+          <button type="button" class="btn btn-secondary form-control float-right align-bottom" data-bs-dismiss="modal">Cancel</button>
+      </div>
+
+
+  </div>
+  </div>
+
+</form>
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  //get data to modal
+  function editMeter(id) {
+    if(id){
+      //get data from table by id
+      var pid = "#extra-" + id;
+      var cmo = $(pid).find(".cmo").text();
+      var data_date_1 = $(pid).find(".data_date_1").text();
+      var data_item = $(pid).find(".data_item").text();
+      var data_mfg = $(pid).find(".data_mfg").text();
+      var data_meter_no = $(pid).find(".data_meter_no").text();
+      var data_reading = $(pid).find(".data_reading").text();
+      var data_date_2 = $(pid).find(".data_date_2").text();
+      var data_cmo = $(pid).find(".data_cmo").text();
+      var data_main_seal = $(pid).find(".data_main_seal").text();
+      var data_body_seal1 = $(pid).find(".data_body_seal1").text();
+      var data_body_seal2 = $(pid).find(".data_body_seal2").text();
+      var data_total_j31 = $(pid).find(".data_total_j31").text();
+      var data_received_by = $(pid).find(".data_received_by").text();
+
+        //set data to modal
+          $('#id').val(id);
+          $('#date_1').val(data_date_1);
+          $('#item_no option').removeAttr('selected').filter('[value=J-39]').attr('selected', true);
+          $('#manufacturer option').removeAttr('selected').filter('[value="'+data_mfg+'"]').attr('selected', true);
+          $('#received_by option').removeAttr('selected').filter('[value="'+data_received_by+'"]').attr('selected', true);
+          $('#meter_no').val(data_meter_no);
+          $('#reading').val(data_reading);
+          $('#date_2').val(data_date_2);
+          $('#cmo').val(data_cmo);
+          $('#main_seal').val(data_main_seal);
+          $('#body_seal1').val(data_body_seal1);
+          $('#body_seal2').val(data_body_seal2);
+          $('#total_j31').val(data_total_j31);
+          //$('#received_by').val(data_received_by);
+    }
+
+  }
+
+
+
+
+
+//update data to database
+$('#save_update').on('click', function(e){
+    //it will prevent regular form submit system
+    e.preventDefault()
+    var meter_id = $('#id').val();
+    var meter_no = $('#meter_no').val();
+    var reading = $('#reading').val()
+    var main_seal = $('#main_seal').val();
+    var cmo = $('#cmo').val()
+    var body_seal1 = $('#body_seal1').val();
+    var body_seal2 = $('#body_seal2').val();
+    var total_seal = $('#total_j31').val();
+    var received_by = $('#received_by').val();
+    var item_no = $('#item_no').val();
+    var manufacturer = $('#manufacturer').val();
+    var token = '{{csrf_token}}';
+
+    console.log(meter_id)
+    $.ajax({
+      url: '/update_issue_ajax',
+      type:'POST',
+      dataType: 'json',
+      headers: { "X-CSRFToken": token },
+      data: {
+        'meter_id':meter_id,
+        'meter_no':meter_no,
+        'reading':reading,
+        'main_seal':main_seal,
+        'cmo':cmo,
+        'body_seal1':body_seal1,
+        'body_seal2':body_seal2,
+        'total_seal':total_seal,
+        'received_by':received_by,
+        'item_no':item_no,
+        'manufacturer':manufacturer,
+          }
+      
+      }).done(function(data){
+          if (data.status == "failed") {
+                    //hide modal
+          $("#issue-update-modal").modal("hide")    
+
+          // Ensure backdrop is removed after modal is hidden
+          $('#issue-update-modal').on('hidden.bs.modal', function (e) {
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            $('body').css('overflow', '');   // Ensure scrolling is restored
+          });
+          alert(data.message);
+      } else {
+          //Update register frontend display
+          var pid = "#extra-" + meter_id;
+            $(pid).find(".data_item").text(item_no);
+            $(pid).find(".data_mfg").text(manufacturer);
+            $(pid).find(".data_meter_no").text(meter_no);
+            $(pid).find(".data_reading").text(reading);
+            $(pid).find(".data_cmo").text(cmo);
+            $(pid).find(".data_main_seal").text(main_seal);
+            $(pid).find(".data_body_seal1").text(body_seal1);
+            $(pid).find(".data_body_seal2").text(body_seal2);
+            $(pid).find(".data_total_j31").text(total_seal);
+            $(pid).find(".data_received_by").text(received_by);
+
+          //hide modal
+          $("#issue-update-modal").modal("hide")    
+
+          // Ensure backdrop is removed after modal is hidden
+          $('#issue-update-modal').on('hidden.bs.modal', function (e) {
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            $('body').css('overflow', '');   // Ensure scrolling is restored
+          });
+          alert(data.message);
+        }
+
+      })
+  
+  })
+
+</script>

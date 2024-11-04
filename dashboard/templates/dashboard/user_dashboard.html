@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'dashboard/jfl_alert_modal.html' %}
+
+<style type="text/css">
+	.table-sm{
+	  font-size: 14px;
+	  padding: 0px;
+	}
+
+	tr {
+	   line-height: 10px;
+	   min-height: 15px;
+	   height: 15px;
+    text-align: center;
+    border: 2px solid #f69c55;
+    
+    	}
+
+    td {
+        display: table-cell;
+        vertical-align: middle;
+        color: blue;
+        line-height: 20px !important;
+    }
+
+
+</style>
+
+
+
+
+<div class="container">
+
+	<div class="bg-secondery text-prinary rounded h2 p-2" >Dashboard of {{ request.user.get_full_name }}, {{ request.user.profile.designation }}</div>
+
+
+<ul class="list-group">
+  <li class="bg-primary text-white list-group-item d-flex justify-content-between align-items-center">
+
+    Panding List of {{ profile.user_name }} {{request.user.profile.designation}}
+    <span class="badge badge-danger badge-pill" id="panding_qty">{{panding_qty}}</span>
+
+  </li>
+</ul>
+
+
+{% if posts %}
+<div class="table-responsive-md">
+<table class="table  table-hover table-striped table-sm" id="panding_table">
+  <thead>
+    <tr>
+      <th scope="col" class="py-2">ID</th>
+      <th scope="col" class="py-2">Meter No</th>
+      <th scope="col" class="py-2">Reading</th>
+      <th scope="col" class="py-2">Account</th>
+      <th scope="col" class="py-2">Result</th>
+      <th scope="col" class="py-2">Date</th>
+	    <th scope="col" class="py-2">Action</th>
+    </tr>
+  </thead>
+  <tbody class="post_list text-nowrap">
+        {% for item in posts %}
+        {% include 'dashboard/mt_dashboard_item.html' %}
+        {% endfor %}
+  </tbody>
+</table>
+</div>
+     {% else %}
+        <div class="form-control text-center text-danger">কোন পেন্ডিং নাই!</div>
+     {% endif %}
+</div>
+
+<p class="text-center text-secondary" id="loading_post" style="display:none;">Loading...</p>
+
+
+
+<script type="text/javascript">
+  //for auto scholl pagew loading.
+$(document).ready(function () {
+    window.post_url = '{% url 'mt_dashboard' %}';
+    var page = 1;
+    var block_request = false;
+    var end_pagination = false;
+    
+    $(window).scroll(function () {
+      var margin = $(document).height() - $(window).height() - 200;
+      if ($(window).scrollTop() > margin && end_pagination === false && block_request === false){
+            $('#loading_post').show();
+            block_request = true;
+            page += 1;
+
+            $.ajax({
+                    type: 'GET',
+                    url: window.post_url,
+                    data: {"page": page},
+                    success: function (data) {
+                            if (data.end_pagination === true) {
+                                end_pagination = true;
+                            } else {
+                                block_request = false;
+                            }
+                            $('.post_list').append(data.content);
+                            $('#loading_post').hide();
+                        }
+                    })
+                }
+            });
+        })
+
+
+
+
+
+$(document).on('click', '#sing_submit', function(){
+    var test_id =$(this).closest('div').find('input').val();
+    var csrftoken=$("[name=csrfmiddlewaretoken]").val();
+    var panding_qty = $('#panding_qty').text()
+    if(test_id==''){
+        jfl_delete_alert('রিলোড করুন।');
+    }else{
+        $.ajax({
+            url: '/mt_dashboard',
+            type: 'POST',
+            dataType: 'json',
+            data:{
+                  test_id : test_id,
+                  csrfmiddlewaretoken : csrftoken
+            },
+        })
+        .done(function(data){
+
+        $('#panding_table tbody').empty();
+
+        for(i=0;i<data.length;i++){
+            $('#panding_table tbody').append(
+              '<tr>'+
+                  '<td class="pt-3">'+data[i].id+'</td>'+
+                  '<td class="pt-3">'+data[i].tested_meter_no+'</td>'+
+                    '<td class="pt-3">'+data[i].reading_as_found+'</td>'+
+                    '<td class="pt-3">'+data[i].book+' - '+data[i].account+' </td>'+
+                    '<td class="pt-3">'+data[i].comments+'</td>'+
+                    '<td class="pt-3">'+data[i].date+'</td>'+
+
+                    '<td>'+ '{% csrf_token %}' +
+                      '<div class="btn-group" role="group" aria-label="Basic example">'+
+                        '<input name="test_id" class="test_id" id="test_id" value="'+data[i].id+'" hidden>'+
+                        '<button type="button" class="btn btn-info btn-sm"> <a href="#" class="text-decoration-none">View</a></button>'+
+                        '<button type="submit" id="sing_submit" class="btn btn-success btn-sm">Sign</button>'+
+                       '</div>'+
+                    '</td>'+
+
+                 '</tr>'
+                ); //appending in the tablereading_as_found
+
+
+
+
+        };//endfor;
+
+        var x = panding_qty -1
+        $('#panding_qty').text(x);
+        jfl_delete_alert('সফলভাবে সম্পন্ন হয়েছে।');
+        //location.reload(); reload the page
+            
+        })
+        .fail(function(){
+            jfl_delete_alert('সমস্যা আছে! সার্ভার সংযুক্ত নয়!')
+        })
+    }
+})
+
+</script>
+
+{% endblock %}

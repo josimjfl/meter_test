@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+<!---for bangla unicode font--->
+<style>
+@import url('https://fonts.maateen.me/adorsho-lipi/font.css');
+</style>
+
+
+<!--To print in landscape in web in bootstrap-->
+<style type="text/css">
+ @media print { @page {size: auto !important} }
+
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+table, th, td, thead {
+  border: 1.5px solid black;
+  border-collapse: collapse;
+}
+
+.mytable>tbody>tr>td, .mytable>thead>tr>td {
+ border: 1px solid black;
+}
+
+
+.table-striped{
+  font-size: 12px;
+  color: black;
+}
+
+.mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+    padding: 2px;
+}
+
+.table-sign{
+  border: 0px;
+  width: 100%
+}
+.sign>td{
+  border: 0px solid black !important;
+  text-align: center;
+  width: 20%;
+}
+</style>
+
+<div>
+<div class="m-1 col-12 w-100 row text-center ">
+  <div class="col-md-4 col-sm-12 text-center"> <br>PBS Instruction: 300-3<br></div>
+  <div class="col-md-4 col-sm-12 text-center"><b><a href="{% url 'test_input' %}" class="text-decoration-none fs-5">{{user.office.pbs.pbs_name}}</a></b> <br>{{user.office.office_name}}<br><span class="h4">Item Balance</span>
+
+      <div id="print_btn"><button href="#" onClick='print_only_doc()' class="btn-sm btn-info">Print</button><noscript>You need Javascript to use the previous link or use <a href="test_report_multi" target="_blank">Print</a></noscript></div>
+  </div>
+    
+  
+
+  <div class="col-md-4 col-sm-12 text-right">  <br> 
+        <br>
+        <div class="pagination d-flex justify-content-center">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+
+
+
+
+<div class="w-100 table-responsive">
+<table class="table table-striped mytable text-center col-12 table-responsive text-nowrap">
+  <thead>
+    <tr>
+      <td>SL</td>
+      <td>Tested Date</td>
+      <td>Item</td>
+      <td>Mfg</td>
+      <td>Meter Serial No</td>
+      <td class="text-center" style="border: 2px solid black;">Reading</td>
+      <td>Issue Date</td>
+      <td>CMO</td>
+      <td>Terminal Seal</td>
+      <td>Body Seal1</td>
+      <td>Body Seal2</td>
+      <td>TotalJ-31</td>
+      <td>Received by</td>
+      <td>Received Sign</td>
+      <td style='widtd:40px;'>Action</td>
+    </tr>
+  </thead>
+
+  <tbody>  
+    {% for data in page_obj %}
+    <tr id="extra-{{data.id}}">
+      <td class="data_id">{{data.id}}</td>
+      <td class="data_date_1">{{ data.created_date|date:"d M Y" }}</td>
+      <td class="data_item">{{data.item}}</td>
+      <td class="data_mfg">{{data.mfg}}</td>
+      <td class="data_meter_no">{{ data.meter_no }}</a></td>
+      <td class="data_reading">{{data.reading}}</td>
+      <td class="data_date_2">{{ data.created_date|date:"d-m-Y" }}</td>
+      <td class="data_cmo">{{data.cmo}}</td>
+      <td class="data_main_seal">{{data.main_seal}}</td>
+      <td class="data_body_seal1">{{data.body_seal1}}</td>
+      <td class="data_body_seal2">{{data.body_seal2}}</td>
+      <td class="data_total_j31">{{data.total_j31}}</td>
+      <td class="data_received_by">{{data.received_by}}</td>
+      <td></td>
+      <td>
+        <button type="button" class="btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#issue-update-modal" onclick="editMeter({{data.id}})">Edit</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<table class="table-sign">
+<tr class="sign"></tr>
+<tr class="sign">
+  <td rowspan="3" colspan="4"><br><br>Issued by<br>{{ profile.tested_by }}<br>{{profile.tested_designation}}</td>
+  <td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+
+
+
+
+{% include 'issue_item/update_modal.html' %}
+
+{% endblock %}
+<!---end payment table--->

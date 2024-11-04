@@ -1,0 +1,49 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+	<div class="card bg-info text-bold text-dark p-4">
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+  	<td colspan="2" class="text-center">Your Informatons</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"><label for="id">Your ID</label></th>
+      <td colspan="2"><input type="" id="id" class="form-control text-center" value="{{user.id}}" disabled></td>
+    </tr>
+    <tr>
+      <th scope="row"><label for="username">Your User Name</label></th>
+      <td colspan="2"><input type="" id="username" class="form-control text-center" value="{{user.username}}" disabled></td>
+    </tr>    
+    <tr>
+      <th scope="row"><label for="groups">Your Designation</label></th>
+      <td colspan="2"><input type="" id="groups" class="form-control text-center" value="{{user.designation}}" disabled></td>
+    </tr>
+    <tr>
+    <tr>
+      <th scope="row"><label for="groups">Your Phone</label></th>
+      <td colspan="2"><input type="" id="groups" class="form-control text-center" value="{{user.mobile}}" disabled></td>
+    </tr>
+    <tr>
+      <th scope="row"><label for="groups">Your Role</label></th>
+      <td colspan="2"><input type="" id="groups" class="form-control text-center" value="{{user.role}}" disabled></td>
+    </tr>
+    <tr>
+      <th scope="row"><label for="groups">Actions</label></th>
+      <td colspan="2">
+      	<a href="#" class="btn btn-warning">Change Password</a>
+      	<a href="{% url 'profile_update' %}" class="btn btn-warning">Office Setup</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+   </div>
+</div>
+
+
+{% endblock %}

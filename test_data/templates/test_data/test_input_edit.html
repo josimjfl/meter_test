@@ -1,0 +1,785 @@
+{% extends 'base.html' %}
+
+{% block title %} Test {% endblock %}
+
+{% block content %}
+<!------>
+<style>
+
+/*for bangla unicode font*/
+  @import url('https://fonts.maateen.me/adorsho-lipi/font.css');
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 2px solid #dddddd;
+  padding: 6px;
+  text-align: center;
+}
+
+
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}
+
+.form-control:focus {
+        border-color: #000000;
+        box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
+    } 
+
+ .header{
+  border: 1px outset white;
+  background-color: #003cb3;    
+  text-align: ;
+  color: white;
+  padding-top:7px;
+  padding-bottom: 0px;
+  margin-top: -1px;
+  margin-bottom: -1px;
+}
+
+.headercolor {
+  width:100%;
+  height:100%;
+  color:black;
+  font-weight:bold;
+  animation: myanimation 10s infinite;
+}
+
+@keyframes myanimation {
+  0% {background-color: red;}
+  25%{background-color:yellow;}
+  50%{background-color:green;}
+  75%{background-color:brown;}
+  100% {background-color: red;}
+}
+
+option {
+  font-family: 'AdorshoLipi', Arial, sans-serif !important;
+}
+
+/* For Input Clear Buttom */
+  span.deleteicon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+  }
+  span.deleteicon span {
+      position: absolute;
+      display: block;
+      right: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      color: #ff3333;
+      background-color: #ccc;
+      font: 15px monospace;
+      text-align: center;
+     line-height: 1em;
+      cursor: pointer;
+  }
+  span.deleteicon input {
+      padding-right: 18px;
+      box-sizing: border-box;
+  }
+  /*end For Input Clear Buttom */
+</style>
+
+<div class="row bg-info rounded m-1">
+    <div class="header headercolor"><h5><span class="mr-5">TEST DATA INPUT</span> <small class="ml-5"></h5>
+    </div>
+
+  <div class="col-md-12 ">
+	<div class="col-md-12 order-md-1">
+
+    <div class="py-0 row">
+      <div class="col-3">
+
+      <!---for erro alert msg show--->
+      <span class="text-danger" id="resmessage" style="display: none; color:red;"></span> <span id="message_cmo" class="text-white bg-danger"></span>
+
+      {% if messages %}
+        <div class="" id="message">
+            {% for message in messages %}
+            <span {% if message.tags == "success" %} class="text-danger text-bolder" {%else%} class="text-danger h5 bg-white p-1" {% endif %}>{{ message }} </span>
+            {% endfor %}
+        </div>
+      {% endif %}
+
+      
+
+      </div>
+      {% if msg %}
+      <div class="col-9">
+        <marquee><h6 style="color: white;">{{ msg|upper }} User: 
+        {% if request.user.is_authenticated %}
+          {{ request.user }}
+        {% else %}
+          not login
+        {% endif %}
+       . Software by josimmsc@gmail.com</h6></marquee>
+      {% endif %}
+      </div>
+    </div>
+
+<form method="get" action="">
+    <div class="row align-items-center bg-secondary">
+        <div class="col-auto">
+            <label for="test_data_id" class="col-form-label">Find ID to Update</label>
+        </div>
+        <div class="col-auto">
+            <input type="text" style="width:150px; background-color: white;" class="form-control" name="test_data_id" id="test_data_id" value="{{ test_data_id }}">
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-sm btn-danger" type="submit">View</button>
+        </div>
+    </div>
+</form>
+
+
+
+<form method="post" class="uploadForm" id="josimForm" data-result-url="{% url 'ajax_load_result' %}" data-mfg-url="{% url 'ajax_load_mfg' %}">
+
+		{% csrf_token %}
+
+ <div class="row align-items-center py-0 pt-0">
+    <div class="col">
+      <label for="cmo_id">CMO</label><br>
+      <input type="text" class="enter_btn form-control:focus form-control-sm" name="cmo" id="cmo_id" placeholder="CMO" maxlength="6" style="width:150px" value="{{ form.cmo.value }}">
+    </div>
+    <div class="col">
+      <label for="book_id">Book</label><br>
+        <input type="text" class="form-control:focus form-control-sm enter_btn" name="book" id= "book_id"placeholder="বই" maxlength="3" style="width:150px" value="{{ form.book.value }}">
+    </div>
+      <div class="col">
+      <label for="account_id">Account</label><br>
+        <input type="text" class="form-control:focus form-control-sm enter_btn" name= "account" id= "account_id"placeholder="হিসাব" maxlength="4" style="width:150px" value="{{ form.account.value }}">
+    </div>
+    <div class="col">
+      <label for="tested_meter_no">Meter No</label><br>
+        <input type="text" class="enter_btn form-control:focus form-control-sm" name="tested_meter_no" id="tested_meter_no" maxlength="14" style="width:150px" value="{{ form.tested_meter_no.value }}" required/>
+    </div>
+
+    <div class="col">
+      <label for="reading">Reading as Found</label><br>
+      <input type="text" class="enter_btn form-control:focus form-control-sm" name= "reading_as_found" id="reading" placeholder="No Reading" maxlength="6" style="width:150px"  value="{{ form.reading_as_found.value }}">
+    </div>
+    <!---CMO Type-->
+    <div class="col">
+      <label for="typ">Type</label><br>
+      <select name="cmo_type" id="typ" class="fform-control:focus form-control-sm enter_btn" required style="width:150px">
+        <!--  <option value="">-----CMO Type-----</option>  -->
+        {% if form.cmo_type.value == "Remove" %}
+        <option value="Remove">Remove</option>
+        <option value="Change">Change</option>
+        <option value="Other">Others Type</option>
+        {% else %}
+        <option value="Change">Change</option>
+        <option value="Remove">Remove</option>
+        <option value="Other">Others Type</option>
+        {% endif %}
+      </select>
+    </div>
+  </div>
+
+
+<div class="row align-items-center pt-2">
+
+    <div class="col">
+      <label for="item">Item</label><br>
+        <select class="form-control:focus form-control-sm enter_btn" id="item" name="item" style="width:150px" required>
+        {% for any in item_no %}
+         <option name="meter_item" value="{{any.pk}}" {% if form.instance.meter_item == any.item_no %}selected{% endif %}>{{ any.item_no }}</option>
+        {% endfor %}
+        </select>
+    </div>
+
+    <div class="col">
+        <label for="mfgid">Manufacturer</label><br>
+        <select class="form-control:focus form-control-sm enter_btn" id="mfgid" name="manufacturer" style="width:150px" required>
+            <option value=""></option>
+            {% for any in mfg %}
+                <option value="{{ any.pk }}" {% if form.instance.manufacturer == any.name %}selected{% endif %}>
+                    {{ any.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+
+    <div class="col">
+      <label for="resultid">Result</label><br>
+        <select class="form-control:focus form-control-sm enter_btn" id="resultid" name="result" style="width:150px" required>
+      <option></option>
+        {% for any in results %}
+      <option name="result" value="{{any.pk}}" {% if form.instance.result == any.pk %}selected{% endif %}>{{ any.name }}</option>
+        {% endfor %}
+        </select>
+    </div>
+
+    <div class="col">
+      <label for="not_run">NR</label><br>
+        <input type="button" class="btn btn-warning btn-sm enter_btn" id="not_run" name="not_run" value="Not Run" style="width:150px">
+    </div>
+    <div class="col">
+      <label for="terminal_seal">Terminal/padlock Seal</label><br>
+      <select class="form-control:focus form-control-sm enter_btn" id="terminal_seal" name="terminal_seal" style="width:150px" style="font-family: 'AdorshoLipi', Arial, sans-serif !important;" required>
+      <option>ভালো</option>
+      <option>নাই</option>
+      <option>কাটা</option>
+      <option>পোড়া</option>
+      <option>ভাঙ্গা</option>
+      </select>
+    </div>
+    <div class="col">
+        <label for="body_seal">Body/Lead Seal</label><br>
+        <select class="form-control:focus form-control-sm enter_btn" id="body_seal" name="body_seal"  style="width:150px" required>
+        <option>ভালো</option>
+        <option>নাই</option>
+        <option>কাটা</option>
+        <option>১টি কাটা</option>
+        <option>পোড়া</option>
+        <option>ভাঙ্গা</option>
+        <option>নকল</option>
+        </select>
+    </div>
+</div>
+
+
+
+<div class="row align-items-center pt-3 pb-3">
+	<div class="col">
+		<input class="deletable enter_btn form-control:focus form-control-sm" list="id_purchase_order" size="38" id="po" name="purchase_order" placeholder="Purchase Order"  required value="{{ form.instance.purchase_order }}">
+		  <datalist id="id_purchase_order">
+			<option value="">...</option>
+			{% for p in po %}
+			<option value="{{p.purchase_order}}"></option>
+			{% endfor %}
+		  </datalist>
+	</div>
+	
+	<div class="col">
+  <div class="form-check border">
+    <input class="form-check-input" type="checkbox" value="" id="toggleFormSection">
+    <label class="form-check-label" for="toggleFormSection">
+      Add Three Phrase Extra Information
+    </label>
+  </div>
+  
+</div>
+
+
+
+	<div class="col">
+	  <h6 class="">Test Results:</h6>
+	</div>
+
+</div>
+
+
+<div class="row align-items-center py-2 text-center bg-warning" id="extraFormSection" style="display: none;">
+    <div class="col">
+        <label for="test_clip">টেস্ট ক্লিপস</label><br>
+        <select class="form-control:focus form-control-sm" id="test_clip" name="test_clip" style="width:150px" style="font-family: 'AdorshoLipi', Arial, sans-serif !important;" required disabled>
+        <option></option>
+        <option>ভালো</option>
+        <option>পোড়া</option>
+        <option>ভাঙ্গা</option>
+        <option>নাই</option>
+        <option>খোলা</option>
+        </select>
+    </div>
+    <div class="col">
+        <label for="glass_cover">গ্লাস কভার</label><br>
+        <select class="form-control:focus form-control-sm" id="glass_cover" name="glass_cover" style="width:150px" style="font-family: 'AdorshoLipi', Arial, sans-serif !important;" required disabled>
+        <option></option>
+        <option>ভালো</option>
+        <option>ভাঙ্গা</option>
+        <option>ঘোলা</option>
+        <option>পোড়া</option>
+        <option>কালো</option>
+        </select>
+    </div>
+    <div class="col">
+      <label for="remove_cause">মিটার অপসারণের কারণ</label><br>
+        <input type="text" class=" form-control:focus form-control-sm" name="remove_cause" id="remove_cause" style="width:250px" required disabled value="{{ form.instance.remove_cause }}"/>
+    </div>
+    <div class="col">
+      <label for="reading">প্যাডলক সিল নং</label><br>
+      <input type="text" class=" form-control:focus form-control-sm" name= "terminal_seal_no" id="terminal_seal_no" style="width:150px" required disabled value="{{ form.instance.terminal_seal_no }}">
+    </div>
+    <div class="col">
+      <label for="terminal_seal_missing">প্যাডলক সিল না থাকার কারণ</label><br>
+      <input type="text" class=" form-control:focus form-control-sm" name= "terminal_seal_missing" id="terminal_seal_missing" style="width:150px" value="সংযুক্ত" required disabled value="{{ form.instance.terminal_seal_missing }}">
+    </div>
+    <div class="col">
+      <label for="remove_date">অপসারণের তারিখ</label><br>
+        <input type="date" class="form-control:focus form-control-sm " name= "remove_date" id= "remove_date"placeholder="হিসাব" value="{{ object.ordered_date }}" maxlength="4" style="width:150px" required disabled value="{{ form.instance.remove_date }}">
+    </div>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#toggleFormSection').on('change', function () {
+        if ($(this).is(':checked')) {
+          $('#extraFormSection').slideDown();
+          $('#extraFormSection input, #extraFormSection select').prop('disabled', false); // Enable required fields
+        } else {
+          $('#extraFormSection').slideUp();
+          $('#extraFormSection input, #extraFormSection select').prop('disabled', true); // Disable required fields
+        }
+      });
+    });
+  </script>
+
+<div class="table-responsive">
+<table class="table-responsive-sm">
+  <tr>
+      <td>date <input id="" name="date" value="{{date}}" style="background:#C0C0C0;" value="{{ form.instance.date }}"></td>
+      <td>item <input id="id_mfg_item" name="meter_item" style="background:#C0C0C0;" value="{{ form.instance.meter_item }}"></td>
+      <td>kh <input id="id_mfg_kh" name="kh" style="background:#C0C0C0;" value="{{ form.instance.kh }}"></td>
+      <td>class <input id="id_mfg_class" name="meter_class" style="background:#C0C0C0;" value="{{ form.instance.meter_class }}"></td>
+  </tr>
+</table>
+
+
+<table class="table-responsive-sm" style="width:; background-color: white;text-align:center;">
+  <tr style="background-color: #f3ccff;">
+    <th></th>
+    <th>T.A</th>
+    <th>Rev</th>
+    <th>As found</th>
+    <th>%</th>
+    <th>Error%</th>
+    <th>As left</th>
+    <th>%</th>
+    <th>Error%</th>
+    <th>Std rev req</th>
+  </tr>
+  <tr>
+      <td>L.L</td>
+      <td><input style="width:50px" id="id_LL_TA" name="LL_TA" value="{{ form.instance.LL_TA }}"></td>
+      <td><input style="width:50px" id="id_LL_rev" name="LL_rev" value="{{ form.instance.LL_rev }}"></td>
+      <td><input style="width:70px; color: blue; font-weight: bolder;" id="id_as_found_ll" name="as_found_ll" value="{{ form.instance.as_found_ll }}"></td>
+      <td><input style="width:70px" id="id_percent_ll" name="percent_found_ll" value="{{ form.instance.percent_found_ll }}"></td>
+      <td><input style="width:70px" id="id_ll_error_ok" name="error_ll" value="{{ form.instance.error_ll }}"></td>
+      <td><input style="width:70px" id="id_as_left_ll" name="as_left_ll" value="{{ form.instance.as_left_ll }}"></td>
+      <td><input style="width:70px" id="id_percent_ll_left" name="percent_left_ll" value="{{ form.instance.percent_left_ll }}"></td>
+      <td><input style="width:70px" id="id_ll_error_ok_left" name="error_left_ll" value="{{ form.instance.error_left_ll }}"></td>
+      <td><input style="width:50px" id="id_standerd_rev_req_ll" name="standerd_rev_req_ll" value="{{ form.instance.standerd_rev_req_ll }}"></td>
+  </tr>
+      <td>F.L</td>
+      <td><input style="width:50px" id="id_FL_TA" name="FL_TA" value="{{ form.instance.FL_TA }}"></td>
+      <td><input style="width:50px" id="id_FL_rev" name="FL_rev" value="{{ form.instance.FL_rev }}"></td>
+      <td><input style="width:70px; color: blue; font-weight: bolder;" id="id_as_found_fl" name="as_found_fl" value="{{ form.instance.as_found_fl }}"></td>
+      <td><input style="width:70px" id="id_percent_fl" name="percent_found_fl" value="{{ form.instance.percent_found_fl }}"></td> 
+      <td><input style="width:70px" id="id_fl_error_ok" name="error_fl" value="{{ form.instance.error_fl }}"></td>
+      <td><input style="width:70px" id="id_as_left_fl" name="as_left_fl" value="{{ form.instance.as_left_fl }}"></td>
+      <td><input style="width:70px" id="id_percent_fl_left" name="percent_left_fl" value="{{ form.instance.percent_left_fl }}"></td> 
+      <td><input style="width:70px" id="id_fl_error_ok_left" name="error_left_fl" value="{{ form.instance.error_left_fl }}"></td> 
+      <td><input style="width:50px" id="id_standerd_rev_req_fl" name="standerd_rev_req_fl" value="{{ form.instance.standerd_rev_req_fl }}"></td>
+  <tr> 
+  </tr>
+		    
+</table>
+</div>
+
+<div class="row col-12 py-1 ml-0">
+  <div class="ml-0 col-8">
+      <label for="id_resultout">Comments</label>
+      <input id="id_resultout" name="comments" class="form-control text-center" style="font-family: 'AdorshoLipi', Arial, sans-serif !important;" value="{{ form.instance.comments }}">
+    </div>
+    <div class="ml-0 col-4">
+      <label for="id_resultout">Remarks</label>
+      <input id="id_remark" name="remark" class="text-center form-control" style="font-family: 'AdorshoLipi', Arial, sans-serif !important;" readonly value="{{ form.instance.remark }}">
+    </div>
+</div>
+
+</div>.
+</div>
+
+<!---Ending input ---->
+
+	{% csrf_token %}
+
+
+
+
+  <!---save button ---->
+  <div class="container">
+	  <div class="py-1 row justify-content-center">
+		  <div class="text-center">
+        <button class="enter_btn btn btn-danger btnClick" id="submit_btn" type="submit">Submit</button>
+  			<button class="btn btn-warning" type="btn" onClick="window.location.reload()">Cancel</button>
+		  </div>
+	  </div>
+  </div>
+
+</form>
+
+
+
+	<!--footer--Last entry-->
+	<div class="row py-1">
+	  <div class="col text-left">
+		{% if test_data %}
+		সর্বশেষ সংরক্ষিতঃ পৃষ্ঠা-<span id="pg">{{pg}}</span> ID= <a id="last_update_id" href="{% url 'update' pk=test_data.id %}" target="_blank" class="text-decoration-none text-danger"> <b id="last_id"> {{test_data.id}} </b></a> M=<b id="last_meter">{{test_data.tested_meter_no}}</b>  R= <span id="last_reading">{{test_data.reading_as_left}}</span>  Done=<span class="text-danger" id="idpg">{{idpg}}</span>
+		{% else %}
+		No Data
+		{% endif %}
+	  </div>
+	  <div class="col text-right">
+		<span>josimmsc@gmail.com</span>
+	  </div>
+	</div>
+</div>
+
+
+
+<script type="text/javascript">
+    //To submit form
+    $(document).ready(function(){
+    $(".uploadForm").submit(function(e){
+      e.preventDefault();
+      $(".btnClick").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
+      var $form = $(this);
+      var serializedData = $form.serialize();
+      var $res_message = $("#resmessage");
+      var $last_meter = $("#last_meter");
+      var $last_id = $("#last_id");
+      var test_data_id = $("#test_data_id").val();
+
+      var url = '/update/' + test_data_id;
+      console.log(url, "jjjjjjjj")
+      $('#cmo_id').prop('readonly', true);
+      $res_message.hide();
+      $.ajax({
+          url: url,
+          type: "POST",
+          data: serializedData,
+          dataType: 'json',
+          success: function (data) {
+
+            if (data.error) {
+                  $res_message.text(data.msg);
+                  $res_message.show();
+                  $(".btnClick").prop('disabled', false);
+                  $(".btnClick").text('Update');
+                  alert(data.msg);
+
+            }else{
+              $res_message.removeClass("alert-danger");
+              $res_message.addClass("alert-success");
+              $res_message.text(data.msg);
+              $res_message.show();
+              $last_meter.text(data.tested_meter_no);
+              $last_id.text(data.last_id);
+              $("#cmo_id").val('');
+              $('#cmo_id').prop('readonly', false);
+              $("#cmo_id").focus();
+              $("#tested_meter_no").val('');
+              $("#book_id").val('')
+              $("#account_id").val('');
+              $("#reading").val('');
+              $("#terminal_seal_no").val('');
+              $("#terminal_seal_missing").val('');
+              $("#glass_cover").val('');
+              $("#test_clip").val('');
+              $("#remove_cause").val('');
+              $("#remove_date").val('');
+              $("#pg").text(data.pg);
+              $("#idpg").text(data.idpg);
+              $("#last_reading").text(data.last_reading);
+              $("#last_update_id").attr('href', '/'+data.last_id+'/update');
+              $("#message_cmo").text(data.cmo);
+              $(".btnClick").prop('disabled', false);
+              $(".btnClick").text('Update');
+            }
+          }
+        });
+    });
+  });
+
+
+
+
+//for messege hide fade
+  setTimeout(function() {
+    $('#message').fadeOut('fast');
+}, 7000); // <-- time in milliseconds
+  //end messege hide fade
+
+
+//To filter mfg and result dropdown
+  $(document).ready(function() {
+      $('#item').on('change', function() {
+          var item_no = $(this).val();
+          console.log(item_no);
+          $.ajax({
+              type: 'GET',
+              url: '{% url 'mfg_res_dropdown' %}',
+              data: {'item_no': item_no},
+              success: function(data) {
+                  //Change data of Manufacturer
+                  $('#mfgid').empty();
+                  $('#mfgid').append('<option value=""></option>');   //set 1st option blank
+                  $.each(data.mfg, function(index, value) {
+                      $('#mfgid').append('<option value="' + value.id + '">' + value.name + '</option>');
+                  });
+                  //Change data of Result
+                  $('#resultid').empty();
+                  $('#resultid').append('<option value=""></option>');    //set 1st option blank
+                  $.each(data.res, function(index, value) {
+                    $('#resultid').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+        
+              }
+          });
+      });
+  });
+
+
+
+
+
+//To load Manufacturer from db
+    $("#mfgid").change(function(){
+      var url = $("#josimForm").attr("data-mfg-url");
+      var resultId = $(this).val();
+      var $j = jQuery.noConflict();   //only j for error solving.
+      $.ajax({
+        url: url,
+        data: { 'mfgid':resultId },   //input
+        success: function(data){
+           //output
+           data_mfg_item = data.item_no
+           data_mfg_kh = data.kh
+           data_mfg_class = data.meter_class
+           data_LL_TA = data.LL_TA
+           data_FL_TA = data.FL_TA
+           data_LL_rev = data.LL_rev
+           data_FL_rev = data.FL_rev;
+           data_standerd_rev_req_ll = data.standerd_rev_req_ll
+           data_standerd_rev_req_fl = data.standerd_rev_req_fl
+  
+
+          $("#id_mfg_item").val(data_mfg_item);
+          $("#id_mfg_kh").val(data_mfg_kh);
+          $("#id_mfg_class").val(data_mfg_class);
+          $("#id_LL_TA").val(data_LL_TA);
+          $("#id_FL_TA").val(data_FL_TA);
+          $("#id_LL_rev").val(data_LL_rev);
+          $("#id_FL_rev").val(data_FL_rev);
+          $("#id_standerd_rev_req_ll").val(data_standerd_rev_req_ll);
+          $("#id_standerd_rev_req_fl").val(data_standerd_rev_req_fl);
+
+        },
+      });
+    });
+
+
+  //To load test result from db
+    $("#resultid").change(function(){
+      var url = $("#josimForm").attr("data-result-url");
+      var resultId = $(this).val();
+      var $j = jQuery.noConflict();   //only j for error solving.
+
+      var std_rq_ll = document.getElementById("id_standerd_rev_req_ll").value;
+      var std_rq_fl = document.getElementById("id_standerd_rev_req_fl").value;
+
+      $.ajax({
+        url: url,
+        data: { 'resultid':resultId },   //input
+        success: function(data){
+          //$("#id_districts").html(data); 
+          let html_data = '';
+          data.forEach(function(resl){    //output
+          //console.log(resl.details); //This line is only to see data in console in browser.
+           html_data += resl.details
+           html_data2 = resl.remark
+           random_error_ll = Math.floor((Math.random()*100)+1)/100-0.5
+           random_error_fl = Math.floor((Math.random()*100)+1)/100-0.5
+
+           as_found_ll = ((std_rq_ll*100)/(100+random_error_ll)).toFixed(2)
+           percent_ll = (as_found_ll*100/std_rq_ll).toFixed(2)
+           error_ll = (percent_ll-100).toFixed(2)
+
+           as_found_fl = ((std_rq_fl*100)/(100+random_error_fl)).toFixed(2)
+           percent_fl = (as_found_fl*100/std_rq_fl).toFixed(2)
+           error_fl = (percent_fl-100).toFixed(2)
+
+
+          });
+          $("#id_resultout").val(html_data);
+          $("#id_remark").val(html_data2);
+
+          $("#id_as_found_ll").val(as_found_ll);
+          $("#id_as_found_fl").val(as_found_fl);
+          $("#id_as_left_ll").val(as_found_ll);
+          $("#id_as_left_fl").val(as_found_fl);
+
+          $("#id_percent_ll").val(percent_ll);
+          $("#id_percent_fl").val(percent_fl);
+          $("#id_percent_ll_left").val(percent_ll);
+          $("#id_percent_fl_left").val(percent_fl);
+
+          $("#id_ll_error_ok").val(error_ll);
+          $("#id_fl_error_ok").val(error_fl);
+          $("#id_ll_error_ok_left").val(error_ll);
+          $("#id_fl_error_ok_left").val(error_fl);
+
+
+          //To open 3 phrase meter inventory part(show div)
+          if (html_data2=="পরীক্ষার জন্য বিআরইবিতে প্রেরণ প্রক্রিয়াধীন।") {
+
+          // Automatically click the button
+          $('#inventory_btn').trigger('click');
+          $('#not_run').trigger('click');
+          }
+        }
+      });
+    });
+
+
+//to Change as found and update result
+    $("#id_as_found_ll, #id_as_found_fl").keyup(function(){
+      var url = $("#josimForm").attr("data-result-url");
+      var resultId = document.getElementById("resultid").value;
+      var $j = jQuery.noConflict();   //only j for error solving.
+
+      var std_rq_ll = document.getElementById("id_standerd_rev_req_ll").value;
+      var std_rq_fl = document.getElementById("id_standerd_rev_req_fl").value;
+      var id_as_found_ll = document.getElementById("id_as_found_ll").value;
+      var id_as_found_fl = document.getElementById("id_as_found_fl").value;
+
+      $.ajax({
+        url: url,
+        data: { 'resultid':resultId },   //input
+        success: function(data){
+          //$("#id_districts").html(data); 
+          let html_data = '';
+          data.forEach(function(resl){    //output
+            console.log(resl.details); //This line is only to see data in console in browser.
+           html_data += resl.details
+           html_data2 = resl.remark
+           random_error_ll = Math.floor((Math.random()*100)+1)/100-0.5
+           random_error_fl = Math.floor((Math.random()*100)+1)/100-0.5
+
+           //as_found_ll = ((std_rq_ll*100)/(100+random_error_ll)).toFixed(2)
+           percent_ll = (id_as_found_ll*100/std_rq_ll).toFixed(2)
+           error_ll = (percent_ll-100).toFixed(2)
+
+           //as_found_fl = ((std_rq_fl*100)/(100+random_error_fl)).toFixed(2)
+           percent_fl = (id_as_found_fl*100/std_rq_fl).toFixed(2)
+           error_fl = (percent_fl-100).toFixed(2)
+          });
+		  
+          $("#id_resultout").val(html_data);
+          $("#id_remark").val(html_data2);
+
+          $("#id_as_found_ll").val(id_as_found_ll);
+          $("#id_as_found_fl").val(id_as_found_fl);
+          $("#id_as_left_ll").val(as_found_ll);
+          $("#id_as_left_fl").val(as_found_fl);
+
+          $("#id_percent_ll").val(percent_ll);
+          $("#id_percent_fl").val(percent_fl);
+          $("#id_percent_ll_left").val(percent_ll);
+          $("#id_percent_fl_left").val(percent_fl);
+
+          $("#id_ll_error_ok").val(error_ll);
+          $("#id_fl_error_ok").val(error_fl);
+          $("#id_ll_error_ok_left").val(error_ll);
+          $("#id_fl_error_ok_left").val(error_fl);
+        },
+      });
+    });
+
+    //For Not Run Result to change value
+    const nr_func = $(document).ready(function(){
+      $("#not_run").click(function(){
+
+      document.getElementById("id_as_found_ll").value = "--";
+      document.getElementById("id_as_found_fl").value = "--";
+      document.getElementById("id_as_left_ll").value = "--";
+      document.getElementById("id_as_left_fl").value = "--";
+
+      document.getElementById("id_percent_ll").value = "--";
+      document.getElementById("id_percent_fl").value = "--";
+      document.getElementById("id_percent_ll_left").value = "--";
+      document.getElementById("id_percent_fl_left").value = "--";
+
+      document.getElementById("id_ll_error_ok").value = "--";
+      document.getElementById("id_fl_error_ok").value = "--";
+      document.getElementById("id_ll_error_ok_left").value = "--";
+      document.getElementById("id_fl_error_ok_left").value = "--";
+       });
+    });
+
+
+//For Move the cursor to the next field and not submitting the form on enter button
+$(document).ready(function() {
+  var enterKeyClicked = true
+$('.enter_btn').keypress(function (e) {
+
+  var btn = $(this).text();
+     if (e.which === 13) {
+      if (btn=="Submit") {
+          //for submit button
+      }else{
+        //for next field
+        e.preventDefault();
+        var index = $('.enter_btn').index(this) + 1;
+        $('.enter_btn').eq(index).focus();
+        }
+      }
+     })
+ });
+
+
+//For clear input button purshase order
+  $(document).ready(function() {
+     $('input.deletable').wrap('<span class="deleteicon"></span>').after($('<span>x</span>').click(function() {
+                $(this).prev('input').val('').trigger('change').focus();
+             }));
+        });
+
+
+// See in base.html more js submit form
+
+
+//3 ph Inventory inventory_btn click ‍show hide toggle
+
+$( "#inventory_btn" ).on( "click", function() {
+  $( "#inventory_div" ).toggle( "fast" );
+
+  //Make Readonly not required sl_end etc.
+  $("#test_clip").prop('required',true);
+  $("#glass_cover").prop("required",true);
+  $("#remove_cause").prop("required",true);
+  $("#terminal_seal_no").prop('required',true);
+  $("#terminal_seal_missing").prop("required",true);
+  $("#remove_date").prop('required',true);
+
+  //input value clear.
+  $( "#test_clip" ).val( "" );
+  $( "#glass_cover" ).val( "" );
+  $("#terminal_seal_no").val( "" );
+
+});
+
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+
+{% load static %}
+<html>
+<head>
+<link href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+<style type="text/css">
+	 @media print { @page {size: auto !important} } 
+
+}
+
+</style>
+</head>
+
+<body style="background-color: black;">
+<div  class="container">
+
+<div style="width: 210mm; height: 297mm;" class=" m-2 bg-light rounded">
+
+  <div style="text-align: center;" class="p-3">
+  	 <br><br><b class="h5">
+  		<p class="text-danger">Sorry, {{user}}!</p>
+  		<p>You Have No Permission To View This Page.</p>
+  		<p>Contract With Admin or Josim Uddin.
+  		<p>Thank You.</p>
+  	</b>
+
+  	<b>
+  		<a href="{% url 'test_input' %}" class="text-decoration-none h4 btn btn-info">Go Home Page</a>
+  		<a href="{% url 'logout' %}" class="text-decoration-none h4 btn btn-danger">Logout</a>
+  	</b>
+  </div>
+
+</div>
+</body>
+</html>

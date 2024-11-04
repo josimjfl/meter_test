@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<style type="text/css">
+	input[type="checkbox"] {
+         transform:scale(1.5, 1.5);
+		}
+</style>
+
+
+
+<div class="container py-2">
+	<h6 class="text-white fw-bold btn btn-secondary">Use and Issue of Twist Tite Seal</h6>
+<form class="issue_form">
+	<div class="row">
+		{% csrf_token %}
+  		<div class="form-group col-md-2">
+  			<label for="item_no">Item</label>
+			 <select class="form-control:focus form-control" id="item_no" name="manufacturer" style="width:150px" required>
+		      <option>J-31</option>
+        	</select>
+		</div>
+		<div class="form-group col-md-2">
+			<label for="main_seal">Main Seal</label>
+			<input class="form-control float-right enter_btn" type="" name="" id="main_seal" minlength="8" required>
+		</div>
+
+		<div class="form-group col-md-2">
+			<label for="book">Book No</label>
+			<input class="form-control float-right enter_btn" type="" name="" id="book" required="" maxlength="3">
+		</div>
+		<div class="form-group col-md-2">
+			<label for="account">Account no</label>
+			<input class="form-control float-right enter_btn" type="" name="" id="account" required maxlength="4">
+		</div>
+		<div class="form-group col-md-2">
+			<label for="cmo">CMO No</label>
+			<input class="form-control float-right enter_btn" type="" name="" id="cmo" required>
+		</div>
+
+
+  </div>
+
+  	<div class="row">
+		<div class="form-group col-md-2">
+			<label for="total_seal">New Total TTS</label>
+			<input class="form-control float-right" type="number" value="1" name="" id="total_seal" readonly>
+		</div>
+		<div class="form-group col-md-4">
+			<label for="received_by">Received By</label>
+			<select class="form-control:focus form-control enter_btn" id="received_by" name="received_by" required>
+		      <option></option>
+		        {% for any in employee %}
+		      <option value="{{ any.training_id }}-  {{any.get_full_name}}, {{ any.designation }}">{{ any.training_id }}-  {{any.get_full_name}}, {{ any.designation }}</option>
+		        {% endfor %}
+        	</select>
+		</div>
+		<div class="form-group col-md-2">
+			<label for="save">.</label>
+			<button class="btn btn-primary form-control float-right align-bottom enter_btn" type="submit" name="" id="save">Save</button> 
+		</div>	
+	</div>
+</form>
+
+	<div class="table-responsive py-2">
+	  <table class="table text-nowrap" id="tableData">
+	  <thead>
+	  	<tr>
+	  		<td>ID</td>
+	  		<td>Item</td>
+	  		<td>Book</td>
+	  		<td>Account</td>
+	  		<td>CMO No</td>
+	  		<td>Seal No</td>
+	  		<td>Received By</td>
+	  		<td>Action</td>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  		<tr class="text-warning w-100">
+	  			<td>{{ last_issue.id }}</td>
+	  			<td>{{ last_issue.item }}</td>
+	  			<th>{{ last_issue.book }}</th>
+	  			<td>{{ last_issue.account }}</td>
+	  			<td>{{ last_issue.cmo }}</td>
+	  			<th>{{ last_issue.main_seal }}</td>
+	  			<td>{{ last_issue.received_by }}</td>
+	  			<td><a href="{% url "seal_issue_list" %}" data-popup="yes" class="btn btn-info" role="button"><i class="fas fa-edit"></i></a></td>
+	  		</tr>
+	  </tbody>
+	  </table>
+	</div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+	
+
+	$('#save').on('click', function(e){
+		//it will prevent regular form submit system
+		e.preventDefault()
+
+		var book = $('#book').val();
+		var account = $('#account').val()
+		var main_seal = $('#main_seal').val();
+		var cmo = $('#cmo').val()
+		var body_seal1 = $('#body_seal1').val();
+		var body_seal2 = $('#body_seal2').val();
+		var total_seal = $('#total_seal').val();
+		var received_by = $('#received_by').val();
+		var item_no = $('#item_no').val();
+		var manufacturer = $('#manufacturer').val();
+		var token = '{{csrf_token}}';
+
+		if (book == '' || account =='') {
+			alert('অনুগ্রহ পূর্বক বই নং ও হিসাব পূরণ করুন।')
+		} else if (main_seal == ''){
+			alert('সকল সিল নাম্বার পূরণ করুণ।')
+
+		} else if (main_seal < 1000000){
+
+			alert('সিল নম্বর কম পক্ষে আট ডিজিট হতে হবে। ')
+
+		} else {
+
+
+		$.ajax({
+			url: '/issue_ajax',
+			type:'POST',
+			dataType: 'json',
+			headers: { "X-CSRFToken": token },
+			data: {
+				'book':book,
+				'account':account,
+				'main_seal':main_seal,
+				'cmo':cmo,
+				'total_seal':total_seal,
+				'received_by':received_by,
+				'item_no':item_no,
+			    }
+			
+			}).done(function(data){
+				if (data.status=="failed"){
+					alert(data.message)
+				} else {
+				$('#tableData tbody').append('<tr><td class="data_id">'+data.id+'</td><td>'+data.item_no+'</td><th class="data_meter_no">'+data.book+'</th><td>'+data.account+'</td><td>'+data.cmo+'</td><th>'+data.main_seal+'</td><td>'+data.received_by+'</td><td><a href="{% url "seal_issue_list" %}" data-popup="yes" class="btn btn-info" role="button"><i class="fas fa-edit"></i></a></td></tr>');
+				$('#book').val('');
+				$('#account').val('');
+				$('#main_seal').val(main_seal.substring(0,5))
+				$('#main_seal').focus();
+				$('#cmo').val('');
+				}
+			})
+	
+		}
+	})
+
+// for deltBtn
+$('#delBtn').on('click', function(){
+	console.log("hi")
+	alert("You are not permitted");
+})
+
+
+
+//For Move the cursor to the next field and not submitting the form on enter button
+$(document).ready(function() {
+
+$('.enter_btn').keypress(function (e) {
+     if (e.which === 13) {
+         e.preventDefault();
+         var index = $('.enter_btn').index(this) + 1;
+         $('.enter_btn').eq(index).focus();
+     }
+ });
+
+});
+
+
+
+
+</script>
+
+
+
+
+{% endblock %}

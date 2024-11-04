@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="container pt-2">
+
+  <h4 class="">3 Phrase Meter Inventory</h4>
+
+<div class="card">
+  <div class="card-header bg-dark text-white">
+    Report by Date
+  </div>
+  <div class="card-body bg-info text-dark">
+    <form method="post" action="{% url 'three_phrase_inv' %}">
+      {% csrf_token %}
+    From : <input type="date" name="fromdate" id="fromdate_payment" class="form-control-sm" style="margin: 0px" required>
+    To : <input type="date" name="todate" class="form-control-sm" id="date" required>
+    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
+  </form>
+  </div>
+</div>
+
+
+<div class="card my-4">
+  <div class="card-header bg-dark text-white">
+    Report by ID
+  </div>
+  <div class="card-body bg-info text-dark ">
+    <form method="post" action="{% url 'three_phrase_inv' %}">
+      {% csrf_token %}
+    From : <input type="text" name="fromid" id="fromid" class="form-control-sm" style="width: 80px" required>
+    To : <input type="text" name="toid" class="form-control-sm" id="toid" value="{{ latest_test.id }}"  style="width: 80px" required>
+    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
+  </form>
+  </div>
+</div>
+
+
+</div>
+
+{% endblock %}

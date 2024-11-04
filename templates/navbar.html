@@ -1,0 +1,113 @@
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-success text-white justify-content-end p-1" id="navbar">
+  <div class="container-fluid">
+    &nbsp; &nbsp; &nbsp; &nbsp;<span class="navbar-brand"><b>JWMT</b></span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      {% if user.is_authenticated %}
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item dropdown">
+          <span class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Test Data
+          </span>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'test_input' %}">New Test</a></li>
+            <li><a class="dropdown-item" href="{% url 'test_report_multi' %}">Test Report</a></li>
+            <li><a class="dropdown-item" href="{% url 'test_report_multi_search' %}">Search</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <span class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Register
+          </span>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'issue_item' %}">Meter Issue</a></li>
+            <li><a class="dropdown-item" href="{% url 'issue_seal' %}">Seal Issue</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'meter_issue_list' %}">Meter Record Book Register</a></li>
+            <li><a class="dropdown-item" href="{% url 'seal_issue_list' %}">Seal Issue Register</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <span class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Balance
+          </span>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'balance' %}">Balance</a></li>
+            <li><a class="dropdown-item" href="{% url 'receive_item' %}">Receive All</a></li>
+            <li><a class="dropdown-item" href="{% url 'issue_item_to_bl' %}">Send Item</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <span class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            More
+          </span>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'signup' %}">Add Employee</a></li>
+            <li><a class="dropdown-item" href="{% url 'register' %}">Despass</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link text-white text-nowrap" href="{% url 'profile' %}">[{{request.user.username}}]  {{request.user.first_name}} {{request.user.last_name}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white text-nowrap" href="{% url 'profile' %}">{{request.user.designation}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white text-nowrap" href="{% url 'profile' %}">{{request.user.office.office_name}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
+        </li>
+      </ul>
+
+      {% else %}
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
+        </li>
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+
+<script type="text/javascript">
+
+  //To auto toggle of hover toggle of navbar
+  const $dropdown = $(".dropdown");
+  const $dropdownToggle = $(".dropdown-toggle");
+  const $dropdownMenu = $(".dropdown-menu");
+  const showClass = "show";
+   
+  $(window).on("load resize", function() {
+    if (this.matchMedia("(min-width: 200px)").matches) {
+      $dropdown.hover(
+        function() {
+          const $this = $(this);
+          $this.addClass(showClass);
+          $this.find($dropdownToggle).attr("aria-expanded", "true");
+          $this.find($dropdownMenu).addClass(showClass);
+        },
+        function() {
+          const $this = $(this);
+          $this.removeClass(showClass);
+          $this.find($dropdownToggle).attr("aria-expanded", "false");
+          $this.find($dropdownMenu).removeClass(showClass);
+        }
+      );
+    } else {
+      $dropdown.off("mouseenter mouseleave");
+    }
+  });
+
+</script>
+
+

@@ -1,0 +1,70 @@
+    <!---<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>--->
+    <script>
+        function jfl_delete_alert(msg, gfg) {
+            var confirmBox = $("#del_container");
+            
+            /* Trace message to display */
+            confirmBox.find(".message").text(msg);
+            
+            /* Calling function */
+            confirmBox.find(".yes").unbind().click(function()
+            {
+            confirmBox.hide();
+            //location.reload(); //reload the page
+            });
+            confirmBox.find(".yes").click(gfg);
+            confirmBox.show();
+        }
+    </script>
+    <style>
+    
+
+        
+        #del_container {
+          display: none;
+          position: fixed; /* Stay in place */
+          z-index: 9999; /* Sit on top */
+          padding-top: 100px;
+          left: 0;
+          top: 0;
+          width: 100%; 
+          height: 100%; 
+          overflow: hidden !important;
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+          color: white;
+        }
+        
+
+        .modal_body{
+            border-radius: 5px;
+            padding: 14px 8px 8px;
+            box-sizing: border-box;
+            background-color: purple !important;
+            margin-left : 30%;
+            margin-right: 40%;
+            border: 1px solid #888;
+            width: 300PX;
+            position: fixed;
+            border: 3px solid white;
+            text-align: center;
+            font-size: 14pt;
+
+        }
+
+        
+        /* Dialog box message decorating */
+        #container .message {
+            text-align: left;
+            padding: 10px 30px;
+        }
+    </style>
+    <div id="del_container">
+        <div class="modal_body">
+            <div class="message">
+                Messege will be here.
+            </div>
+            <button class="yes btn btn-danger btn-sm">ওকে</button>
+        </div>
+    </div>
+

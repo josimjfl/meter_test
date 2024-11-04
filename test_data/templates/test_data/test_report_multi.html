@@ -1,0 +1,206 @@
+
+{% extends 'base.html' %}
+
+{% block title %} Test Report {% endblock %}
+
+{% block content %}
+
+
+
+<!---for bangla unicode font--->
+<style>
+@import url('https://fonts.maateen.me/adorsho-lipi/font.css');
+</style>
+
+
+<!--To print in landscape in web in bootstrap-->
+<style type="text/css">
+ @media print { @page {size: auto !important} }
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+table, th, td, thead {
+  border: 1.5px solid black;
+  border-collapse: collapse;
+}
+
+.mytable>tbody>tr>td, .mytable>thead>tr>td {
+ border: 1px solid black;
+}
+
+
+.table-bordered{
+  font-size: 12px;
+  color: black;
+}
+
+.mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+    padding: 2px;
+}
+
+.table-sign{
+  border: 0px;
+  width: 100%
+}
+.sign>td{
+  border: 0px solid black !important;
+  text-align: center;
+  width: 20%;
+}
+
+</style>
+
+<div class="m-0 p-2 w-100">
+
+<h6 style="text-align:center"></h6>
+<div class="col-12 row">
+  <div class="col-md-4 col-sm-12 text-left"> <br>BREB form no: 576 <br> Standerd meter no: {{office.officeemp.standered_meter}},  & kh: {{office.officeemp.standered_meter.std_kh}} <br> Calibrarion volt: 240V,  amp: 10A & Multiplier: 1 </div>
+  <div class="col-md-4 col-sm-12 text-center"><b><a href="{% url 'test_input' %}" class="text-decoration-none">{{office.pbs.pbs_name}}</a></b> <br>{{ office.office_name }}<br>Meter Test Reports  
+
+    <div id="print_btn"><button href="#" onClick='print_only_doc("e")' class="btn-sm btn-info">Print</button><noscript>You need Javascript to use the previous link or use <a href="test_report_multi" target="_blank">Print</a></noscript></div>
+
+  </div>
+  <div class="col-md-4 col-sm-12 text-right"> <br>Date: <input style="width:100px; outline:none!important; border:0;outline:0;" value ="{{date}}" id="date"> <br> Reason for Test:<i> New/<b>Complain</b>/Periodic</i>
+        <script type="text/javascript">
+          //JS for Current Date of Test data
+          n =  new Date();
+          y = n.getFullYear();
+          m = n.getMonth() + 1;
+          d = n.getDate();
+        document.getElementById("date").innerHTML = d + "/" + m + "/" + y;
+        </script>
+
+        <br>
+        <div class="pagination d-flex justify-content-center">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+
+
+    </div>
+</div>
+<div class="table-responsive">
+<table class="table table-bordered mytable text-center">
+  <thead>
+    <tr>
+      <td rowspan="2">SL</td>
+      <td rowspan="2">Tested</td>
+      <td colspan="2" class="text-center" style="border: 2px solid black;">Reading</td>
+      <td rowspan="2">CMO</td>
+      <td rowspan="2">Account..</td>
+      <td rowspan="2">Mfg</td>
+      <td scope="col">Class</td>
+      <td rowspan="2">Kh</td>
+      <td colspan="10" class="text-center" style="border: 2px solid black;">Test Result</td>
+      <td scope="col"></td>
+      <td scope="col"></td>
+      <td rowspan="2">Comments</td>
+      <td rowspan="2">Remarks</td>
+    </tr>
+  </thead>
+  <thead>
+    <tr>
+      <td style='widtd:50px;'>No</td>
+      <td scope="col">Meter No</td>
+      <td scope="col">As Found</td>
+      <td scope="col">As Left</td>
+      <td scope="col">No.&Type</td>
+      <td style='widtd:50px;'>No</td>
+      <td scope="col"></td>
+      <td scope="col">Item</td>
+      <td scope="col"></td>
+      <td scope="col">Load</td>
+      <td scope="col">T.A</td>
+      <td scope="col">Rev</td>
+      <td scope="col">Found</td>
+      <td scope="col">%</td>
+      <td scope="col">Error%</td>
+      <td scope="col">Left%</td>
+      <td scope="col">%</td>
+      <td scope="col">Error%</td>
+      <td scope="col">Std rev.req</td>
+      <td scope="col">Terminal Seal</td>
+      <td scope="col">Body Seal</td>
+      <td scope="col"></td>
+      <td scope="col"></td>
+    </tr>
+  </thead>
+  <tbody>
+    
+    {% for data in page_obj %}
+    <tr>
+      <td rowspan="2"><a href="{% url 'test_report_single' pk=data.id %}" class="text-decoration-none" title="View Single Test Report">{{data.id}}</a></td>
+      <td rowspan="2"><a href="{% url 'update_td' pk=data.id %}" class="text-decoration-none" title="Edit">{{ data.tested_meter_no }}</a></td>
+      <td rowspan="2">{{data.reading_as_found}}</td>
+      <td rowspan="2">{{data.reading_as_left}}</td>
+      <td rowspan="2">{{data.cmo}}<br>{{data.cmo_type}}</td>
+      <td rowspan="2">{{data.book}}-{{data.account}}</td>
+      <td rowspan="2">{{data.manufacturer}}</td>
+      <td rowspan="2">{{data.meter_class}}/{{data.meter_item}}</td>
+      <td rowspan="2">{{data.kh}}</td>
+      <td scope="col">L.L</td>
+      <td scope="col">{{data.LL_TA}}</td>
+      <td scope="col">{{data.LL_rev}}</td>
+      <td scope="col">{{data.as_found_ll}}</td>
+      <td scope="col">{{data.percent_found_ll}}</td>
+      <td scope="col">{{data.error_ll}}</td>
+      <td scope="col">{{data.as_found_ll}}</td>
+      <td scope="col">{{data.percent_left_ll}}</td>
+      <td scope="col">{{data.error_left_ll}}</td>
+      <td scope="col">{{data.standerd_rev_req_ll}}</td>
+      <td rowspan="2">{{data.terminal_seal}}</td>
+      <td rowspan="2">{{data.body_seal}}</td>
+      <td rowspan="2" style="font-family: 'AdorshoLipi', Arial, sans-serif !important;">{{data.comments}}</td>
+      <td rowspan="2" style="font-family: 'AdorshoLipi', Arial, sans-serif !important;">{{data.remark}}</td>
+    </tr>
+    <tr>
+      <td scope="col">F.L</td>
+      <td scope="col">{{data.FL_TA}}</td>
+      <td scope="col">{{data.FL_rev}}</td>
+      <td scope="col">{{data.as_found_fl}}</td>
+      <td scope="col">{{data.percent_found_fl}}</td>
+      <td scope="col">{{data.error_fl}}</td>
+      <td scope="col">{{data.as_left_fl}}</td>
+      <td scope="col">{{data.percent_left_fl}}</td>
+      <td scope="col">{{data.error_left_fl}}</td>
+      <td scope="col">{{data.standerd_rev_req_fl}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<table class="table-sign">
+<tr class="sign"></tr>
+<tr class="sign">
+  <td rowspan="3" colspan="4"><br><br>Tested by<br>{{ office.officeemp.tested_by.get_full_name }}<br>{{office.officeemp.tested_by.designation}}</td>
+  <td></td>
+  <td colspan="6" rowspan="3"><br><br>Checked by<br>{{ office.officeemp.checked_by.get_full_name }}<br>{{office.officeemp.checked_by.designation}}</td>
+  <td></td>
+  <td colspan="4" rowspan="3"><br><br>Counter sign by <br>  {{office.officeemp.counter_sign_by.get_full_name }}<br> {{office.officeemp.counter_sign_by.designation}}
+  </td>
+</tr>
+</table>
+
+
+
+
+</div>
+{% endblock %}
+<!---end payment table--->

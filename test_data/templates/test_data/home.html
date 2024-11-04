@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+  {% block content %}
+
+ <style type="text/css">
+
+
+.services {
+      background-image: url('{% static 'images/home_bg.jpg' %}');
+      background-position: center;
+      background-size: auto;
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100%;
+    }
+
+
+.services a {
+  text-decoration: none;
+}
+.services .service-box {
+  text-align: center;
+}
+.services .service-box h2 {
+  color: #222;
+  font-size: 20px;
+  padding-top: 10px;
+  text-decoration: none;
+}
+.services a .service-box:hover h2 {
+  color: #FB0626;
+}
+.services .investor-box {
+    background-color: #168a40;
+    color: white;
+    background-position: center center;
+    padding: 20px;
+    width: 100%;
+    min-height: 70px;
+    display: block;
+    position: relative;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+.services .investor-box h2 {
+  font-size: 20px;
+}
+.services .investor-box .flip-view {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: #3643ff;
+  left: -10%;
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: all ease-in-out 333ms;
+}
+.services .investor-box a {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+}
+.services .investor-box:hover .flip-view {
+    left: 0;
+    visibility: visible;
+    opacity: 1;
+}
+
+.investor-box-text{
+    font-size: 18pt;
+}
+
+i {
+  text-align: center;
+  font-size: 40pt;
+}
+
+ </style>
+
+
+
+<!--services-->
+        <div class="services pb-5" style="width: 100%">
+          <div class="container">
+            <div class="pt-5">
+              <h2 class="vc_custom_heading ico_header">Meter Testing Lab by Josim</h2>
+              <hr>
+              <div class="row col-md-12">
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">              
+                <div class="investor-box">
+                    <i class="fa-solid fa-pen-to-square"></i> <span class="investor-box-text">New Test Data</span>
+                    <div class="flip-view">
+                      <a href="{% url 'test_input' %}">Read More <i class="fa-solid fa-pen-to-square"></i></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
+                  <div class="investor-box">
+                    <i class="fa-solid fa-clipboard"></i> <span class="investor-box-text">Report</span>
+                    <div class="flip-view">
+                      <a href="{% url 'test_report_multi' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
+                  <div class="investor-box">
+                    <i class="fa-brands fa-searchengin"></i> <span class="investor-box-text">Single Report</span>
+                    <div class="flip-view">
+                      <a href="{% url 'test_report_single' '0'%}">Read More <i class="fas fa-chevron-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
+                  <div class="investor-box">
+                    <i class="fa-solid fa-magnifying-glass"></i> <span class="investor-box-text">Search</span>
+                    <div class="flip-view">
+                      <a href="{% url 'test_report_multi_search' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+          
+              <div class="row col-md-12">
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
+                  <div class="investor-box">
+                    <i class="fa-solid fa-paper-plane"></i> <span class="investor-box-text">Issue</span>
+                    <div class="flip-view">
+                      <a href="{% url 'issue_item' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
+                  <div class="investor-box">
+                    <i class="fa-solid fa-file-import"></i> <span class="investor-box-text">Meter Memo</span>
+                    <div class="flip-view">
+                      <a href="{% url 'meter_memo' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
+                  <div class="investor-box">
+                    <i class="fa-solid fa-scale-balanced"></i> <span class="investor-box-text">Balance</span>
+                    <div class="flip-view">
+                      <a href="{% url 'balance' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
+                  <div class="investor-box">
+                    <i class="fa-solid fa-book"></i> <span class="investor-box-text">Issue Register</span>
+                    <div class="flip-view">
+                      <a href="{% url 'meter_issue_list' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+             <hr>
+              <div class="row col-md-12">
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
+                  <div class="investor-box">
+                    <i class="fa-regular fa-hourglass-half"></i> <span class="investor-box-text">Panding </span> <span style="color: white; font-size: 30pt;" class="text-warning"> 25</span>
+                    <div class="flip-view">
+                      <a href="{% url 'issue_item' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
+                  <div class="investor-box">
+                    <i class="fa-solid fa-file-import"></i> <span class="investor-box-text">Meter Memo</span>
+                    <div class="flip-view">
+                      <a href="{% url 'meter_memo' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--end services-->
+
+  {%endblock%}

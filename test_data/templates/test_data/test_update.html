@@ -1,0 +1,18 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container py-1 bg-warning">
+	<h4 class="text-center bg-secondary p-2 text-white">Update Test Data</h4>
+<form method="post"> 
+   {% csrf_token %}
+   {{ form|crispy }}
+    <input type="submit" value="Save"> 
+</form> 
+
+{% endblock %}
+</div>

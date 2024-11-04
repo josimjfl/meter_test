@@ -1,0 +1,59 @@
+<!-- templates/403.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 Forbidden</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: yellow;
+        }
+        h1 {
+            font-size: 30px;
+        }
+        p {
+            font-size: 20px;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+
+        .button {
+          background-color: #04AA6D; /* Green */
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          -webkit-transition-duration: 0.4s; /* Safari */
+          transition-duration: 0.4s;
+        }
+
+        .button1 {
+          box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+
+    </style>
+</head>
+<body>
+    <h1>দুঃখিত, এই পরিবর্তনটি করতে আপনি অনুমতি প্রাপ্ত নন।</h1>
+    <p>Sorry, you don't have permission to access this page.</p>
+    <h1>403 Forbidden</h1>
+    <button class="button button1" onclick="history.back()">Go Back</button>
+    <p><a href="{% url 'home' %}">Return to Home Page</a></p>
+</body>
+</html>

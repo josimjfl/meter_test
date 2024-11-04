@@ -1,0 +1,101 @@
+
+
+{% load static %}
+<html>
+<head>
+<link href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+<style type="text/css">
+	 @media print { @page {size: auto !important} } 
+
+}
+
+
+
+</style>
+</head>
+
+<body style="background-color: black;">
+<div  class="container">
+
+    
+
+<div style="width: 210mm; height: 300mm;" class=" m-2 bg-light rounded">
+<button onclick="history.back()" class="btn-sm text-left"><</button>
+  <div style="text-align: center;" class="p-2">
+  	<b>
+      <a href="{% url 'test_input' %}" class="text-decoration-none">Jamalpur Palli Bidyout Samity</a>
+    </b> 
+    <br> Nandina zonal office<br>
+    <b class="h5">Test Data Despass Register</b>
+  </div>
+
+
+
+<div class="" style="margin-left: 80px;">
+Date: <input style="width:250px; outline:none!important; border:0;outline:0;" value ="{{date}}" id="date">
+        <script type="text/javascript">
+          //JS for Current Date of Test data
+          n =  new Date();
+          y = n.getFullYear();
+          m = n.getMonth() + 1;
+          d = n.getDate();
+        document.getElementById("date").value = d + "/" + m + "/" + y;
+        console.log(n, d, m, y)
+        </script>
+
+<!--- ids --->
+
+<span class="pl-5 text-right">IDs: {{fromid}} to {{toid}}</span>
+</div>
+<div class="" style="margin-left: 80px;">
+
+
+{% if total_remove != 0 %}
+<table class="table-sm">
+  <b>Remove-A/C:</b>
+{% for obj in remove %}
+    <tr>
+      {% for post in obj %}
+            <td>
+                {{ post.book }}-{{post.account}},  
+            </td>
+
+    	{% endfor %}
+
+    </tr>
+{% endfor %}
+    	<td><b>  Total =</b></td>
+    	<td><b>{{total_remove}} Nos</b></td>
+</table>
+<div class="p-4 text-right mr-5">Received By</div>
+{% endif %}
+
+
+
+{% if total_change != 0 %}
+<table class="table-sm">
+<b>Change-A/C:</b>
+{% for obj in change %}
+    <tr>
+      {% for post in obj %}
+            <td>
+                {{ post.book }}-{{post.account}},  
+            </td>
+      {% endfor %}
+
+    </tr>
+{% endfor %}
+      <td><b>  Total =</b></td>
+      <td><b>{{total_change}} Nos</b></td>
+</table>
+  <div class="p-4 text-right mr-5">Received By</div>
+{% endif %}
+
+</div>
+
+		
+
+</div>
+</body>
+</html>

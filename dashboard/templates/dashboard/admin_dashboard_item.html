@@ -1,0 +1,21 @@
+<!---List Item for scrolling paginate-->
+
+    <tr>
+      <td class="pt-3">{{item.id}}</td>
+      <td class="pt-3">{{item.username}}</td>
+      <td class="pt-3">{{item.get_full_name}}</td>
+      <td class="pt-3">{{item.designation }}</td>
+      <td class="pt-3">{{item.role }}</td>
+      <td class="pt-3">{{item.office }}</td>
+      <td>
+      {% csrf_token %}
+      	<div class="btn-group" role="group" aria-label="Basic example">
+      	  <input name="test_id" id="test_id" value="{{item.id}}" hidden>
+		  <button type="button" class="btn btn-info btn-sm"> <a href="{% url 'profile_update' item.id %}" class="text-decoration-none">View</a></button>
+		  <!---<button type="button" class="btn btn-danger">Edit</button>
+		  <button type="submit" id="sing_submit" class="btn btn-success btn-sm">Sign</button> -->
+		</div>
+      </td>
+    </tr>
+
+

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container py-2">
+	{% csrf_token %}
+	<h3>Employee</h3>
+
+
+  		<table class="table">
+  			<th>ID</th>
+  			<th>Username</th>
+  			<th>Name</th>
+  			<th>Designation</th>
+  			<th>BREB ID</th>
+  			<th>OFFICE</th>
+  			<th>Role</th>
+
+  			{% for x in emp %}
+  			<tr>
+  				<td>{{x.id}}</td>
+  				<td>{{x.username}}</td>
+  				<td>{{x.get_full_name}}</td>
+				<td>{{x.designation}}</td>
+  				<td>{{x.training_id}}</td>
+  				<td>{{x.office.office_code}}</td>
+				<td>{{x.role}}</td>
+  			</tr>
+  			{%endfor%}
+  		</table>
+ </div>
+
+
+<script type="text/javascript">
+//For Move the cursor to the next field and not submitting the form on enter button
+$(document).ready(function() {
+
+$('.enter_btn').keypress(function (e) {
+     if (e.which === 13) {
+         e.preventDefault();
+         var index = $('.enter_btn').index(this) + 1;
+         $('.enter_btn').eq(index).focus();
+     }
+ });
+
+});
+</script>
+
+ {% endblock %}

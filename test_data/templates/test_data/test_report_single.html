@@ -1,0 +1,358 @@
+
+{% load static %}
+
+{% block content %}
+
+<link href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="https://fonts.maateen.me/bangla/font.css" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/times-new-roman" rel="stylesheet">
+
+
+<!---for bangla unicode font--->
+<style>
+@import url('https://fonts.maateen.me/bangla/font.css');
+@import url('https://fonts.cdnfonts.com/css/times-new-roman');
+</style>
+
+<!--To print in landscape in web in bootstrap-->
+<style type="text/css">
+
+
+body {
+        width: 210mm;
+        height: 297mm;
+        margin: 10mm;
+        padding: 0;
+        background-color: #fff;
+        font-family: 'Times New Roman', sans-serif;
+    }
+    * {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+    .page {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 20mm;
+        margin: 10mm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 5px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .subpage {
+        padding: 1cm;
+        border: 5px red solid;
+        height: 257mm;
+        outline: 2cm #FFEAEA solid;
+    }
+    
+    @page {
+        size: A4;
+        margin: 0;
+    }
+    @media print {
+        html, body {
+            width: 210mm;
+            height: 99%;           
+        }
+        .page {
+            margin: 0;
+            border: initial;
+            border-radius: initial;
+            width: initial;
+            min-height: initial;
+            box-shadow: initial;
+            background: initial;
+            page-break-after: always;
+        }
+    }
+
+
+
+
+html{
+  font-size: 15pt;
+}
+
+
+div {font-family: 'Times New Roman', serif;}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+
+
+table, th, td, thead {
+  border: 2px solid black;
+  border-collapse: collapse;
+}
+
+.mytable>tbody>tr>td, .mytable>thead>tr>td {
+ border: 1px solid black;
+}
+
+
+.table-striped{
+  font-size: 15px;
+  color: black;
+}
+
+.mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+    padding: 5px;
+}
+
+.table-sign{
+  border: 0px;
+  width: 100%
+}
+.sign>td{
+  border: 0px solid black !important;
+  text-align: center;
+  width: 20%;
+}
+</style>
+
+<body>
+
+<h6 style="text-align:center"></h6>
+<div class="col-12 row">
+  <div class="col-4"> <br>BREB form no: 576 <br></div>
+
+  <div class="col-5 text-center"><b><a href="{% url 'test_input' %}" class="h5 text-decoration-none">{{data.office.pbs.pbs_name}}</a></b> <br>{{data.office.office_name}}<br><b class="h5 fw-bolder">METER TEST DATA</b>
+  </div>
+  <div class="col-3"> <br><button mat-raised-button color="default" class="btn btn-outline-primary btn-sm" onclick="window.print()">Print</button><br></div>
+
+</div>
+
+<div class="ml-2">
+  <div class="row">
+    <div class="col-6">Account: <b>{{data.book}}-{{data.account}}</b></div>
+    <div class="col">
+      ID: <a href="{% url 'test_report_single' pk=data.id %}" class="text-decoration-none">{{data.id}}</a></div>
+    <div class="col-4">Created date:{{data.updated_date|date:'d-m-Y'}}</div>
+  </div>
+<div class="row">
+  <div class="col">Serial:<b><a href="{% url 'update' pk=data.id %}" class="text-decoration-none">{{ data.tested_meter_no }}</a></b></div>
+  <div class="col">Manuf: {{data.manufacturer}}</div>
+  <div class="col">Type</div>
+  <div class="col">Class: {{data.meter_class}}</div>
+</div>
+<div class="row">
+  <div class="col">Volts: 240V</div>
+  <div class="col">Amps: 10A</div>
+  <div class="col">Kh: {{data.kh}}</div>
+  <div class="col">Multiplier: 1</div>
+</div>
+<div class="row">
+  <div class="col">Reading as found (Kwh): <b>{{data.reading_as_found}}</b></div>
+  <div class="col">Reading as left (Kwh): <b>{{data.reading_as_left}}</b></div>
+</div>
+<div class="row">
+  <div class="col">Reason for Test:<i> New/<b>Complain</b>/Periodic</i> </div>
+</div>
+</div>
+
+
+
+
+<table class="table table-striped mytable text-center mt-3">
+  <thead>
+    <tr>
+      <td colspan="12" class="text-center h6" style="border: 2px solid black;">Test Result</td>
+    </tr>
+  </thead>
+  <thead>
+    <tr>
+      <td scope="col">Load</td>
+      <td scope="col">T.A</td>
+      <td scope="col">Rev</td>
+      <td scope="col">As Found</td>
+      <td scope="col">%</td>
+      <td scope="col">Error%</td>
+      <td scope="col">As Left%</td>
+      <td scope="col">%</td>
+      <td scope="col">Error%</td>
+      <td scope="col">Std rev.req</td>
+    </tr>
+  </tdhead>
+  <tbody>
+    
+    <tr>
+      <td scope="col">L.L</td>
+      <td scope="col">{{data.LL_TA}}</td>
+      <td scope="col">{{data.LL_rev}}</td>
+      <td scope="col">{{data.as_found_ll}}</td>
+      <td scope="col">{{data.percent_found_ll}}</td>
+      <td scope="col">{{data.error_ll}}</td>
+      <td scope="col">{{data.as_found_ll}}</td>
+      <td scope="col">{{data.percent_left_ll}}</td>
+      <td scope="col">{{data.error_left_ll}}</td>
+      <td scope="col">{{data.standerd_rev_req_ll}}</td>
+
+    </tr>
+    <tr>
+      <td scope="col">F.L</td>
+      <td scope="col">{{data.FL_TA}}</td>
+      <td scope="col">{{data.FL_rev}}</td>
+      <td scope="col">{{data.as_found_fl}}</td>
+      <td scope="col">{{data.percent_found_fl}}</td>
+      <td scope="col">{{data.error_fl}}</td>
+      <td scope="col">{{data.as_left_fl}}</td>
+      <td scope="col">{{data.percent_left_fl}}</td>
+      <td scope="col">{{data.error_left_fl}}</td>
+      <td scope="col">{{data.standerd_rev_req_fl}}</td>
+    </tr>
+
+    <tr>
+      <td scope="col">50% P.F </td>
+      <td scope="col">{{data.LL_TA}}</td>
+      <td scope="col">{{data.LL_rev}}</td>
+      <td scope="col">{{data.as_found_ll}}</td>
+      <td scope="col">{{data.percent_found_ll}}</td>
+      <td scope="col">{{data.error_ll}}</td>
+      <td scope="col">{{data.as_found_ll}}</td>
+      <td scope="col">{{data.percent_left_ll}}</td>
+      <td scope="col">{{data.error_left_ll}}</td>
+      <td scope="col">{{data.standerd_rev_req_ll}}</td>
+
+    </tr>
+    <tr>
+      <td scope="col">100% P.F </td>
+      <td scope="col">{{data.FL_TA}}</td>
+      <td scope="col">{{data.FL_rev}}</td>
+      <td scope="col">{{data.as_found_fl}}</td>
+      <td scope="col">{{data.percent_found_fl}}</td>
+      <td scope="col">{{data.error_fl}}</td>
+      <td scope="col">{{data.as_left_fl}}</td>
+      <td scope="col">{{data.percent_left_fl}}</td>
+      <td scope="col">{{data.error_left_fl}}</td>
+      <td scope="col">{{data.standerd_rev_req_fl}}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+<table class="table table-striped mytable text-center mt-4">
+  <thead>
+    <tr>
+      <td colspan="12" class="text-center h6" style="border: 2px solid black;">Element Test (For 3 phrase Meter) </td>
+    </tr>
+  </thead>
+  <thead>
+    <tr>
+      <td scope="col">E.L.T</td>
+      <td scope="col">T.A</td>
+      <td scope="col">Rev</td>
+      <td scope="col">As Found</td>
+      <td scope="col">%</td>
+      <td scope="col">Error%</td>
+      <td scope="col">As Left%</td>
+      <td scope="col">%</td>
+      <td scope="col">Error%</td>
+      <td scope="col">Std rev.req</td>
+    </tr>
+  </tdhead>
+  <tbody>
+    
+    <tr>
+      <td scope="col">L.</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+    </tr>
+    <tr>
+      <td scope="col">R.</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+    </tr>
+    <tr>
+      <td scope="col">Z.</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+      <td scope="col">--</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+(i) Standard Serial No.:............{{office.officeemp.standered_meter}} <br/>
+(ii) Standard Kh. L.L:........{{office.officeemp.standered_meter.std_kh}}......................................F.L : ...{{office.officeemp.standered_meter.std_kh}}<br/>
+(iii) Type of Repaired done ---------------------<br/>
+(iv) Body seal:  -----{{data.body_seal}}...........................Terminal seal: {{data.terminal_seal}}--<br/>
+
+
+<div class="mt-1 card border-success" style="font-family: 'Bangla', Arial, sans-serif !important;">
+  <div class="col">Comment :</div>
+  <div class="col text-center">
+    <tr rowspan="2">{{data.comments}}</tr><br>
+    <tr rowspan="2">{{data.remark}}</tr><br>
+    <tr rowspan="2">আইটেমঃ {{data.meter_item}}</tr>
+  </div>
+  <div class="col-2"></div>
+</div>
+
+<div class="py-4">
+<table class="table-sign p-5">
+<tr class="sign"></tr>
+<tr class="sign">
+  <td rowspan="3" colspan="4"><br>
+
+      {% if data.updated_by.sign_image %}
+          <img src="{{ data.updated_by.sign_image.url }}" alt="Signed" width="150" height="40">
+      {% endif %}
+
+      <br>Tested by<br>{{ data.updated_by.get_full_name }}<br>{{data.updated_by.designation}}</td>
+  <td></td>
+  <td colspan="6" rowspan="3"><br>
+
+      {% if data.checked_by.sign_image %}
+          <img src="{{ data.checked_by.sign_image.url }}" alt="Signed" width="150" height="40">
+      {% endif %}
+
+      <br>Checked by<br>{{ data.checked_by.get_full_name }}<br>{{data.checked_by.designation}}</td>
+  <td></td>
+  <td colspan="4" rowspan="3"><br>
+
+      {% if data.counter_sign_by.sign_image %}
+          <img src="{{ data.counter_sign_by.sign_image.url }}" alt="Signed" width="150" height="40">
+      {% endif %}
+
+      <br>Counter sign by<br>{{ data.counter_sign_by.get_full_name }}<br>{{data.counter_sign_by.designation}}</td>
+
+
+
+</tr>
+</table>
+</div>
+
+
+
+
+</body>
+{% endblock %}
+<!---end payment table--->

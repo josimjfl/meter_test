@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="container">
+   <div>
+    <div class="bg-warning card py-2 m-3">
+     <form class="form-inline" method="get" action="{% url 'report_search' %}">
+      <div class="card-header bg-danger text-white"><b>Report by Date </b>
+      </div>
+      <div class="form-row py-3">
+        <div class="form-group">
+       <label style="margin:30px" for="date">From:</label>
+        <input type="date" name="fromdate" id="fromdate_payment" class="form-control" style="margin: 0px">
+        </div>
+        <div class="form-group">
+        <label for="date" style="margin:30px">To</label>
+        <input type="date" name="todate" class="form-control" id="">
+        <button type="submit" name="search" class="btn btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
+        <input type="submit" name="" class="btn btn-primary mx-2" value="Report">
+      </div>
+    </form>
+   </div>
+ </div>
+
+  <script type="text/javascript">
+    $(document).on('click','#searchbuttonpayment',function(p){
+      var fromdate=$('#fromdate_payment').val();
+      var todate=$('#todate_payment').val();
+      if (fromdate=='' || todate== ''){
+        p.preventDefault();
+        alert('all fields are required');
+      }
+    });//end of click functiion of search button pyment list
+  </script>
+
+
+  <div class="bg-info card py-2 m-3">
+  <form class="form-inline" method="get" action="{% url 'report_search' %}">
+      <div class="card-header bg-danger text-white"><b>Report by ID </b>
+      </div>
+      <div class="form-row py-3">
+        <div class="form-group">
+          <label style="margin:35px" for="fromid">From:</label>
+          <input type="text" name="fromid" id="fromid" class="form-control" style="width: 150px">
+        </div>
+        <div class="form-group">
+          <label for="toid" style="margin:30px">To</label>
+          <input type="text" name="toid" class="form-control" id="toid" value="{{ latest_test.id }}"  style="width: 150px">
+          <button type="submit" name="search" class="btn btn-success text-center font-weight-bold mx-2" id="">Search</button>
+          <input type="submit" name="" class="btn btn-primary mx-2" value="Report">
+        </div>
+      </div>
+  </form>
+  </div>
+
+
+  <div class="bg-info card py-2 m-3">
+  <form class="form-inline" method="get" action="{% url 'report_search' %}">
+      <div class="card-header bg-danger text-white"><b>Report by Meter </b>
+      </div>
+      <div class="form-row py-3">
+        <div class="form-group">
+            <label class="form-group" style="margin:35px" for="search_option">Search By</label>
+            <select class="form-control" name="search_option" id="search_option">
+              <option value="">--select--</option>
+              <option value="tested_meter_no">Meter</option>
+              <option value="cmo">CMO</option>
+              <option value="book">Book</option>
+              <option value="account">Account</option>
+            </select>
+            <label style="margin:35px" for="fromid">Meter No.</label>
+            <input type="text" name="search_value" id="fromid" class="form-control" style="width: 150px">
+        </div>
+        <div>
+             <button type="submit" name="search" class="btn btn-success text-center font-weight-bold mx-2" id="">Search</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="bg-info card py-3 m-3">
+    <form class="form-inline" method="get" action="{% url 'report_search' %}">
+      <div class="card-header bg-danger text-white mt-5"><b>Report by Account</b>
+      </div>
+      <div class="form-row py-3">
+        <table class="table">
+            <tr><label style="" for="fromid">Book </label>            
+            <input type="text" name="fromid" id="fromid" class="form-control-sm" style="width: 80px">
+            <label style="" for="fromid">Account </label>
+            <input type="text" name="fromid" id="fromid" class="form-control-sm" style="width: 100px">
+            <button type="submit" name="search" class="btn btn-success text-center font-weight-bold mt-2" id="">Search</button>
+            </tr>
+        </table>
+      </div>
+    </form>
+  </div>
+  
+  </div>
+
+{% endblock %}

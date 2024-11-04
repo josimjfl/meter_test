@@ -1,0 +1,165 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+
+<!---for bangla unicode font--->
+<style>
+@import url('https://fonts.maateen.me/adorsho-lipi/font.css');
+</style>
+
+
+<!--To print in landscape in web in bootstrap-->
+<style type="text/css">
+ @media print { @page {size: auto !important} }
+
+
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+table, th, td, thead {
+  border: 1.5px solid black;
+  border-collapse: collapse;
+}
+
+.mytable>tbody>tr>td, .mytable>thead>tr>td {
+ border: 1px solid black;
+}
+
+
+.table-striped{
+  font-size: 12px;
+  color: black;
+}
+
+.mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+    padding: 2px;
+}
+
+.table-sign{
+  border: 0px;
+  width: 100%
+}
+.sign>td{
+  border: 0px solid black !important;
+  text-align: center;
+  width: 20%;
+}
+</style>
+
+<div class="m-1 p-4 w-100">
+
+<h6 style="text-align:center"></h6>
+<div class="col-12 row">
+  <div class="col-md-4 col-sm-12 text-center"> <br>BREB form no: 576 <br> Standerd meter no: {{office.standered_meter}},  & kh: {{office.standered_meter.std_kh}} <br> Calibrarion volt: 240V,  amp: 10A & Multiplier: 1 </div>
+  <div class="col-md-4 col-sm-12 text-center"><b><a href="{% url 'test_input' %}" class="text-decoration-none">{{office.pbs.pbs_name}}</a></b> <br>{{ office.office_name }}<br>Meter Memo
+
+  </div>
+  <div class="col-md-4 col-sm-12 text-right"> <br>Date: <input style="width:100px; outline:none!important; border:0;outline:0;" value ="{{date}}" id="date"> <br> Reason for Test:<i> New/<b>Complain</b>/Periodic</i>
+        <script type="text/javascript">
+          //JS for Current Date of Test data
+          n =  new Date();
+          y = n.getFullYear();
+          m = n.getMonth() + 1;
+          d = n.getDate();
+        document.getElementById("date").innerHTML = d + "/" + m + "/" + y;
+        </script>
+
+        <br>
+        <div class="pagination d-flex justify-content-center">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+
+
+    </div>
+</div>
+<div class="table-responsive">
+<table class="table table-striped mytable text-center w-100">
+  <thead>
+    <tr>
+      <td>SL</td>
+      <td>Item</td>
+      <td>Meter Serial No</td>
+      <td class="text-center" style="border: 2px solid black;">Reading</td>
+      <td>CMO</td>
+      <td>Account..</td>
+      <td>Mfg</td>
+      <td>Class</td>
+      <td>Kh</td>
+      <td>Terminal Seal</td>
+      <td>Body Seal</td>
+      <td>CMO type</td>
+      <td>Comments/Cause</td>
+      <td>Returned by</td>
+    </tr>
+  </thead>
+
+  <tbody>  
+    {% for data in page_obj %}
+    <tr>
+      <td><a href="{% url 'test_report_single' pk=data.id %}" class="text-decoration-none">{{data.id}}</a></td>
+      <td>{{data.meter_item}}</td>
+      <td><a href="{% url 'update' pk=data.id %}" class="text-decoration-none">{{ data.tested_meter_no }}</a></td>
+      <td>{{data.reading_as_found}}</td>
+      <td>{{data.cmo}}</td>
+      <td>{{data.book}}-{{data.account}}</td>
+      <td>{{data.manufacturer}}</td>
+      <td>{{data.meter_class}}</td>
+      <td>{{data.kh}}</td>
+      <td>{{data.terminal_seal}}</td>
+      <td>{{data.body_seal}}</td>
+      <td>
+        {% if data.cmo_type == "True" %}
+              Remove
+        {% else %}
+              Change
+        {% endif %}
+      </td>
+      <td style="font-family: 'AdorshoLipi', Arial, sans-serif !important;">{{data.remove_cause}}</td>
+      <td></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<table class="table-sign">
+<tr class="sign"></tr>
+<tr class="sign">
+  <td rowspan="3" colspan="4"><br><br>Return by<br>{{ profile.tested_by }}<br>{{profile.tested_designation}}</td>
+  <td></td>
+  <td colspan="6" rowspan="3"><br><br>Received by<br>{{ office.officeemp.tested_by.get_full_name }}<br>{{office.officeemp.tested_by.designation}}
+  </td>
+  <td></td>
+  <td colspan="4" rowspan="3"><br><br>Approved by<br>  {{office.officeemp.counter_sign_by.get_full_name }}<br> {{office.officeemp.counter_sign_by.designation}}
+  </td>
+</tr>
+</table>
+
+
+
+
+</div>
+{% endblock %}
+<!---end payment table--->

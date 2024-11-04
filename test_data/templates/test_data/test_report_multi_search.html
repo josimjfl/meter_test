@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="container pt-2">
+
+<div class="card">
+  <div class="card-header bg-dark text-white">
+    Report by Date
+  </div>
+  <div class="card-body bg-info text-dark">
+    <form method="get" action="{% url 'report_search' %}">
+    From : <input type="date" name="fromdate" id="fromdate_payment" class="form-control-sm" style="margin: 0px" required>
+    To : <input type="date" name="todate" class="form-control-sm" id="date" required>
+    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
+  </form>
+  </div>
+</div>
+
+
+<div class="card my-4">
+  <div class="card-header bg-dark text-white">
+    Report by ID
+  </div>
+  <div class="card-body bg-info text-dark ">
+    <form method="get" action="{% url 'report_search' %}">
+    From : <input type="text" name="fromid" id="fromid" class="form-control-sm" style="width: 80px" required>
+    To : <input type="text" name="toid" class="form-control-sm" id="toid" value="{{ latest_test.id }}"  style="width: 80px" required>
+    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
+  </form>
+  </div>
+</div>
+
+
+<div class="card my-4">
+  <div class="card-header bg-dark text-white">
+    Report by Account
+  </div>
+  <div class="card-body bg-info text-dark ">
+    <form method="get" action="{% url 'report_search' %}">
+    Book: <input type="text" name="book" id="fromid" class="form-control-sm" style="width: 80px" required>
+    Account: <input type="text" name="account" id="fromid" class="form-control-sm" style="width: 80px" required>
+    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
+  </form>
+  </div>
+</div>
+
+
+
+<div class="card my-4">
+  <div class="card-header bg-dark text-white">
+    Report by Select
+  </div>
+  <div class="card-body bg-info text-dark ">
+    <form method="get" action="{% url 'report_search' %}">
+    By : <select class="form-control-sm" name="search_option" id="search_option" required>
+              <option value="">--select--</option>
+              <option value="tested_meter_no">Meter</option>
+              <option value="cmo">CMO</option>
+              <option value="book">Book</option>
+              <option value="account">Account</option>
+            </select>
+
+    Number : <input type="text" name="search_value" id="search_value" class="form-control-sm" style="width: 100px" required>
+    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
+  </form>
+  </div>
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+
+{% extends 'base.html' %}
+<!-- 404.html template -->
+{% block content %}
+
+   
+    <style>
+        body {
+
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .emoji {
+            font-size: 8rem;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            font-size: 1.25rem;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+
+    <div class="container">
+        <div class="emoji">😕</div>
+        <h1>Oops! Page Not Found</h1>
+        <h2 class="text-danger">দুঃখিত, এই তথ্যটি খুজে পাওয়া যায়নি।</h2>
+        <p>We couldn't find the page you were looking for.</p>
+        <a class="btn btn-primary" href="{% url 'test_report_single' 0 %}">Go back to Home</a>
+    </div>
+
+
+{% endblock %}

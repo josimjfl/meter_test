@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="m-0 p-0 bg-light py-0" style="width: 100%">
+
+ <div class="m-0 p-5 bg-light py-0">
+  <h2 class="text-danger">Received All Item</h2>
+<form method="post">
+  {% csrf_token %}
+
+  <div class="row">
+    <div class="form-group col-md-4">
+      <label for="inputEmail4">date</label>
+      <input type="date" class="form-control enter_btn" id="date" name="date_start" required>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="inputState">Ref</label>
+        <select id="inputState" class="form-control enter_btn" name="referance_name" required>
+          <option selected></option>
+          <option>Meter Memo</option>
+          <option>Store</option>
+        </select>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="ticket_no">Ticket No <span style="color: #88b1f7">(last saved {{last_data.ticket_no}})</span></label>
+        <input type="text" class="form-control enter_btn" id="ticket_no" name="ticket_no" placeholder="Ticket No, serial no" required>
+    </div>
+  </div>
+
+
+
+<div class="card mt-3">
+<table class="table table-sm table-success text-center">
+  <tr>
+    <th>Item</th>
+    <th>Quantity</th>
+  </tr>
+<!---only for J-31-->
+   <tr class="table-warning">
+    <th class="align-middle">J-31</th>
+    <th><input type="" name="J-31" class="form-control enter_btn" placeholder=""></th>
+  </tr>  
+
+<!---for all item without J-31-->
+  {% for i in item %}
+   <tr class="table-danger">
+    <th class="align-middle">{{i.item_no}}</th>
+    <th><input type="" name="{{i.item_no}}" class="form-control enter_btn" placeholder="{{j_1.referance_name}}-{{j_1.ticket_no}}"></th>
+  </tr>
+  {% endfor %}
+
+</table>
+</div>
+
+ 
+
+  <div class="form-row pt-2">
+    <div class="form-group col-md-4">
+       <button type="submit" class="btn btn-primary enter_btn">Save</button>
+    </div>
+    <div class="col-6" id="message">
+      {% if messages %}
+      <ul class="messages text-danger fw-20">
+          {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</div>
+ 
+</form>
+</div>
+
+
+<script type="text/javascript">
+
+  //for messege hide fade
+  setTimeout(function() {
+    $('#message').fadeOut('fast');
+}, 3000); // <-- time in milliseconds
+
+
+//For Move the cursor to the next field and not submitting the form on enter button
+$(document).ready(function() {
+
+$('.enter_btn').keypress(function (e) {
+     if (e.which === 13) {
+         e.preventDefault();
+         var index = $('.enter_btn').index(this) + 1;
+         $('.enter_btn').eq(index).focus();
+     }
+ });
+
+});
+</script>
+</div>
+
+{% endblock %}
+

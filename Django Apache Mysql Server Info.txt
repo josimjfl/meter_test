@@ -1,0 +1,9 @@
+
+python 3.11
+
+Django==4.2
+mod_wsgi==4.9.4
+mysqlclient==2.1.1
+
+Apache 2.4.
+MySQL 8.0 – Fully supported and compatible with Django 4.x and mysqlclient.

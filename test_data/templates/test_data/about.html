@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+  {% block content %}
+
+ <style>
+	.bg {
+	  background-image: url('{% static 'images/bg.jpg' %}');
+	  background-position: center;
+	  background-size: auto;
+	  background-repeat: no-repeat;
+	  background-size: cover;
+	}
+</style>
+<div class="container bg">
+  <div class="m-3 border border-info card">
+  	<div class="card-header">
+  	<h5>This software is created by</h5>
+   </div>
+   <div class="card-body">
+  	<h5>Josim Uddin</h5>
+  	<h5>Meter Tester</h5>
+  	<h5>Jamalpur PBS</h5>
+  	<h5>josimmsc@gmail.com</h5>
+  </div>
+  </div>
+ </div>
+  {% endblock %}

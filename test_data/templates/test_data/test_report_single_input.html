@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+
+{%block content%}
+
+<div class="p-5 m-4">
+<div class="card bg-info">
+<form method="post"  action="{% url 'test_report_single' 0 %}">
+<div class="card-header bg-dark text-white">
+    View Single Test Data
+  </div>
+	<div class="card-body ">
+		INPU ID:
+		<input type="" name="test_id" id="test_id" required>
+		<input type="submit" value="Search">
+		{%csrf_token%}
+	</div>
+</form>
+</div>
+
+<div class="card my-4 bg-info">
+<form method="post" action="{% url 'test_report_single' 0 %}">
+	<div class="card-header bg-dark text-white">
+		View Single Test Data
+	</div>
+	<div class="card-body">
+		Book:
+		<input type="" name="book" class="enter_btn" required>
+		Account:
+		<input type="" name="account" class="enter_btn" required>
+		<input type="submit" name="Search" value="Search" class="enter_btn">
+		{%csrf_token%}
+	</div>
+
+</form>
+</div>
+</div>
+
+
+<script type="text/javascript">
+//For Move the cursor to the next field and not submitting the form on enter button
+$(document).ready(function() {
+
+$('.enter_btn').keypress(function (e) {
+     if (e.which === 13) {
+         e.preventDefault();
+         var index = $('.enter_btn').index(this) + 1;
+         $('.enter_btn').eq(index).focus();
+     }
+ });
+
+});
+</script>
+
+
+
+
+
+{%endblock%}

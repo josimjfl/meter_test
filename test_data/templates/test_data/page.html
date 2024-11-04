@@ -1,0 +1,88 @@
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}Default Title{% endblock %}</title>
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">-->
+    {% block stylesheet %}{% endblock %}
+
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    
+  </head>
+  <body>
+    <header>
+     Header
+    </header>
+    <main>
+      {% block content %}
+      <form class="uploadForm" accept-charset="UTF-8" action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.reViewsUpload }}
+    <input type="hidden" name="user_id" value="1">
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" name="fullname" class="form-control" id="name" placeholder="Enter your name and surname">
+    </div>
+    <div class="form-group">
+      <label for="email" required="required">Email address</label>
+      <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+    </div>
+    <div class="form-group">
+      <label for="url" required="required">Enter URL</label>
+      <input type="text" name="url" class="form-control" id="url" aria-describedby="emailHelp" placeholder="Enter Game URL">
+    </div>
+     
+   <div class="alert alert-danger resmessage" style="display:none;"></div>
+    <button type="submit" name="submit" class="btn btn-primary btnClick">Submit</button>
+  </form>
+      {% endblock %}
+    </main>
+    <footer>
+      Footer
+    </footer>
+    
+    <!--<script src="{% static 'js/app.js' %}"></script>-->
+    {% block javascript %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+    $(".uploadForm").submit(function(e){
+      e.preventDefault();
+      $(".btnClick").prop('disabled', true);
+      $(".btnClick").text('Processing...');
+      var $form = $(this);
+      var serializedData = $form.serialize();
+      var $res_message = $(".resmessage");
+      $res_message.hide();
+      $.ajax({
+          url: 'ajax/uploads/',
+          type: "POST",
+          data: serializedData,
+          dataType: 'json',
+          success: function (data) {
+
+            if (data.error) {
+                  $res_message.text(data.msg);
+                  $res_message.show();
+                  $(".btnClick").prop('disabled', false);
+                  $(".btnClick").text('Submit');
+            }else{
+              $res_message.removeClass("alert-danger");
+              $res_message.addClass("alert-success");
+              $res_message.text(data.msg);
+              $res_message.show();
+              $(".btnClick").prop('disabled', false);
+              $(".btnClick").text('Submit');
+            }
+          }
+        });
+    });
+  });
+  </script>
+
+
+
+
+  {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+.bg {
+  background-image: url('{% static 'images/bg.jpg' %}');
+  background-position: center;
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
+
+	
+<div class="container bg">
+	<div class="container">
+		</br><h6 style="color: red; border: 2px solid red; border-radius: 5px; width: 210px;">
+	{% for error in form.non_field_errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endfor %}
+	    </h6>
+		<h1 class="text-primary">Login</h1>
+		<form method="POST" action="{% url 'login' %}">
+			
+		{% csrf_token %}
+			
+			Username:<br/><input type="text" name="username" /> <br/>
+			
+			Password:<br/><input type="password" name="password" /> <br/>
+
+			<br/>
+			<input class="btn btn-primary" type="submit" value="Login"/>
+
+		</form>
+	</div>
+</div>
+
+
+{% endblock %}
