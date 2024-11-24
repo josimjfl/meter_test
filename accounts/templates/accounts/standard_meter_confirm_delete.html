@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container pt-3">
+    <h4>Delete Standard Meter</h2>
+    <p>Are you sure you want to delete this meter?</p>
+    <p><strong>Serial:</strong> {{ meter.std_serial }}</p>
+    <p><strong>Name:</strong> {{ meter.std_name }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'standard_meter_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

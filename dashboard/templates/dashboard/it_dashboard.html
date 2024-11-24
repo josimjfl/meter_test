@@ -6,19 +6,19 @@
 {% include 'dashboard/jfl_alert_modal.html' %}
 
 <style type="text/css">
-	.table-sm{
-	  font-size: 14px;
-	  padding: 0px;
-	}
+  .table-sm{
+    font-size: 14px;
+    padding: 0px;
+  }
 
-	tr {
-	   line-height: 10px;
-	   min-height: 15px;
-	   height: 15px;
+  tr {
+     line-height: 10px;
+     min-height: 15px;
+     height: 15px;
     text-align: center;
     border: 2px solid #f69c55;
     
-    	}
+      }
 
     td {
         display: table-cell;
@@ -35,36 +35,36 @@
 
 <div class="container">
 
-	<div class="bg-secondery text-prinary rounded h2 p-2" >Dashboard of {{ request.user.get_full_name }}, {{ request.user.profile.designation }}</div>
+  <div class="bg-secondery text-prinary rounded h2 p-2" >Dashboard of {{ user }} {{request.user.profile.designation}} </div>
 
 
 <ul class="list-group">
   <li class="bg-primary text-white list-group-item d-flex justify-content-between align-items-center">
 
-    Panding List of {{ profile.user_name }} {{request.user.profile.designation}}
-    <span class="badge badge-danger badge-pill" id="panding_qty">{{panding_qty}}</span>
+    Panding List of {{ user }} {{request.user.profile.designation}}
+    <span class="badge badge-danger badge-pill">{{panding_qty}}</span>
 
   </li>
 </ul>
 
 
-{% if posts %}
-<div class="table-responsive-md">
+{% if profile %}
+<div class="table-responsive">
 <table class="table  table-hover table-striped table-sm" id="panding_table">
   <thead>
     <tr>
       <th scope="col" class="py-2">ID</th>
-      <th scope="col" class="py-2">Meter No</th>
-      <th scope="col" class="py-2">Reading</th>
-      <th scope="col" class="py-2">Account</th>
-      <th scope="col" class="py-2">Result</th>
-      <th scope="col" class="py-2">Date</th>
-	    <th scope="col" class="py-2">Action</th>
+      <th scope="col" class="py-2">User ID</th>
+      <th scope="col" class="py-2">Name</th>
+      <th scope="col" class="py-2">Designation</th>
+      <th scope="col" class="py-2">Roll</th>
+      <th scope="col" class="py-2">Office</th>
+      <th scope="col" class="py-2">Action</th>
     </tr>
   </thead>
   <tbody class="post_list text-nowrap">
-        {% for item in posts %}
-        {% include 'dashboard/mt_dashboard_item.html' %}
+        {% for item in profile %}
+        {% include 'dashboard/admin_dashboard_item.html' %}
         {% endfor %}
   </tbody>
 </table>
@@ -81,7 +81,7 @@
 <script type="text/javascript">
   //for auto scholl pagew loading.
 $(document).ready(function () {
-    window.post_url = '{% url 'mt_dashboard' %}';
+    window.post_url = '{% url 'admin_dashboard' %}';
     var page = 1;
     var block_request = false;
     var end_pagination = false;
@@ -117,13 +117,13 @@ $(document).ready(function () {
 
 $(document).on('click', '#sing_submit', function(){
     var test_id =$(this).closest('div').find('input').val();
+    console.log(test_id)
     var csrftoken=$("[name=csrfmiddlewaretoken]").val();
-    var panding_qty = $('#panding_qty').text()
     if(test_id==''){
         jfl_delete_alert('রিলোড করুন।');
     }else{
         $.ajax({
-            url: '/mt_dashboard',
+            url: '/admin_dashboard',
             type: 'POST',
             dataType: 'json',
             data:{
@@ -161,10 +161,8 @@ $(document).on('click', '#sing_submit', function(){
 
         };//endfor;
 
-        var x = panding_qty -1
-        $('#panding_qty').text(x);
-        jfl_delete_alert('সফলভাবে সম্পন্ন হয়েছে।');
-        //location.reload(); reload the page
+            jfl_delete_alert('সফলভাবে সম্পন্ন হয়েছে।');
+            //location.reload(); reload the page
             
         })
         .fail(function(){

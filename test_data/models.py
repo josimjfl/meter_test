@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from accounts.models import Office, get_office, CustomUser as User
+from accounts.models import Office, default_office, CustomUser as User
 from balance_reg.models import Item
 
 import datetime
@@ -50,7 +50,7 @@ remark_choice = (
 
 
 class Results(models.Model):
-	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=get_office)
+	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=default_office)
 	name = models.CharField(max_length=100)
 	items = models.ManyToManyField(Item)
 	details = models.CharField(max_length=1000, blank=True, null=True)
@@ -69,7 +69,7 @@ class Results(models.Model):
 
 
 class Test_Data(models.Model):
-	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=get_office)
+	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=default_office)
 	tested_meter_no = models.CharField(max_length=20, blank=True, null=True)
 	reading_as_found = models.CharField(max_length=20, default="x")
 	reading_as_left = models.CharField(max_length=20, default="x")
@@ -125,6 +125,7 @@ class Test_Data(models.Model):
 	checked_date = models.DateTimeField(auto_now_add=False, auto_now=False, null=True, blank=True)
 	counter_sign_by = models.ForeignKey(User, null=True, blank=True, default=None, on_delete=models.CASCADE, related_name="counter_sign_by")
 	counter_sign_date = models.DateTimeField(auto_now_add=False, auto_now=False, null=True, blank=True)
+	print_counter = models.IntegerField(null=True, blank=True, default=0)
 	received_by = models.ForeignKey(User, null=True, blank=True,  default=None, on_delete=models.CASCADE, related_name="received_by")
 	received_date = models.DateTimeField(auto_now_add=False, auto_now=False, null=True, blank=True)
 	

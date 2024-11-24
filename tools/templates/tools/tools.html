@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .icon-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .icon-item {
+            width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .icon-item i {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .icon-name {
+            font-size: 12px;
+            word-wrap: break-word;
+            color: #b100d9;
+        }
+         .copy-button {
+            margin-top: 5px;
+            padding: 4px 6px;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+            background-color: #00d97b;
+            color: white;
+            border-radius: 3px;
+        }
+
+        .copy-button:active {
+            background-color: #eee;
+        }
+    </style>
+
+
+    <h1>Font Awesome Solid Icons From My Static</h1>
+    <p>Official URL: <a href="https://fontawesome.com/search" target="_blank">https://fontawesome.com</a></p>
+    
+    <div class="icon-grid" id="iconGrid"></div>
+
+    <script>
+        // Array of Font Awesome icon classes
+        const icons = [
+                // User Interface Icons
+            "fa-home", "fa-user", "fa-users", "fa-user-circle", "fa-user-plus", "fa-user-edit", 
+            "fa-user-times", "fa-envelope", "fa-inbox", "fa-calendar-alt", "fa-clock", 
+            "fa-bell", "fa-cog", "fa-sliders-h", "fa-trash-alt", "fa-search", 
+
+            // Navigation Icons
+            "fa-arrow-left", "fa-arrow-right", "fa-arrow-up", "fa-arrow-down", 
+            "fa-chevron-left", "fa-chevron-right", "fa-chevron-up", "fa-chevron-down", 
+            "fa-angle-left", "fa-angle-right", "fa-angle-up", "fa-angle-down", 
+            "fa-expand", "fa-compress", 
+
+            // Social Media Icons
+            "fa-facebook", "fa-twitter", "fa-linkedin", "fa-instagram", "fa-github", 
+            "fa-youtube", "fa-reddit", "fa-pinterest", "fa-dribbble", "fa-behance", 
+
+            // E-commerce Icons
+            "fa-shopping-cart", "fa-shopping-bag", "fa-credit-card", "fa-money-bill-wave", 
+            "fa-wallet", "fa-tags", "fa-gift", "fa-box", "fa-truck", 
+
+            // Form and Text Editing Icons
+            "fa-edit", "fa-save", "fa-copy", "fa-paste", "fa-cut", "fa-undo", 
+            "fa-redo", "fa-paperclip", "fa-download", "fa-upload", 
+
+            // File and Media Icons
+            "fa-file", "fa-file-alt", "fa-file-pdf", "fa-file-image", "fa-file-video", 
+            "fa-file-audio", "fa-image", "fa-camera", "fa-video", "fa-music", 
+
+            // Alerts and Notifications
+            "fa-exclamation-circle", "fa-exclamation-triangle", "fa-check-circle", 
+            "fa-info-circle", "fa-question-circle", "fa-spinner", "fa-sync-alt", 
+
+            // Device and Connectivity Icons
+            "fa-mobile-alt", "fa-laptop", "fa-tablet-alt", "fa-desktop", 
+            "fa-wifi", "fa-bluetooth", "fa-battery-full", "fa-plug", "fa-signal", 
+
+            // Utility and Miscellaneous Icons
+            "fa-map-marker-alt", "fa-location-arrow", "fa-heart", "fa-star", 
+            "fa-lightbulb", "fa-shield-alt", "fa-lock", "fa-unlock", 
+            "fa-key", "fa-thumbs-up", "fa-thumbs-down",
+
+            // More Icon Icon
+            "fa-address-book", "fa-address-card", "fa-adjust", "fa-air-freshener",
+            "fa-align-center", "fa-align-justify", "fa-align-left", "fa-align-right",
+            "fa-allergies", "fa-ambulance", "fa-american-sign-language-interpreting",
+            "fa-anchor", "fa-angle-double-down", "fa-angle-double-left",
+            "fa-angle-double-right", "fa-angle-double-up", "fa-angle-down",
+            "fa-angle-left", "fa-angle-right", "fa-angle-up", "fa-apple-alt",
+            "fa-archive", "fa-archway", "fa-arrow-alt-circle-down", "fa-arrow-alt-circle-left",
+            "fa-arrow-alt-circle-right", "fa-arrow-alt-circle-up", "fa-arrow-circle-down",
+            "fa-arrow-circle-left", "fa-arrow-circle-right", "fa-arrow-circle-up",
+            "fa-arrow-down", "fa-arrow-left", "fa-arrow-right", "fa-arrow-up",
+            "fa-arrows-alt", "fa-arrows-alt-h", "fa-arrows-alt-v", "fa-assistive-listening-systems",
+            "fa-asterisk", "fa-at", "fa-atlas", "fa-atom", "fa-audio-description",
+            "fa-award", "fa-baby", "fa-baby-carriage", "fa-backspace", "fa-backward",
+            "fa-bacon", "fa-bahai", "fa-balance-scale", "fa-ban", "fa-band-aid",
+            "fa-barcode", "fa-bars", "fa-baseball-ball", "fa-basketball-ball",
+            "fa-bath", "fa-battery-empty", "fa-battery-full", "fa-battery-half",
+            "fa-battery-quarter", "fa-battery-three-quarters", "fa-bed", "fa-beer",
+            "fa-bell", "fa-bell-slash", "fa-bezier-curve", "fa-bible", "fa-bicycle",
+            "fa-biking", "fa-binoculars", "fa-biohazard", "fa-birthday-cake",
+            "fa-blender", "fa-blender-phone", "fa-blind", "fa-blog", "fa-bold",
+            "fa-bolt", "fa-bomb", "fa-bone", "fa-bong", "fa-book", "fa-book-dead",
+            "fa-book-medical", "fa-book-open", "fa-book-reader", "fa-bookmark",
+            "fa-border-all", "fa-border-none", "fa-border-style", "fa-bowling-ball",
+            "fa-box", "fa-box-open", "fa-boxes", "fa-braille", "fa-brain", "fa-bread-slice",
+            "fa-briefcase", "fa-briefcase-medical", "fa-broadcast-tower", "fa-broom",
+            "fa-brush", "fa-bug", "fa-building", "fa-bullhorn", "fa-bullseye",
+            "fa-burn", "fa-bus", "fa-bus-alt", "fa-business-time", "fa-calculator",
+            "fa-calendar", "fa-calendar-alt", "fa-calendar-check", "fa-calendar-day",
+            "fa-calendar-minus", "fa-calendar-plus", "fa-calendar-times", "fa-calendar-week",
+            "fa-camera", "fa-camera-retro", "fa-campground", "fa-candy-cane",
+            "fa-cannabis", "fa-capsules", "fa-car", "fa-car-alt", "fa-car-battery",
+            "fa-car-crash", "fa-car-side", "fa-caravan", "fa-caret-down", "fa-caret-left",
+            "fa-caret-right", "fa-caret-square-down", "fa-caret-square-left",
+            "fa-caret-square-right", "fa-caret-square-up", "fa-caret-up", "fa-carrot",
+            "fa-cart-arrow-down", "fa-cart-plus", "fa-cash-register", "fa-cat",
+            "fa-certificate", "fa-chair", "fa-chalkboard", "fa-chalkboard-teacher",
+            "fa-charging-station", "fa-chart-area", "fa-chart-bar", "fa-chart-line",
+            "fa-chart-pie", "fa-check", "fa-check-circle", "fa-check-double",
+            "fa-check-square", "fa-cheese", "fa-chess", "fa-chess-bishop",
+            "fa-chess-board", "fa-chess-king", "fa-chess-knight", "fa-chess-pawn",
+            "fa-chess-queen", "fa-chess-rook", "fa-chevron-circle-down", "fa-chevron-circle-left",
+            "fa-chevron-circle-right", "fa-chevron-circle-up", "fa-chevron-down",
+            "fa-chevron-left", "fa-chevron-right", "fa-chevron-up", "fa-child",
+            "fa-church", "fa-circle", "fa-circle-notch", "fa-city", "fa-clinic-medical",
+            "fa-clipboard", "fa-clipboard-check", "fa-clipboard-list", "fa-clock",
+            "fa-clone", "fa-closed-captioning", "fa-cloud", "fa-cloud-download-alt",
+            "fa-cloud-meatball", "fa-cloud-moon", "fa-cloud-moon-rain",
+            "fa-cloud-rain", "fa-cloud-showers-heavy", "fa-cloud-sun", "fa-cloud-sun-rain",
+            "fa-cloud-upload-alt", "fa-cocktail", "fa-code", "fa-code-branch",
+            "fa-coffee", "fa-cog", "fa-cogs", "fa-coins", "fa-columns", "fa-comment",
+            "fa-comment-alt", "fa-comment-dollar", "fa-comment-dots", "fa-comment-medical",
+            "fa-comment-slash", "fa-comments", "fa-comments-dollar", "fa-compact-disc",
+            "fa-compass", "fa-compress", "fa-compress-alt", "fa-compress-arrows-alt",
+            "fa-concierge-bell", "fa-cookie", "fa-cookie-bite", "fa-copy",
+            "fa-copyright", "fa-couch", "fa-credit-card", "fa-crop", "fa-crop-alt",
+            "fa-cross", "fa-crosshairs", "fa-crow", "fa-crown", "fa-crutch", "fa-cube",
+            "fa-cubes", "fa-cut", "fa-database", "fa-deaf", "fa-democrat", "fa-desktop",
+            "fa-dharmachakra", "fa-diagnoses", "fa-dice", "fa-dice-d20", "fa-dice-d6",
+            "fa-dice-five", "fa-dice-four", "fa-dice-one", "fa-dice-six", "fa-dice-three",
+            "fa-dice-two", "fa-digital-tachograph", "fa-directions", "fa-disease",
+            "fa-divide", "fa-dizzy", "fa-dna", "fa-dog", "fa-dollar-sign", "fa-dolly",
+            "fa-dolly-flatbed", "fa-donate", "fa-door-closed", "fa-door-open",
+            "fa-dot-circle", "fa-dove", "fa-download", "fa-drafting-compass",
+            "fa-dragon", "fa-draw-polygon", "fa-drum", "fa-drum-steelpan", "fa-drumstick-bite",
+            "fa-dumbbell", "fa-dumpster", "fa-dumpster-fire", "fa-dungeon", "fa-edit",
+            "fa-egg", "fa-eject", "fa-ellipsis-h", "fa-ellipsis-v", "fa-envelope",
+            "fa-envelope-open", "fa-envelope-square", "fa-equals", "fa-eraser",
+            "fa-ethernet", "fa-euro-sign", "fa-exchange-alt", "fa-exclamation",
+            "fa-exclamation-circle", "fa-exclamation-triangle", "fa-expand", "fa-expand-alt",
+            "fa-expand-arrows-alt", "fa-external-link-alt", "fa-external-link-square-alt",
+            "fa-eye", "fa-eye-dropper", "fa-eye-slash", "fa-fast-backward", "fa-fast-forward",
+            "fa-fax", "fa-feather", "fa-feather-alt", "fa-female", "fa-fighter-jet",
+            "fa-file", "fa-file-alt", "fa-file-archive", "fa-file-audio", "fa-file-code",
+            "fa-file-contract", "fa-file-csv", "fa-file-download", "fa-file-excel",
+            "fa-file-export", "fa-file-image", "fa-file-import", "fa-file-invoice",
+            "fa-file-invoice-dollar", "fa-file-medical", "fa-file-medical-alt",
+            "fa-file-pdf", "fa-file-powerpoint", "fa-file-prescription", "fa-file-signature",
+            "fa-file-upload", "fa-file-video", "fa-file-word", "fa-fill", "fa-fill-drip",
+            "fa-film", "fa-filter", "fa-fingerprint", "fa-fire", "fa-fire-alt",
+            "fa-fire-extinguisher", "fa-first-aid", "fa-fish", "fa-fist-raised",
+            "fa-flag", "fa-flag-checkered", "fa-flag-usa", "fa-flask", "fa-flushed",
+            "fa-folder", "fa-folder-minus", "fa-folder-open", "fa-folder-plus",
+            "fa-font", "fa-football-ball", "fa-forward", "fa-frog", "fa-frown",
+            "fa-frown-open", "fa-funnel-dollar", "fa-futbol", "fa-gamepad", "fa-gas-pump",
+            "fa-gavel", "fa-gem", "fa-genderless", "fa-ghost", "fa-gift", "fa-gifts",
+            "fa-glass-cheers", "fa-glass-martini", "fa-glass-martini-alt",
+            "fa-glass-whiskey", "fa-glasses", "fa-globe", "fa-globe-africa",
+            "fa-globe-americas", "fa-globe-asia", "fa-globe-europe", "fa-golf-ball",
+            "fa-gopuram", "fa-graduation-cap", "fa-greater-than", "fa-greater-than-equal",
+            "fa-grimace", "fa-grin", "fa-grin-alt", "fa-grin-beam", "fa-grin-beam-sweat",
+            "fa-grin-hearts", "fa-grin-squint", "fa-grin-squint-tears", "fa-grin-stars",
+            "fa-grin-tears", "fa-grin-tongue", "fa-grin-tongue-squint", "fa-grin-tongue-wink",
+            "fa-grin-wink", "fa-grip-horizontal", "fa-grip-lines", "fa-grip-lines-vertical",
+            "fa-grip-vertical", "fa-guitar"
+            // Add more as needed from https://fontawesome.com/search
+        ];
+
+
+        const iconGrid = document.getElementById("iconGrid");
+
+        // Loop through icons and create HTML for each
+        icons.forEach(iconClass => {
+            const iconItem = document.createElement("div");
+            iconItem.className = "icon-item";
+            
+            const iconElement = document.createElement("i");
+            iconElement.className = `fa ${iconClass}`;
+            
+            const iconName = document.createElement("div");
+            iconName.className = "icon-name";
+            iconName.textContent = iconClass;
+
+            // Create a copy button
+            const copyButton = document.createElement("button");
+            copyButton.className = "copy-button";
+            copyButton.textContent = "Copy";
+            copyButton.addEventListener("click", () => {
+                navigator.clipboard.writeText(iconClass).then(() => {
+                    copyButton.textContent = "Copied!";
+                    setTimeout(() => {
+                        copyButton.textContent = "Copy";
+                    }, 1000); // Reset button text after 1 second
+                }).catch(err => {
+                    console.error("Failed to copy text: ", err);
+                });
+            });
+
+            // Append elements to icon item
+            iconItem.appendChild(iconElement);
+            iconItem.appendChild(iconName);
+            iconItem.appendChild(copyButton);
+            iconGrid.appendChild(iconItem);
+        });
+    </script>
+
+
+{% endblock %}

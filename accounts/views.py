@@ -1,15 +1,18 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from accounts.decorators import role_required
 from django.utils.decorators import method_decorator  #for class based view
 from django.urls import reverse
-from .models import CustomUser
 from django.views.generic.edit import UpdateView
 from accounts.forms import CustomLoginForm, CustomUserForm
-from django.http import JsonResponse
 from .forms import UserUpdateForm
+from .models import OfficeEmp, Office, CustomUser, Standard_Meter
+from .forms import OfficeEmpForm
+from .forms import StandardMeterForm
+
+
 #make CutomUser to User
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -108,7 +111,6 @@ def profile_update(request):
             return redirect('profile')  # Ensure this matches your URL name for profile detail view
 
     else:
-        print(f"User: {request.user}")
         user_form = UserUpdateForm(instance=request.user)
 
     context = {
@@ -124,9 +126,124 @@ def admin_dashboard_view(request):
     return render(request, 'dashboard/admin_dashboard.html')
 
 
-@method_decorator(role_required(['IT', 'admin']), name='dispatch')
-class ProfileUpdate(UpdateView):
-    model = CustomUser
-    form_class = CustomUserForm
-    template_name = 'test_data/custom_user.html'
-    success_url = "/"
+
+def update_user(request, pk):
+    user = get_object_or_404(CustomUser, id=pk)
+    if request.method == 'POST':
+        form = CustomUserForm(request.POST, request=request, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('add_employee')
+    else:
+        form = CustomUserForm(instance=user, request=request)
+    return render(request, 'accounts/custom_user.html', {'form': form})
+
+
+
+
+# For Office Setup
+@login_required
+@role_required(['admin', 'IT'])          #For user Group test  
+def office_emp_list(request):
+    """List all OfficeEmp records."""
+    if  request.user.role == 'IT':
+        office_emps = OfficeEmp.objects.filter(office__pbs=request.user.office.pbs)
+    else:
+        office_emps = OfficeEmp.objects.filter(office=request.user.office)
+    return render(request, 'accounts/office_emp_list.html', {'office_emps': office_emps})
+
+
+@login_required
+@role_required(['admin', 'IT'])          #For user Group test  
+def office_emp_create(request):
+    if request.method == 'POST':
+        form = OfficeEmpForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('office_emp_list')
+    else:
+        form = OfficeEmpForm(user=request.user)
+    return render(request, 'accounts/office_emp_form.html', {'form': form, 'action': 'Create'})
+
+
+
+
+@login_required
+@role_required(['admin', 'IT', 'MT', 'MTS'])          #For user Group test  
+def office_emp_update(request, pk): 
+    instance = get_object_or_404(OfficeEmp, pk=pk)
+    if request.method == 'POST':
+        form = OfficeEmpForm(request.POST, instance=instance, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('office_emp_list')
+    else:
+        form = OfficeEmpForm(instance=instance, user=request.user)
+    return render(request, 'accounts/office_emp_form.html', {'form': form, 'action': 'Update'})
+
+
+
+@login_required
+@role_required(['admin', 'IT'])          #For user Group test  
+def office_emp_delete(request, pk):
+    """Delete an OfficeEmp record."""
+    office_emp = get_object_or_404(OfficeEmp, pk=pk)
+    if request.method == 'POST':
+        office_emp.delete()
+        return redirect('office_emp_list')
+    return render(request, 'accounts/office_emp_confirm_delete.html', {'office_emp': office_emp})
+
+
+
+
+# Standard meter settings
+@login_required
+@role_required(['admin', 'IT', 'MT', 'MTS'])          #For user Group test  
+def standard_meter_list(request):
+    # Filter Standard_Meter by the user's office
+    meters = Standard_Meter.objects.filter(office=request.user.office)
+    return render(request, 'accounts/standard_meter_list.html', {'meters': meters})
+
+
+
+
+@login_required
+@role_required(['admin', 'IT', 'MT', 'MTS'])          #For user Group test  
+def standard_meter_create(request):
+    if request.method == 'POST':
+        form = StandardMeterForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('standard_meter_list')
+    else:
+        form = StandardMeterForm(user=request.user)
+    return render(request, 'accounts/standard_meter_form.html', {'form': form, 'action': 'Add'})
+
+
+
+
+
+@login_required
+@role_required(['admin', 'IT', 'MT', 'MTS'])          #For user Group test  
+def standard_meter_update(request, pk):
+    meter = get_object_or_404(Standard_Meter, pk=pk)
+    if request.method == 'POST':
+        form = StandardMeterForm(request.POST, instance=meter, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('standard_meter_list')
+    else:
+        form = StandardMeterForm(instance=meter, user=request.user)
+    return render(request, 'accounts/standard_meter_form.html', {'form': form, 'action': 'Update'})
+
+
+
+
+@login_required
+@role_required(['admin', 'IT', 'MT', 'MTS'])          #For user Group test  
+def standard_meter_delete(request, pk):
+    meter = get_object_or_404(Standard_Meter, pk=pk)
+    if request.method == 'POST':
+        meter.delete()
+        return redirect('standard_meter_list')
+    return render(request, 'accounts/standard_meter_confirm_delete.html', {'meter': meter})

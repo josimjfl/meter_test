@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
-  {% block content %}
+{% block content %}
 
  <style>
 	.bg {
-	  background-image: url('{% static 'images/bg.jpg' %}');
-	  background-position: center;
-	  background-size: auto;
-	  background-repeat: no-repeat;
-	  background-size: cover;
+	background-image: url('{% static 'images/bg.jpg' %}');
+	background-position: left top;
+	background-repeat: no-repeat;
+	background-size: cover;
+	height: 92vh; /* Sets the background to take up the full viewport height */
+	width: 100vw; /* Ensures the background spans the full viewport width */
+	overflow: hidden;
 	}
 </style>
 <div class="container bg">

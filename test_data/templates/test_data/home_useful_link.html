@@ -1,0 +1,430 @@
+
+
+{% if role == 'MT' or role == 'MTS' or role == 'IT' %}
+    <div class="row">
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'test_input' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-pen-to-square"></i><br>
+            <span class="investor-box-text">New Test Data</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'test_report_multi' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-alt"></i><br>
+            <span class="investor-box-text">Report</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'test_report_multi_search' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <span class="investor-box-text">Search</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'test_report_list' %}">
+          <div class="investor-box">
+            <i class="fa-brands fa-searchengin"></i><br>
+            <span class="investor-box-text">Test Report</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'meter_memo' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-import"></i><br>
+            <span class="investor-box-text">Meter Memo</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'issue_item' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-paper-plane"></i><br>
+            <span class="investor-box-text">Despass Report</span>
+          </div>
+          </a>
+        </div>
+      </div>
+  </div>
+
+   <!-- Row of Services (6 items in one row) -->
+   <div class="row">
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'issue_item' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-cart-plus"></i><br>
+            <span class="investor-box-text">Meter Issue</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'issue_seal' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-cart-plus"></i><br>
+            <span class="investor-box-text">Seal Issue</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'meter_issue_list' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-book"></i><br>
+            <span class="investor-box-text">Meter Record Book</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'seal_issue_list' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-book"></i><br>
+            <span class="investor-box-text">Seal Record Book</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'balance' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-balance-scale"></i><br>
+            <span class="investor-box-text">Item balance</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'balance_summary' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-import"></i><br>
+            <span class="investor-box-text">Balance Summary</span>
+          </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+   <!-- Row of Services (6 items in one row) -->
+    <div class="row">
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'receive_item' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-plug-circle-plus"></i><br>
+            <span class="investor-box-text">Receive Item</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'issue_item_to_bl' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-plug-circle-minus"></i><br>
+            <span class="investor-box-text">Return Item</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'three_phrase_inv' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-truck"></i><br>
+            <span class="investor-box-text">3Phrase Inventory</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'damage_meter' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-excel"></i><br>
+            <span class="investor-box-text">Damage Meter</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'profile' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-cogs"></i><br>
+            <span class="investor-box-text">Setup</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'logout' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-import"></i><br>
+            <span class="investor-box-text">Logout</span>
+          </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+{% elif role == 'AGM' or role == 'DGM' %}
+
+   <!-- Row of Services (6 items in one row) -->
+    <div class="row">
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'home' %}{{request.user.role|lower}}_dashboard">
+          <div class="investor-box">
+            <i class="fa-solid fa-pen-to-square"></i><br>
+            <span class="investor-box-text">Pending</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'test_report_list' %}">
+          <div class="investor-box">
+            <i class="fa-brands fa-searchengin"></i><br>
+            <span class="investor-box-text">Test Report</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'test_report_multi' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-alt"></i><br>
+            <span class="investor-box-text">Report</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'test_report_multi_search' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <span class="investor-box-text">Search</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'balance_summary' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-import"></i><br>
+            <span class="investor-box-text">Balance Summary</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'meter_memo' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-import"></i><br>
+            <span class="investor-box-text">Balance Summary</span>
+          </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+
+   <!-- Row of Services (6 items in one row) -->
+    <div class="row">
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'home' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-home"></i><br>
+            <span class="investor-box-text">Home</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'home' %}{{request.user.role|lower}}_dashboard">
+          <div class="investor-box">
+            <i class="fa-regular fa-clock"></i><br>
+            <span class="investor-box-text">Dashboard</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'about' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <span class="investor-box-text">About</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'add_employee' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-users"></i><br>
+            <span class="investor-box-text">Employee</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'profile' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-cogs"></i><br>
+            <span class="investor-box-text">Setup</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'logout' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-import"></i><br>
+            <span class="investor-box-text">Logout</span>
+          </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+{% elif role == 'BS' or role == 'BA' or role == 'JE' or role == 'LT' or role == 'LM' %}
+
+   <!-- Row of Services (6 items in one row) -->
+    <div class="row">
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'home' %}{{request.user.role|lower}}_dashboard">
+          <div class="investor-box">
+            <i class="fa-solid fa-pen-to-square"></i><br>
+            <span class="investor-box-text">Pending</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'test_report_list' %}">
+          <div class="investor-box">
+            <i class="fa-brands fa-searchengin"></i><br>
+            <span class="investor-box-text">Test Report</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'home' %}{{request.user.role|lower}}_dashboard">
+          <div class="investor-box">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <span class="investor-box-text">Dashboard</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'issue_item' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-magnifying-glass"></i><br>
+            <span class="investor-box-text">Search</span>
+          </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'about' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-file-import"></i><br>
+            <span class="investor-box-text">About</span>
+          </div>
+          </a>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'profile' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-cogs"></i><br>
+            <span class="investor-box-text">Setup</span>
+          </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+{% else %}
+   <!-- Row of Services (6 items in one row) -->
+    <div class="row">
+      <div class="col-md-2">
+        <div class="service-box">
+        <a href="{% url 'about' %}">
+          <div class="investor-box">
+            <i class="fa-solid fa-pen-to-square"></i><br>
+            <span class="investor-box-text">About</span>
+          </div>
+          </a>
+        </div>
+      </div>
+    </div>
+{% endif %}

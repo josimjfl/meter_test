@@ -4,39 +4,55 @@
 {% block content %}
 
 
-<div class="container pt-2">
+{% include 'jfl_date.html' %}
+<div class="container py-3">
+  <h4 class="text-center mb-3">3 Phase Meter Inventory</h4>
 
-  <h4 class="">3 Phrase Meter Inventory</h4>
-
-<div class="card">
-  <div class="card-header bg-dark text-white">
-    Report by Date
+  <!-- Report by Date Card -->
+  <div class="card m-2 shadow-lg" style="border-radius: 10px;">
+    <div class="card-header bg-dark text-white text-center">
+      Report by Date
+    </div>
+    <div class="card-body px-4 bg-light">
+      <form method="get" action="{% url 'three_phrase_inv' %}" class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-5">
+          <label for="fromdate_payment" class="form-label">From</label>
+          <input type="text" name="fromdate" id="fromdate_payment" class="form-control jfldate" required>
+        </div>
+        <div class="col-md-5">
+          <label for="date" class="form-label">To</label>
+          <input type="text" name="todate" id="date" class="form-control jfldate" required>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" name="search" class="btn btn-success w-100">Search</button>
+        </div>
+      </form>
+    </div>
   </div>
-  <div class="card-body bg-info text-dark">
-    <form method="post" action="{% url 'three_phrase_inv' %}">
-      {% csrf_token %}
-    From : <input type="date" name="fromdate" id="fromdate_payment" class="form-control-sm" style="margin: 0px" required>
-    To : <input type="date" name="todate" class="form-control-sm" id="date" required>
-    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
-  </form>
-  </div>
-</div>
 
-
-<div class="card my-4">
-  <div class="card-header bg-dark text-white">
-    Report by ID
+  <!-- Report by ID Card -->
+  <div class="card shadow-lg m-2" style="border-radius: 10px;">
+    <div class="card-header bg-dark text-white text-center">
+      Report by ID
+    </div>
+    <div class="card-body px-4 bg-light">
+      <form method="get" action="{% url 'three_phrase_inv' %}" class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-5">
+          <label for="fromid" class="form-label">From ID</label>
+          <input type="text" name="fromid" id="fromid" class="form-control" required>
+        </div>
+        <div class="col-md-5">
+          <label for="toid" class="form-label">To ID</label>
+          <input type="text" name="toid" id="toid" value="{{ latest_test.id }}" class="form-control" required>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" name="search" class="btn btn-success w-100">Search</button>
+        </div>
+      </form>
+    </div>
   </div>
-  <div class="card-body bg-info text-dark ">
-    <form method="post" action="{% url 'three_phrase_inv' %}">
-      {% csrf_token %}
-    From : <input type="text" name="fromid" id="fromid" class="form-control-sm" style="width: 80px" required>
-    To : <input type="text" name="toid" class="form-control-sm" id="toid" value="{{ latest_test.id }}"  style="width: 80px" required>
-    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
-  </form>
-  </div>
-</div>
-
 
 </div>
 

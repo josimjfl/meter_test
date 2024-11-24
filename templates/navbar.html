@@ -1,13 +1,14 @@
 
 <nav class="navbar navbar-expand-sm navbar-dark bg-success text-white justify-content-end p-1" id="navbar">
   <div class="container-fluid">
-    &nbsp; &nbsp; &nbsp; &nbsp;<span class="navbar-brand"><b>JWMT</b></span>
+    &nbsp; &nbsp; &nbsp; &nbsp;<span class="navbar-brand"><b style="text-shadow: 3px 3px 3px rgba(0, 0, 10, 0.9);">OMT</b></span>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       {% if user.is_authenticated %}
+        {% if role == 'MT' or role == 'MTS' %}
       <ul class="navbar-nav me-auto">
         <li class="nav-item dropdown">
           <span class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,6 +53,11 @@
         </li>
       </ul>
 
+      {% else %}
+        <!---Add if need---->
+        (Online Meter Test)
+      {% endif %}
+
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
           <a class="nav-link text-white text-nowrap" href="{% url 'profile' %}">[{{request.user.username}}]  {{request.user.first_name}} {{request.user.last_name}}</a>
@@ -61,6 +67,9 @@
         </li>
         <li class="nav-item">
           <a class="nav-link text-white text-nowrap" href="{% url 'profile' %}">{{request.user.office.office_name}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="{% url 'password_change' %}">ChangePassword</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>

@@ -27,8 +27,13 @@ class AddItem(View):
         return render(self.request,'balance_reg/add_item.html', {'last_data':last_data, 'item':item})
 
     def post(self, *args, **kwargs):
-        date_start =self.request.POST.get('date_start')
         ticket_no =self.request.POST.get('ticket_no')
+        date_st =self.request.POST.get('date_start')
+        #convert date format
+        from datetime import datetime
+        date_start = datetime.strptime(date_st, '%d-%m-%Y').date()
+
+
         referance_name =self.request.POST.get('referance_name')
         j_1 = self.request.POST.get('J-1')
         j_2 = self.request.POST.get('J-2')
@@ -91,17 +96,23 @@ class IssueItem(View):
         seal = SealBalance()
         #Get data
         office= self.request.user.office
+        option_value = self.request.POST.get('issue_to')
         store_return_ticket = self.request.POST.get('store_return_ticket')
         name =self.request.POST.get('name')
         sl_start =self.request.POST.get('sl_start')
         sl_end =self.request.POST.get('sl_end')
-        date_start =self.request.POST.get('date_start')
-        date_end =self.request.POST.get('date_start')
         total_seal =self.request.POST.get('j31total')
         debit_qty =self.request.POST.get('debit_qty')
         remark = self.request.POST.get('remark')
         created_by=self.request.user
         item_no =self.request.POST.get('item_no')
+
+        f_date =self.request.POST.get('date_start')
+        t_date =self.request.POST.get('date_start')
+        #convert date format
+        from datetime import datetime
+        date_start = datetime.strptime(f_date, '%d-%m-%Y').date()
+        date_end = datetime.strptime(t_date, '%d-%m-%Y').date()
 
         # if any problem to continue db will not change any part of data for transaction.atomic()
         with transaction.atomic():        
@@ -110,28 +121,34 @@ class IssueItem(View):
                 if store_return_ticket != "":
                     SealBalance.objects.create(office= self.request.user.office, item="J-31",date_start=date_start, date_end=date_end, store_return_ticket=store_return_ticket, remark=remark, debit_qty=debit_qty, created_by=self.request.user)
                     msg='Successfully Return only Seal to Store!'
+
                 else:
                     SealBalance.objects.create(office= self.request.user.office, item="J-31",date_start=date_start, date_end=date_end, sl_start=sl_start, sl_end=sl_end,remark="J-31", debit_qty=debit_qty, created_by=self.request.user)
                     msg='Successfully Accepted only Seal as Register!'
             else:
+
                 item = Item.objects.get(item_no=item_no)
 
-                if store_return_ticket != "":
+                if option_value =="register":
                     Balance.objects.create(office= self.request.user.office, item=item ,date_start=date_start, date_end=date_end,store_return_ticket=store_return_ticket, debit_qty=debit_qty, created_by=self.request.user)
                     #seal save
-                    SealBalance.objects.create(office= self.request.user.office, item="J-31",date_start=date_start, date_end=date_end,store_return_ticket=store_return_ticket, remark=item_no, debit_qty=debit_qty, created_by=self.request.user)
+                    SealBalance.objects.create(office= self.request.user.office, item="J-31",date_start=date_start, date_end=date_end,store_return_ticket=store_return_ticket, remark=item_no, debit_qty=total_seal, created_by=self.request.user)
                     msg='Successfully Accepted as Store return!'
-                else:
+
+                elif option_value == 'return_to_store':
                     Balance.objects.create(office= self.request.user.office, item=item ,date_start=date_start, date_end=date_end, sl_start=sl_start, sl_end=sl_end, debit_qty=debit_qty, created_by=self.request.user)
-                    #Seal save
-                    SealBalance.objects.create(office= self.request.user.office, item="J-31",date_start=date_start, date_end=date_end, sl_start=sl_start, sl_end=sl_end, remark=item_no, debit_qty=debit_qty, created_by=self.request.user)
                     msg='Successfully Accepted as Register Issue.!'
+
+                else:
+                    msg='option value not selected!'
+
             data = {'error': False, 'msg': msg, 'sl_end':sl_end}
             return JsonResponse(data, safe=False)
 
 
 
 
+@method_decorator(role_required(['MT', 'MTS', 'admin']), name='dispatch')
 class BalanceView(View):
     def get(self, *args, **kwargs):
         #Get last query
@@ -225,6 +242,9 @@ class BalanceView(View):
             })
 
 
+
+@login_required
+@role_required(['admin', 'IT', 'MT', 'MTS', 'AGM', 'DGM'])      
 def balance_summary_view(request):
     #J-31 balance summary
     Seal_BL = SealBalance.objects.filter(office=request.user.office)
@@ -237,9 +257,13 @@ def balance_summary_view(request):
     seal_bl_sum = total_credit_qty - total_debit_qty
 
 
-    #All item total balance summary   
+    #All item total balance summary
     Res_office = Balance.objects.filter(office=request.user.office)
-    date = Res_office.latest('id')
+    try:
+        last_transaction = Res_office.latest('id')
+    except Balance.DoesNotExist:
+        last_transaction = None
+    
     item = Item.objects.all()
     obj = []
     item_box = []
@@ -256,8 +280,11 @@ def balance_summary_view(request):
         new_data = {'item': x.item_no, 'balance': balance}
         obj.append(new_data)
  
-    return render(request, 'balance_reg/balance_summary.html', {'balance':balance, 'obj':obj, 'seal_bl_sum':seal_bl_sum, 'date':date })
+    return render(request, 'balance_reg/balance_summary.html', {'balance':balance, 'obj':obj, 'seal_bl_sum':seal_bl_sum, 'last_transaction':last_transaction })
 
+
+
+@login_required
 def last_balance(request):
     item_no = request.GET.get('item_no')
     if item_no == "J-31":
@@ -267,6 +294,8 @@ def last_balance(request):
         last_bl = Balance.objects.filter(office=request.user.office, item=item).latest('id');
     data = {'last_bl':last_bl.sl_end, }
     return JsonResponse(data, safe=False)
+
+
 
 # Django Drag and drop sort item
 def item_list(request):

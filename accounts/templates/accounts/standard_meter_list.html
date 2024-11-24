@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container pt-3">
+    <h4>Standard Meters</h4>
+    <a href="{% url 'standard_meter_create' %}" class="btn btn-primary mb-3">Add Standard Meter</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Serial</th>
+                <th>Name</th>
+                <th>KH</th>
+                <th>Office</th>
+                <th>From Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for meter in meters %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ meter.std_serial }}</td>
+                <td>{{ meter.std_name }}</td>
+                <td>{{ meter.std_kh }}</td>
+                <td>{{ meter.office }}</td>
+                <td>{{ meter.from_date }}</td>
+                <td>
+                    <a href="{% url 'standard_meter_update' meter.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'standard_meter_delete' meter.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+   </div>
+{% endblock %}

@@ -1,10 +1,10 @@
 from django.db import models
 from balance_reg.models import Item
-from accounts.models import Office, get_office, CustomUser as User
+from accounts.models import Office, default_office, CustomUser as User
 
 
 class IssueItem(models.Model):
-	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=get_office)
+	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=default_office)
 	item = models.ForeignKey(Item, on_delete=models.CASCADE)
 	serial = models.CharField(max_length=20, null=True, blank=True)
 	cmo = models.CharField(max_length=20, null=True, blank=True)
@@ -35,7 +35,7 @@ class IssueItem(models.Model):
 
 
 class SealIssue(models.Model):
-	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=get_office)
+	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=default_office)
 	item = models.CharField(max_length=20, null=True, blank=True, default="J-31")
 	cmo = models.CharField(max_length=20, null=True, blank=True)
 	book = models.CharField(max_length=10, null=True, blank=True)

@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import Office, get_office, CustomUser as User
+from accounts.models import Office, default_office, CustomUser as User
 
 import datetime
 today=datetime.date.today().strftime("%Y-%m-%d")
@@ -19,7 +19,7 @@ class Item(models.Model):
 
 
 class Balance(models.Model):
-	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=get_office)
+	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=default_office)
 	item = models.ForeignKey(Item, on_delete = models.CASCADE, blank=True)
 	sl_start = models.CharField(max_length=10, blank=True, null=True)
 	sl_end = models.CharField(max_length=10, blank=True, null=True)
@@ -48,7 +48,7 @@ class Balance(models.Model):
 
 
 class SealBalance(models.Model):
-	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=get_office)
+	office = models.ForeignKey(Office, on_delete=models.CASCADE, default=default_office)
 	item = models.CharField(max_length=10, blank=True, null=True, default="J-31")
 	sl_start = models.CharField(max_length=10, blank=True, null=True)
 	sl_end = models.CharField(max_length=10, blank=True, null=True)

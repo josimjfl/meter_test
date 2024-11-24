@@ -38,7 +38,7 @@ table, th, td, thead {
 }
 
 .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
-    padding: 2px;
+    padding: 1px;
 }
 
 .table-sign{
@@ -53,15 +53,22 @@ table, th, td, thead {
 
 </style>
 
-<div class="m-0 p-2 w-100">
+<div class="my-2 p-4">
 
 <h6 style="text-align:center"></h6>
 <div class="col-12 row">
   <div class="col-md-4 col-sm-12 text-left"> <br>BREB form no: 576 <br> Standerd meter no: {{office.officeemp.standered_meter}},  & kh: {{office.officeemp.standered_meter.std_kh}} <br> Calibrarion volt: 240V,  amp: 10A & Multiplier: 1 </div>
-  <div class="col-md-4 col-sm-12 text-center"><b><a href="{% url 'test_input' %}" class="text-decoration-none">{{office.pbs.pbs_name}}</a></b> <br>{{ office.office_name }}<br>Meter Test Reports  
+  <div class="col-md-4 col-sm-12 text-center"><b><a href="{% url 'test_input' %}" class="text-decoration-none">
+    {{office.pbs.pbs_name}}</a></b> <br>{{ office.office_name }}<br>Meter Test Reports  
 
-    <div id="print_btn"><button href="#" onClick='print_only_doc("e")' class="btn-sm btn-info">Print</button><noscript>You need Javascript to use the previous link or use <a href="test_report_multi" target="_blank">Print</a></noscript></div>
-
+    <div id="print_btn">
+      <button href="#" onClick='print_only_doc("e")' class="btn btn-sm btn-info">
+        Print
+      </button>
+      <noscript>
+        You need Javascript to use the previous link or use <a href="test_report_multi" target="_blank">Print</a>
+      </noscript>
+    </div>
   </div>
   <div class="col-md-4 col-sm-12 text-right"> <br>Date: <input style="width:100px; outline:none!important; border:0;outline:0;" value ="{{date}}" id="date"> <br> Reason for Test:<i> New/<b>Complain</b>/Periodic</i>
         <script type="text/javascript">
@@ -77,8 +84,8 @@ table, th, td, thead {
         <div class="pagination d-flex justify-content-center">
             <span class="step-links">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    <a href="?page=1&{{ query_string }}">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}&{{ query_string }}">previous</a>
                 {% endif %}
 
                 <span class="current">
@@ -86,8 +93,8 @@ table, th, td, thead {
                 </span>
 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    <a href="?page={{ page_obj.next_page_number }}&{{ query_string }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}&{{ query_string }}">last &raquo;</a>
                 {% endif %}
             </span>
         </div>
@@ -96,6 +103,7 @@ table, th, td, thead {
     </div>
 </div>
 <div class="table-responsive">
+  {% if page_obj %}
 <table class="table table-bordered mytable text-center">
   <thead>
     <tr>
@@ -142,7 +150,6 @@ table, th, td, thead {
     </tr>
   </thead>
   <tbody>
-    
     {% for data in page_obj %}
     <tr>
       <td rowspan="2"><a href="{% url 'test_report_single' pk=data.id %}" class="text-decoration-none" title="View Single Test Report">{{data.id}}</a></td>
@@ -166,8 +173,8 @@ table, th, td, thead {
       <td scope="col">{{data.standerd_rev_req_ll}}</td>
       <td rowspan="2">{{data.terminal_seal}}</td>
       <td rowspan="2">{{data.body_seal}}</td>
-      <td rowspan="2" style="font-family: 'AdorshoLipi', Arial, sans-serif !important;">{{data.comments}}</td>
-      <td rowspan="2" style="font-family: 'AdorshoLipi', Arial, sans-serif !important;">{{data.remark}}</td>
+      <td rowspan="2" style="font-family: 'AdorshoLipi', Arial, sans-serif !important; min-width:150px;">{{data.comments}}</td>
+      <td rowspan="2" style="font-family: 'AdorshoLipi', Arial, sans-serif !important; min-width:140px;">{{data.remark}}</td>
     </tr>
     <tr>
       <td scope="col">F.L</td>
@@ -198,8 +205,9 @@ table, th, td, thead {
 </tr>
 </table>
 
-
-
+    {% else %}
+      <p class="pt-4 text-center text-danger">No Result Found</p>  
+    {% endif %}
 
 </div>
 {% endblock %}

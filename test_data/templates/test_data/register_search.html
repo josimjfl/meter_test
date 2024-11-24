@@ -1,23 +1,47 @@
-{%extends 'base.html'%}
+{% extends 'base.html' %}
 
-{%block content%}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Make Despass Register</h3>
+                </div>
+                <div class="card-body bg-light">
+                    <form action="{% url 'register' %}" method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="fromid" class="form-label">ID From:</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="fromid" 
+                                id="fromid" 
+                                placeholder="Enter starting ID">
+                        </div>
 
-<div>
-<div class="card m-5 text-white bg-primary">
-<form action="{% url 'register' %}" method="post">
-<div class="card-header">
-	<h3 class="p-3">Make Despass Register</h3>
-</div>
-<div class="card-body bg-info">
-ID From:
-<input type="" class="form-control-sm" name="fromid">
-To ID:
-<input type="" class="form-control-sm" name="toid" value="{{ last_id }}">
-<input type="submit" name="Search" class="btn btn-primary" value="Search">
-{%csrf_token%}
-</div>
-</form>
-</div>
-</div>
+                        <div class="mb-3">
+                            <label for="toid" class="form-label">To ID:</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="toid" 
+                                id="toid" 
+                                placeholder="Enter ending ID" 
+                                value="{% if last_id != None %}{{ last_id }}{% endif %}">
+                        </div>
 
-{%endblock%}
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" name="Search" class="btn btn-primary">
+                                Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

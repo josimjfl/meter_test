@@ -5,14 +5,6 @@
 
 {% block content %}
 
-
-
-<!---for bangla unicode font--->
-<style>
-@import url('https://fonts.maateen.me/adorsho-lipi/font.css');
-</style>
-
-
 <!--To print in landscape in web in bootstrap-->
 <style type="text/css">
  @media print { @page {size: auto !important} }
@@ -33,8 +25,12 @@ table, th, td, thead {
 
 
 .table-striped{
-  font-size: 14px;
+  font-size: 12px;
   color: black;
+}
+
+.table {
+  font-size: 14px;
 }
 
 .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
@@ -58,59 +54,72 @@ table, th, td, thead {
   opacity: 0;
 }
 
-tr:hover button, .view:hover {
+tr:hover button {
   opacity: 1;
 }
 
 </style>
 
-<div class="m-0 p-2 w-100">
 
-<h6 style="text-align:center"></h6>
-<div class="col-12 row">
-  <div class="col-4"> <br>BREB form no: </div>
-  <div class="col-4 text-center"><b><a href="{% url 'test_input' %}" class="text-decoration-none">{{request.user.office.pbs.pbs_name}}</a></b> <br>{{ request.user.office.office_name }}<br>Three Phrase Meter Inventory  
+<div class="p-3">
 
-    <div id="print_btn"><button href="#" onClick='print_only_doc()' class="btn-sm btn-info">Print</button><noscript>You need Javascript to use the previous link or use <a href="test_report_multi" target="_blank">Print</a></noscript></div>
-
-  </div>
-  <div class="col-4 text-right"> <br>Date: <input style="width:100px; outline:none!important; border:0;outline:0;" value ="{{date}}" id="date"> <br> Reason for Test:<i> New/<b>Complain</b>/Periodic</i>
-        <script type="text/javascript">
-          //JS for Current Date of Test data
-          n =  new Date();
-          y = n.getFullYear();
-          m = n.getMonth() + 1;
-          d = n.getDate();
-        document.getElementById("date").innerHTML = d + "/" + m + "/" + y;
-        </script>
-
-        <br>
-        <div class="pagination d-flex justify-content-center">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
-
-
+  <div class="col-12 row">
+    <div class="col-md-4 col-sm-12 text-left"> <br>BREB form</div>
+    <div class="col-md-4 col-sm-12 text-center"><b><a href="{% url 'test_input' %}" class="h5 text-decoration-none">
+      {{office.pbs.pbs_name}}</a></b> <br>{{ office.office_name }}<br>Three Phrase Inventory Sheet
+  
+      <div id="print_btn">
+        <button href="#" onClick='print_only_doc("e")' class="btn btn-sm btn-info">
+          Print
+        </button>
+        <noscript>
+          You need Javascript to use the previous link or use <a href="test_report_multi" target="_blank">Print</a>
+        </noscript>
+      </div>
     </div>
-</div>
+    <div class="col-md-4 col-sm-12 text-right"> <br>Date: <input style="width:100px; outline:none!important; border:0;outline:0;" value ="{{date}}" id="date"> <br> Reason for Test:<i> New/<b>Complain</b>/Periodic</i>
+          <script type="text/javascript">
+            //JS for Current Date of Test data
+            n =  new Date();
+            y = n.getFullYear();
+            m = n.getMonth() + 1;
+            d = n.getDate();
+          document.getElementById("date").innerHTML = d + "/" + m + "/" + y;
+          </script>
+  
+          <br>
+          <div class="pagination d-flex justify-content-center">
+            <span class="step-links">
+             <!-- Add the query string to pagination links -->
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1{% if query_string %}&{{ query_string }}{% endif %}">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}">previous</a>
+                    {% endif %}
 
-<table class="table table-striped table-responsive mytable text-center"  style="font-family: 'AdorshoLipi', Arial, sans-serif !important;">
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if query_string %}&{{ query_string }}{% endif %}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+
+            </span>
+          </div>
+      </div>
+  </div>
+</div>
+{% if page_obj %}
+<div class="table-responsive px-4">
+<table class="table mytable text-center"  style="font-family: 'AdorshoLipi', Arial, sans-serif !important;">
   <thead>
     <tr style="vertical-align:top">
-      <td rowspan="">ক্রমিক</td>
+      <td colspan="" style="max-width:3px;">ক্রমিক</td>
       <td rowspan="">মিটারের সিরিয়াল নং</td>
       <td colspan="">বর্তমান রিডিং</td>
       <td rowspan="">প্রস্তুতকারকের নাম</td>
@@ -120,7 +129,7 @@ tr:hover button, .view:hover {
       <td colspan="" class="text-center">মিটার অপসারনের কারণ</td>
       <td scope="col">প্যাডলক সিল নং</td>
       <td scope="col">প্যাডলক সিলের অবস্থা</td>
-      <td rowspan="">প্যাডলক সিল সংযুক্ত না<br>কারার কারণ</td>
+      <td rowspan="" style="white-space: nowrap;">প্যাডলক সিল সংযুক্ত <br>না কারার কারণ</td>
       <td rowspan="">লিড সিলের অবস্থা</td>
       <td rowspan="">গ্লাস কভারের অবস্থা</td>
       <td rowspan="">টেস্ট ক্লিপের অবস্থা</td>
@@ -132,42 +141,49 @@ tr:hover button, .view:hover {
     
     {% for data in page_obj %}
     <tr class="table_row">
-      <td rowspan=""><a href="{% url 'test_report_single' pk=data.id %}" class="text-decoration-none view" title="View Single Test Report {{data.id}}">View</a></td>
-      <td rowspan=""><a href="{% url 'update' pk=data.id %}" class="text-decoration-none" title="Edit">{{ data.tested_meter_no }}</a></td>
+      <td rowspan=""><a href="{% url 'test_report_single' pk=data.id %}"><button hreif="{% url 'test_report_single' pk=data.id %}" class="view btn btn-sm btn-warning" title="Will Preview Test Data">View</button></a></td>
+      <td rowspan=""><a href="{% url 'update_td' pk=data.id %}" class="text-decoration-none" title="Edit">{{ data.tested_meter_no }}</a></td>
       <td rowspan="">{{data.reading_as_found}}</td>
       <td rowspan="">{{data.manufacturer}}</td>
       <td rowspan="">{{data.meter_class}}</td>
       <td rowspan="">{{data.meter_item}}</td>
       <td rowspan="">{{data.remove_date | date:"d-m-Y"}}</td>
-      <td rowspan="">{{data.remove_cause}}</td>
-      <td rowspan="">{{data.terminal_seal_no}}</td>
+      <td rowspan="" style="white-space: nowrap;">{% if data.remove_cause != None %}{{data.remove_cause}}{% endif %}</td>
+      <td rowspan="">{% if data.terminal_seal_no != None %}{{data.terminal_seal_no}}{%endif%}</td>
       <td rowspan="">{{data.terminal_seal}}</td>
-      <td rowspan="">{{data.terminal_seal_missing}}</td>
+      <td rowspan="" style="white-space: nowrap;">{% if data.terminal_seal_missing != None %}{{data.terminal_seal_missing}}{% endif %}</td>
       <td rowspan="">{{data.body_seal}}</td>
       <td rowspan="">{{data.glass_cover}}</td>
       <td rowspan="">{{data.test_clip}}</td>
-      <td rowspan="" style="white-space: nowrap;">{{data.book}}-{{data.account}}</td>
-      <td rowspan=""><button class="close btn-sm btn-danger" title="Will not delete permanently. Just hide.">Close</button></td>
+      <td rowspan="" style="white-space: nowrap;">{% if data.account != None %}{{data.book}}-{{data.account}}{%endif%}</td>
+      <td rowspan=""><button class="close btn btn-sm btn-danger" title="Will not delete permanently. Just hide.">Close</button></td>
     </tr>
     {% endfor %}
   </tbody>
-</table>
 
-
-<table class="table-sign">
-<tr class="sign"></tr>
-<tr class="sign">
+<tbody>
+<tr class="sign w-100" style="white-space: nowrap;">
+  <td></td>
   <td><br><br>Meter Tester/ MTS<br>{{ office.officeemp.tested_by.get_full_name }}<br>{{office.officeemp.tested_by.designation}}</td>
   <td></td>
-  <td><br><br>AGM<br>{{ office.officeemp.checked_by.get_full_name }}<br>{{office.officeemp.checked_by.designation}}</td>
   <td></td>
-  <td><br><br>DGM<br>{{ office.officeemp.checked_by.get_full_name }}<br>{{office.officeemp.checked_by.designation}}</td>
   <td></td>
-  <td><br><br>Approved by <br>  {{office.officeemp.counter_sign_by.get_full_name }}<br> {{office.officeemp.counter_sign_by.designation}}
+  <td><br><br>AGM<br><br></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td><br><br>DGM<br><br></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td><br><br>Approved by <br><br>
   </td>
 </tr>
+</tbody>
 </table>
-
+{% else %}
+  <p class="pt-4 text-center text-danger">No Result Found</p>  
+{% endif %}
 </div>
 
 <script>

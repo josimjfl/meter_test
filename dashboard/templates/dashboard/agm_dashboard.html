@@ -1,177 +1,267 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% block title %} Dashoard {% endblock %}
 {% block content %}
+<style>
 
-{% include 'dashboard/jfl_alert_modal.html' %}
+/* for table list */
+.table-custom {
+            border-collapse: collapse;
+            border-radius: 10px;
+        }
 
-<style type="text/css">
-	.table-sm{
-	  font-size: 14px;
-	  padding: 0px;
-	}
+        .table-custom th {
+            background: #6c757d;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
 
-	tr {
-	   line-height: 10px;
-	   min-height: 15px;
-	   height: 15px;
-    text-align: center;
-    border: 2px solid #f69c55;
-    
-    	}
+        .table-custom td, 
+        .table-custom th {
+            padding: 0.3rem;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid black;
+        }
 
-    td {
-        display: table-cell;
-        vertical-align: middle;
-        color: blue;
-        line-height: 20px !important;
+        .table-custom tr:nth-child(even) {
+            background-color: #f9f1fa;
+        }
+
+
+    .page-number {
+        margin: 0 5px;
+        cursor: pointer;
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        color: #007bff;
     }
 
+    .page-number:hover {
+        background-color: #007bff;
+        color: white;
+    }
 
+    .active-page {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+
+    #pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #prev, #next {
+        width: 100px;
+    }
 </style>
 
-
-
-
+{% include 'dashboard/jfl_alert_modal.html' %}
 <div class="container">
-
-	<div class="bg-secondery text-prinary rounded h2 p-2" >Dashboard of {{ request.user.profile.designation }} AGM</div>
-
-
-<ul class="list-group">
-  <li class="bg-primary text-white list-group-item d-flex justify-content-between align-items-center">
-
-    Panding List of {{ profile.user_name }} {{request.user.groups.all.0.name}}
-    <span class="badge badge-danger badge-pill" id="panding_qty">{{panding_qty}}</span>
-
-  </li>
-</ul>
-
-
-{% if posts %}
-<div class="table-responsive-md">
-<table class="table  table-hover table-striped table-sm" id="panding_table">
-  <thead>
-    <tr>
-      <th scope="col" class="py-2">ID</th>
-      <th scope="col" class="py-2">Meter No</th>
-      <th scope="col" class="py-2">Reading</th>
-      <th scope="col" class="py-2">Account</th>
-      <th scope="col" class="py-2">Result</th>
-      <th scope="col" class="py-2">Date</th>
-	    <th scope="col" class="py-2">Action</th>
-    </tr>
-  </thead>
-  <tbody class="post_list text-nowrap">
-        {% for item in posts %}
-        {% include 'dashboard/agm_dashboard_item.html' %}
-        {% endfor %}
-  </tbody>
-</table>
-</div>
-     {% else %}
-        <div class="form-control text-center text-danger">কোন পেন্ডিং নাই!</div>
-     {% endif %}
-</div>
-
-<p class="text-center text-secondary" id="loading_post" style="display:none;">Loading...</p>
-
-
-
-<script type="text/javascript">
-  //for auto scholl pagew loading.
-$(document).ready(function () {
-    window.post_url = '{% url 'agm_dashboard' %}';
-    var page = 1;
-    var block_request = false;
-    var end_pagination = false;
+  <div class="h5 p-1">Welcome {{request.user.designation}} {{request.user.get_full_name}} <span id="pending_qty" class="badge bg-warning mr-5 fs-6 ms-auto">{{pending_qty}}</span></div> 
+  <span class="trapezium">
+        Your Pending 
+    </span>
     
-    $(window).scroll(function () {
-      var margin = $(document).height() - $(window).height() - 200;
-      if ($(window).scrollTop() > margin && end_pagination === false && block_request === false){
-            $('#loading_post').show();
-            block_request = true;
-            page += 1;
+    <div class="table-responsive w-100">
+      <table class="table-custom w-100">
+        <thead>
+            <tr>
+                <th scope="col" class="py-2">ID</th>
+                <th scope="col" class="py-2">Meter_No</th>
+                <th scope="col" class="py-2">Reading</th>
+                <th scope="col" class="py-2">Account</th>
+                <th scope="col" class="py-2">Result</th>
+                <th scope="col" class="py-2">Date</th>
+                <th scope="col" class="py-2">Print</th>
+                <th scope="col" class="py-2">Action</th>
+            </tr>
+        </thead>
+        <tbody id="data-body">
+          <!---here data will be shown from jquery -->
+        </tbody>
+    </table>
+  </div>
 
+  <div id="pagination" class="mt-3  align-items-center">
+      <button id="prev" class="btn btn-outline-primary btn-sm" disabled>Previous</button>
+      <span id="page-numbers" class="mx-2"></span>
+      <button id="next" class="btn btn-outline-primary btn-sm">Next</button>
+  </div>
+</div>
+{% endblock %}
+
+
+
+{% block scripts %}
+<script type="text/javascript">
+$(document).ready(function () {
+    let currentPage = 1; // Current active page
+    const hiddenPages = {}; // Cache for hidden pages
+    let totalPages = 1; // Default total pages
+
+    // Function to load data from the server or cache
+    const loadData = (page) => {
+        if (hiddenPages[page]) {
+            renderTable(hiddenPages[page]);
+            updatePagination(page);
+        } else {
             $.ajax({
-                    type: 'GET',
-                    url: window.post_url,
-                    data: {"page": page},
-                    success: function (data) {
-                            if (data.end_pagination === true) {
-                                end_pagination = true;
-                            } else {
-                                block_request = false;
-                            }
-                            $('.post_list').append(data.content);
-                            $('#loading_post').hide();
-                        }
-                    })
-                }
+                url: "/agm_dashboard/", // Update URL to your backend endpoint
+                data: { page },
+                dataType: "json",
+                success: function (response) {
+                    hiddenPages[page] = response.content; // Cache the response content
+                    totalPages = response.total_pages; // Store the total page count
+                    renderTable(response.content);
+                    updatePagination(page);
+                },
+                error: function () {
+                    alert("Failed to load data!");
+                },
             });
-        })
+        }
+    };
+
+// Render table rows dynamically
+const renderTable = (data) => {
+    const rows = data
+        .map(
+            (item) => `
+            <tr>
+                <td>${item.id}</td>
+                <td>${item.meter_no}</td>
+                <td>${item.reading}</td>
+                <td>${item.book} - ${item.account}</td>
+                <td style="min-width:250px;">${item.result}</td>
+                <td>${item.date}</td>
+                <td class="print_counter">${item.print_counter}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <input type="hidden" id="item_id" value="${ item.id }">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${getCsrfToken()}">
+
+                        <button type="submit" class="btn btn-success btn-sm" onclick="return popitup('/test_report_single/${item.id}')">View
+                        </button>
+                        <button type="button" id="sing_submit" class="btn btn-info btn-sm no-loader"> 
+                            Sign <i class="fa-solid fa-file-signature"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `
+        )
+        .join("");
+    $("#data-body").html(rows);
+};
+
+
+    // Update pagination UI
+    const updatePagination = (page) => {
+        currentPage = page;
+
+        // Update Previous and Next button states
+        $("#prev").prop("disabled", page === 1);
+        $("#next").prop("disabled", page === totalPages);
+
+        // Render page numbers dynamically
+        const pageNumbers = [];
+        for (let i = 1; i <= totalPages; i++) {
+            pageNumbers.push(
+                `<span class="page-number ${
+                    i === page ? "active-page" : ""
+                }" data-page="${i}">${i}</span>`
+            );
+        }
+        $("#page-numbers").html(pageNumbers.join(""));
+    };
+
+    // Event listeners for pagination controls
+    $("#prev").click(() => {
+        if (currentPage > 1) {
+            loadData(currentPage - 1);
+        }
+    });
+
+    $("#next").click(() => {
+        if (currentPage < totalPages) {
+            loadData(currentPage + 1);
+        }
+    });
+
+    $(document).on("click", ".page-number", function () {
+        const page = parseInt($(this).data("page"));
+        if (page !== currentPage) {
+            loadData(page);
+        }
+    });
+
+    // Initial data load
+    loadData(currentPage);
+});
 
 
 
+
+// Function to get CSRF token from the cookie
+const getCsrfToken = () => {
+    const csrfCookie = document.cookie.split("; ").find((row) => row.startsWith("csrftoken="));
+    return csrfCookie ? csrfCookie.split("=")[1] : "";
+};
 
 
 $(document).on('click', '#sing_submit', function(){
-    var test_id =$(this).closest('div').find('input').val();
-    var csrftoken=$("[name=csrfmiddlewaretoken]").val();
-    var panding_qty = $('#panding_qty').text()
-    if(test_id==''){
+    var $this = $(this); // Save reference to the clicked element
+    var test_id = $this.closest('tr').find('#item_id').val();
+    var print_counter = $this.closest('tr').find('.print_counter').text();
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    var pending_qty = parseInt($('#pending_qty').text());
+
+    if (test_id == '') {
         jfl_delete_alert('রিলোড করুন।');
-    }else{
+    } else {
         $.ajax({
-            url: '/agm_dashboard',
+            url: '/agm_dashboard/',
             type: 'POST',
             dataType: 'json',
-            data:{
-                  test_id : test_id,
-                  csrfmiddlewaretoken : csrftoken
+            data: {
+                test_id: test_id,
+                csrfmiddlewaretoken: csrftoken
             },
         })
-        .done(function(data){
+        .done(function(data) {
+            // Remove tr from dashboard instantly
+            $this.closest("tr").remove();
+            var x = pending_qty - 1;
+            $('#pending_qty').text(x);
 
-        $('#panding_table tbody').empty();
+            var pc = parseInt(print_counter) - 1;
+            $this.closest('tr').find('.print_counter').text(pc);
 
-        for(i=0;i<data.length;i++){
-            $('#panding_table tbody').append(
-              '<tr>'+
-                  '<td class="pt-3">'+data[i].id+'</td>'+
-                  '<td class="pt-3">'+data[i].tested_meter_no+'</td>'+
-                    '<td class="pt-3">'+data[i].reading_as_found+'</td>'+
-                    '<td class="pt-3">'+data[i].book+' - '+data[i].account+' </td>'+
-                    '<td class="pt-3">'+data[i].comments+'</td>'+
-                    '<td class="pt-3">'+data[i].date+'</td>'+
-
-                    '<td>'+ '{% csrf_token %}' +
-                      '<div class="btn-group" role="group" aria-label="Basic example">'+
-                        '<input name="test_id" class="test_id" id="test_id" value="'+data[i].id+'" hidden>'+
-                        '<button type="button" class="btn btn-info btn-sm"> <a href="#" class="text-decoration-none">View</a></button>'+
-                        '<button type="submit" id="sing_submit" class="btn btn-success btn-sm">Sign</button>'+
-                       '</div>'+
-                    '</td>'+
-
-                 '</tr>'
-                ); //appending in the tablereading_as_found
-
-
-
-
-        };//endfor;
-
-        var x = panding_qty -1
-        $('#panding_qty').text(x);
-        jfl_delete_alert('সফলভাবে সম্পন্ন হয়েছে।');
-        //location.reload(); reload the page
-            
+            // Uncomment for alerts
+            jfl_alert('সফলভাবে সম্পন্ন হয়েছে।');
+            //location.reload(); // Reload the page
         })
-        .fail(function(){
-            jfl_delete_alert('সমস্যা আছে! সার্ভার সংযুক্ত নয়!')
-        })
+        .fail(function() {
+            jfl_alert('সমস্যা আছে! সার্ভার সংযুক্ত নয়!');
+        });
     }
-})
+});
+
+
+
+
+//For popup view
+function popitup(url) {
+    newwindow=window.open(url,'{{title}}','height=800,width=800,directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no print=yes');
+    if (window.focus) {newwindow.focus()}
+    return false;
+}
 
 </script>
 

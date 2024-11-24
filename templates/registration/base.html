@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Login{% endblock %}</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #FF7E5F, #feb47b, #86A8E7, #91EAE4);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column; /* Arrange vertically */
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #fff;
+            padding: 0px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            background-color:rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .container-body {
+            width: 100%;
+            background: #fff;
+            padding: 30px;
+            overflow: hidden;
+
+        }
+
+        /* Header Styling */
+        .header {
+            background: linear-gradient(135deg, #007bff, #00c853); /* Blue-Green Gradient */
+            padding: 15px;
+            text-align: center;
+            color: #fff;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .container h5 {
+            text-align: center;
+            margin: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .form-group.active {
+            display: block;
+        }
+
+        .form-group label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 16px;
+            color: #888;
+            background-color: white;
+            padding: 0 5px;
+            transition: all 0.15s ease;
+            pointer-events: none;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-group input:focus, .form-group input.not-empty {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
+        }
+
+        .form-group input:focus + label,
+        .form-group input.not-empty + label {
+            top: -10px;
+            left: 10px;
+            font-size: 12px;
+            color: #007bff;
+        }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 10px;
+            cursor: pointer;
+            color: #007bff;
+            font-size: 14px;
+            text-decoration: underline;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .note {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .toggle-link {
+            text-decoration: none;
+            padding: 14px;
+            padding-top: 0;
+        }
+
+        .main-text {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 3px 3px 3px rgba(0, 0, 10, 0.9);
+        }
+
+        /* Responsive */
+        @media (max-width: 400px) {
+            .container {
+                padding:4px;
+                max-width: 400px;
+                width: 98%;
+                margin-top: -20px;
+
+
+
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-text">    
+        <h1>OMT</h1>
+        <h4>Welcom to Online Meter Test by Josim MT</h4>
+        <p>josimmsc@gmail.com</p>
+    </div>
+    <br/>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+      {% block scripts %}{% endblock %}
+</body>
+</html>

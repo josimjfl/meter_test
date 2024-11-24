@@ -1,97 +1,122 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 {% load static %}
-
 {% load mathfilters %}
 
 {% block content %}
 
+<style type="text/css">
+  .card {
+    border: 5px black !importantt;
+  }
+</style>
 
- <div class="p-5 py-0 w-100 h-50">
+<div class="container p-4">
+  <div class="row gy-4">
+    <!-- Card 1: View Total Summary Today -->
+    <div class="col-sm-12 col-md-6">
+      <div class="card bg-info text-white text-center h-100">
+        <div class="card-body">
+          <form method="get" action="{% url 'balance_summary' %}">
+            <h3 class="card-title mb-4 pt-5">View Total Summary Today</h3>
+            <input type="submit" class="btn btn-success" value="Click">
+          </form>
+        </div>
+      </div>
+    </div>
 
+    <!-- Card 2: View Item Wise Ledger -->
+    <div class="col-sm-12 col-md-6">
+      <div class="card bg-info text-white text-center h-100">
+        <div class="card-body">
+          <form method="post" action="{% url 'balance' %}">
+            <h3 class="card-title mb-4">View Item Wise Ledger</h3>
+            <label for="item_no">Input ID:</label>
+            <select class="modern-input form-control-sm mb-3" id="item_no" name="item_no">
+              <option></option>
+              <option value="J-31">J-31</option>
+              {% for i in item %}
+              <option value="{{i.item_no}}">{{i.item_no}}</option>
+              {% endfor %}
+            </select>
+            <input type="submit" class="btn btn-success" value="Search">
+            {% csrf_token %}
+          </form>
+        </div>
+      </div>
+    </div>
 
-<div class="p-4 m-4">
-<div class="row">
-<div class="col-md-5 card bg-info col-sm-12 mt-2 m-1">
-<form method="get" action="{% url 'balance_summary' %}">
-	<div class="p-2 m-3 text-center">
-		<h3 class="p-4">View Total Sammary Today</h3>
-		<input type="submit" class="btn btn-success" value="Click">
-	</div>
-
-</form>
+    <!-- Card 3: View Date Balance -->
+    <div class="col-12">
+      <div class="card bg-info text-white h-100">
+        <div class="card-body">
+          <form method="post" action="{% url 'balance' %}">
+            <h3 class="card-title text-center mb-4">View Date Balance</h3>
+            <div class="row justify-content-center">
+              <div class="col-sm-6 col-lg-4 mb-3">
+                <label for="from_date">From Date:</label>
+                <input type="date" name="from_date" class="modern-input enter_btn" required>
+              </div>
+              <div class="col-sm-6 col-lg-4 mb-3">
+                <label for="to_date">To Date:</label>
+                <input type="date" name="to_date" class="modern-input enter_btn" required>
+              </div>
+              <div class="col-sm-6 col-lg-4 mb-3">
+                <label for="item_no">Item:</label>
+                <select class="modern-input" id="item_no" name="item_no" required>
+                  <option></option>
+                  <option value="J-31">J-31</option>
+                  {% for i in item %}
+                  <option value="{{i.item_no}}">{{i.item_no}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-12 text-center">
+                <input type="submit" name="Search" value="Search" class="btn btn-success enter_btn">
+              </div>
+            </div>
+            {% csrf_token %}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="col-md-5 card bg-info col-sm-12 mt-2 m-1">
-<form method="post"  action="{% url 'balance' %}">
-	<div class="p-2 m-3 text-center">
-		<h3 class="p-4">View Item Wise Lazer</h3>
-		INPU ID:
-	      <select type="text" class="form-control-sm" id="item_no" name="item_no">
-	        <option></option>
-	        <option value="J-31">J-31</option>
-	        {% for i in item %}
-	        <option value="{{i.item_no}}">{{i.item_no}}</option>
-	        {%endfor%}
-	      </select>
+<style>
+  /* Modern input styling */
+  .modern-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #f8f9fa;
+  }
 
-		<input type="submit" class="form-control-sm bg-success" value="Search">
-		{%csrf_token%}
-	</div>
-</form>
-</div>
-</div>
+  .modern-input:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+  }
 
-
-<div class="row">
-<div class="card my-3 bg-info col-md-10 px-5 mx-2">
-<form method="post" action="{% url 'balance' %}">
-	<div class="p-2 m-3">
-		<h3 class="p-4">View Date Balance</h3>
-		From date:
-		<input type="date" name="from_date" class="form-control-sm enter_btn" required>
-
-		To date:
-		<input type="date" name="to_date" class="form-control-sm enter_btn" required>
-
-		Item:
-	      <select type="text" class="form-control-sm" id="item_no" name="item_no" required>
-	        <option></option>
-	        <option value="J-31">J-31</option>
-	        {% for i in item %}
-	        <option value="{{i.item_no}}">{{i.item_no}}</option>
-	        {%endfor%}
-	      </select>
-		<input type="submit" name="Search" value="Search" class="form-control-sm bg-success enter_btn">
-		{%csrf_token%}
-	</div>
-
-</form>
-</div>
-</div>
-
-</div>
-</div>
-
-
-
+  /* Ensure dropdown and date inputs match styling */
+  select.modern-input, input[type="date"].modern-input {
+    appearance: none;
+  }
+</style>
 
 <script type="text/javascript">
-//For Move the cursor to the next field and not submitting the form on enter button
-$(document).ready(function() {
-
-$('.enter_btn').keypress(function (e) {
-     if (e.which === 13) {
-         e.preventDefault();
-         var index = $('.enter_btn').index(this) + 1;
-         $('.enter_btn').eq(index).focus();
-     }
- });
-
-});
+  // Move the cursor to the next field and prevent submitting the form on enter
+  $(document).ready(function() {
+    $('.enter_btn').keypress(function(e) {
+      if (e.which === 13) {
+        e.preventDefault();
+        var index = $('.enter_btn').index(this) + 1;
+        $('.enter_btn').eq(index).focus();
+      }
+    });
+  });
 </script>
 
-
-
-
-
-{%endblock%}
+{% endblock %}

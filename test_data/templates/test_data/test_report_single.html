@@ -4,18 +4,25 @@
 {% block content %}
 
 <link href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-<link href="https://fonts.maateen.me/bangla/font.css" rel="stylesheet">
-<link href="https://fonts.cdnfonts.com/css/times-new-roman" rel="stylesheet">
-
-
-<!---for bangla unicode font--->
-<style>
-@import url('https://fonts.maateen.me/bangla/font.css');
-@import url('https://fonts.cdnfonts.com/css/times-new-roman');
-</style>
+<link rel="stylesheet" href="{% static 'assets/font-awesome/css/all.min.css' %}">
 
 <!--To print in landscape in web in bootstrap-->
 <style type="text/css">
+
+
+/* Define bangla the font-face */
+    @font-face {
+      font-family: 'AdarshaLipiNormal';
+      src: url('{% static "assets/font/AdorshoLipi.TTF" %}') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+/* Apply the font to Bangla text font */
+    .text-bn {
+      font-family: 'AdorshoLipi', serif;
+      font-size: 16px;
+    }
 
 
 body {
@@ -117,7 +124,12 @@ table, th, td, thead {
 
 <body>
 
-<h6 style="text-align:center"></h6>
+
+<a href="javascript:history.back()" class="btn btn-outline-primary">
+  <i class="fas fa-arrow-left"></i>
+</a>
+
+
 <div class="col-12 row">
   <div class="col-4"> <br>BREB form no: 576 <br></div>
 
@@ -131,7 +143,7 @@ table, th, td, thead {
   <div class="row">
     <div class="col-6">Account: <b>{{data.book}}-{{data.account}}</b></div>
     <div class="col">
-      ID: <a href="{% url 'test_report_single' pk=data.id %}" class="text-decoration-none">{{data.id}}</a></div>
+      ID: <b href="#" class="text-decoration-none">{{data.id}}</b></div>
     <div class="col-4">Created date:{{data.updated_date|date:'d-m-Y'}}</div>
   </div>
 <div class="row">
@@ -306,9 +318,9 @@ table, th, td, thead {
 (iv) Body seal:  -----{{data.body_seal}}...........................Terminal seal: {{data.terminal_seal}}--<br/>
 
 
-<div class="mt-1 card border-success" style="font-family: 'Bangla', Arial, sans-serif !important;">
+<div class="mt-1 card border-success">
   <div class="col">Comment :</div>
-  <div class="col text-center">
+  <div class="col text-center text-bn">
     <tr rowspan="2">{{data.comments}}</tr><br>
     <tr rowspan="2">{{data.remark}}</tr><br>
     <tr rowspan="2">আইটেমঃ {{data.meter_item}}</tr>
@@ -322,8 +334,8 @@ table, th, td, thead {
 <tr class="sign">
   <td rowspan="3" colspan="4"><br>
 
-      {% if data.updated_by.sign_image %}
-          <img src="{{ data.updated_by.sign_image.url }}" alt="Signed" width="150" height="40">
+      {% if data.updated_by.sign_image.url %}
+          <img src="{{ data.updated_by.sign_image.url }}" alt="" width="150" height="40">
       {% endif %}
 
       <br>Tested by<br>{{ data.updated_by.get_full_name }}<br>{{data.updated_by.designation}}</td>
@@ -331,7 +343,7 @@ table, th, td, thead {
   <td colspan="6" rowspan="3"><br>
 
       {% if data.checked_by.sign_image %}
-          <img src="{{ data.checked_by.sign_image.url }}" alt="Signed" width="150" height="40">
+          <img src="{{ data.checked_by.sign_image.url }}" alt="" width="150" height="40">
       {% endif %}
 
       <br>Checked by<br>{{ data.checked_by.get_full_name }}<br>{{data.checked_by.designation}}</td>
@@ -339,7 +351,7 @@ table, th, td, thead {
   <td colspan="4" rowspan="3"><br>
 
       {% if data.counter_sign_by.sign_image %}
-          <img src="{{ data.counter_sign_by.sign_image.url }}" alt="Signed" width="150" height="40">
+          <img src="{{ data.counter_sign_by.sign_image.url }}" alt="" width="150" height="40">
       {% endif %}
 
       <br>Counter sign by<br>{{ data.counter_sign_by.get_full_name }}<br>{{data.counter_sign_by.designation}}</td>

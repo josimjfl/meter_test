@@ -5,7 +5,8 @@ from test_data import views
 urlpatterns = [
     path('test_input/', views.TestInputView.as_view(), name= 'test_input'),
     path('<pk>/update', views.TestUpdateView.as_view(), name='update'), 
-    path('update/<pk>', views.update_test_data, name='update_td'), 
+    path('update/<pk>', views.update_test_data, name='update_td'),
+    path('test_report_list/', views.test_report_list, name= 'test_report_list'),
     path('test_report_single/<int:pk>', views.TestReportSingle, name= 'test_report_single'),
     path('test_report_multi', views.TestReportMulti, name= 'test_report_multi'),
     path('test_report_multi_search', views.TestReportMultiSearch, name= 'test_report_multi_search'),

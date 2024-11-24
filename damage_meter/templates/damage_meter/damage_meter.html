@@ -54,14 +54,14 @@ table, th, td, thead {
 
 <div class="m-1 pl-2" style="width: 100%">
 
-<h6 style="text-align:center"></h6>
+<div>
+    <br><a href="{% url 'download' %}" class="btn btn-danger">Download All</a>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#download-modal" data-bs-whatever="@getbootstrap">Download</button> 
+    <a href="{% url 'damage_report' %}" class="btn btn-danger">Report</a><br>
+</div>
+
 <div class="col-12 row">
   <div class="col-4"> 
-
-    <br><a href="{% url 'download' %}" class="btn btn-danger">Download All</a>
-
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#download-modal" data-bs-whatever="@getbootstrap">Download</button> 
-
   <br> Standerd meter no: {{office.standered_meter}},  & kh: {{office.standered_meter.std_kh}} <br> Calibrarion volt: 240V,  amp: 10A & Multiplier: 1 </div>
   <div class="col-4 text-center"><b><a href="{% url 'test_input' %}" class="text-decoration-none">{{office.pbs.pbs_name}}</a></b> <br>{{ office.office_name }}<br>Damage Meter 
 

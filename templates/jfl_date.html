@@ -1,0 +1,86 @@
+    <!-- Bootstrap CSS jQuery UI CSS for Datepicker
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    --->
+
+    <!-- Date Selection with Calendar and Navigation
+    <div class="mb-3">
+    <label class="form-label">তারিখ</label>
+    <div class="d-flex align-items-center">
+        <button type="button" class="btn btn-danger me-2 rounded-circle prevDayBtn">
+        <i class="fas fa-arrow-left"></i>
+        </button>
+        <input type="text" class="form-control w-50 jfldate" required readonly>
+        <button type="button" class="btn btn-danger ms-2 rounded-circle nextDayBtn">
+        <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+    </div>
+ -->
+
+
+    <script>
+    // For dynamic date picker and calendar with next and previous button.
+ $(document).ready(function () {
+  // Initialize datepicker for all elements with the class jfldate
+
+  $('.jfldate').each(function () {
+    $(this).datepicker({
+      dateFormat: 'dd-mm-yy', // Custom date format
+      changeMonth: true,
+      changeYear: true,
+      showOtherMonths: true,
+      //selectOtherMonths: true,
+      defaultDate: $(this).val(), // Use input valu for next time what i entire before. Replace today default
+      yearRange: "-100:+0", // Allow years from 100 years ago to present
+      onSelect: function (dateText, inst) {
+        // Update the input with the selected date
+        $(this).val(dateText);
+      },
+    });
+
+    // Set today's date as default
+    const today = new Date();
+    $(this).val(formatDate(today));
+  });
+
+  // Format date as dd-mm-yyyy
+  function formatDate(date) {
+    const day = ("0" + date.getDate()).slice(-2);
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+
+  // Convert dd-mm-yyyy to yyyy-mm-dd for internal use
+  function convertToISODate(dateString) {
+    const parts = dateString.split('-');
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  }
+
+  // Handle "Previous Day" button click
+  $('.prevDayBtn').click(function () {
+    const $container = $(this).closest('.d-flex'); // Get the parent container
+    const $input = $container.find('.jfldate'); // Find the associated input field
+    const currentDate = $input.val(); // Get the current date
+    const date = new Date(convertToISODate(currentDate)); // Convert to ISO format
+    date.setDate(date.getDate() - 1); // Subtract one day
+    $input.val(formatDate(date)); // Update the input field
+  });
+
+  // Handle "Next Day" button click
+  $('.nextDayBtn').click(function () {
+    const $container = $(this).closest('.d-flex'); // Get the parent container
+    const $input = $container.find('.jfldate'); // Find the associated input field
+    const currentDate = $input.val(); // Get the current date
+    const date = new Date(convertToISODate(currentDate)); // Convert to ISO format
+    date.setDate(date.getDate() + 1); // Add one day
+    $input.val(formatDate(date)); // Update the input field
+  });
+});
+
+
+</script>

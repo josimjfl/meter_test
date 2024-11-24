@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style type="text/css">
+    .container {
+        font-size: 14px;
+        text-align: center;
+        vertical-align: center;
+    }
+</style>
+<div class="container mt-5">
+    <h2 class="mb-4">Office Employees</h2>
+    
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'office_emp_create' %}" class="btn btn-primary"> Add New Office</a>
+    </div>
+    
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Office</th>
+                <th scope="col">Tested By</th>
+                <th scope="col">Checked By</th>
+                <th scope="col">Counter Signed By</th>
+                <th scope="col">Received By</th>
+                <th scope="col">Standard Meter</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in office_emps %}
+            <tr>
+                <td>{{ emp.id }}</td>
+                <td>{{ emp.office }}</td>
+                <td>{{ emp.tested_by }}</td>
+                <td>{{ emp.checked_by }}</td>
+                <td>{{ emp.counter_sign_by }}</td>
+                <td>{{ emp.received_by }}</td>
+                <td>{{ emp.standered_meter.std_serial }}</td>
+                <td>
+                    <a href="{% url 'office_emp_update' emp.id %}" class="btn btn-sm btn-warning me-1">Edit</a>
+                    <a href="{% url 'office_emp_delete' emp.id %}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

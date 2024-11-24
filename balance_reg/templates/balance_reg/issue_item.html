@@ -9,9 +9,22 @@
   {% csrf_token %}
   <div class="row">
     <div class="form-group col-md-4">
-      <label for="inputEmail4">Date: (Month-Date-Year)</label>
-            <input type="date" class="form-control" id="date" name="date_start" required>
-      <!---<input type="date" class="form-control" id="date" name="date_start" value="{{obj.date_start|date:"Y-m-d"}}">-->
+        <!-- Date Selection with Calendar and Navigation -->
+        <div class="mb-3 pt-0 mt-0">
+          <label for="jfldate" class="form-label mb-0 pb-0">Date</label>
+          <div class="d-flex align-items-center">
+             <!-- Previous Day Button -->
+            <button type="button" id="" class="prevDayBtn btn btn-sm btn-danger me-2 rounded-circle">
+                  <i class="fas fa-arrow-left"></i>
+            </button>
+            <!-- Date Picker Input -->
+                  <input type="text" class="mt-0 form-control w-50 text-center jfldate" id="jfldate" name="date_start"  required readonly>
+            <!-- Next Day Button -->
+            <button type="button" id="" class="nextDayBtn btn btn-sm btn-danger ms-2 rounded-circle">
+                  <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+      </div>
     </div>
     <div class="form-group col-md-4">
       <label for="inputEmail4">Item No</label>
@@ -236,10 +249,11 @@ function calc() {
       } else {
         $('#seal').show();
         if (issue_to=="return_to_store"){
-          $('#j31total').prop('readonly', false);
           $('#j31total').val('');
+          $('#j31total').prop('readonly', false);
           $('#seal').hide();
         } else {
+          $("#store_return_ticket" ).val("");
           $('#seal').show();
           $( "#j31total" ).val( "" );
         }

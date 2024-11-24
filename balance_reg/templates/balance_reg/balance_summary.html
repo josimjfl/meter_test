@@ -1,74 +1,62 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="m-5 p-3">
+<div class="container my-5 p-3">
 
- <div class="m-0 p-5 bg-light py-0">
-  <h2 class="text-danger text-center mt-3">Balance Summary Today (<span id="today" style="color: violet;"></span>)</h2>
-<form method="post">
-  {% csrf_token %}
-
-
-<div class=" mt-3  border">
-<table class="table table-sm table-success text-center table-bordered">
-  <tr>
-    <th>Item</th>
-    <th>Quantity</th>
-    <th>Action</th>
-  </tr>
-  <tr class="table-danger">
-    <th class="align-middle">J-31</th>
-    <th>{{seal_bl_sum}}</th>
-    <th><!--first item link not work-->
-      <form method="post" action="{% url 'balance' %}">
-        <input id="item_no" name="item_no" value="J-31" hidden>
-          {%csrf_token%}
-      </form>
-
-      <form method="post" action="{% url 'balance' %}">
-        <input id="item_no" name="item_no" value="J-31" hidden>
-          {%csrf_token%}
-        <input type="submit" name="Search" value="View" class="form-control-sm bg-success enter_btn">
-      </form>
-    </th>
-  </tr>
-  {% for x in obj %}
-   <tr class="table-danger">
-    <th class="align-middle">{{x.item}}</th>
-    <th>{{x.balance}}</th>
-    <th>
-
-      <form method="post" action="{% url 'balance' %}">
-        <input id="item_no" name="item_no" value="{{x.item}}" hidden>
-          {%csrf_token%}
-        <input type="submit" name="Search" value="View" class="form-control-sm bg-success">
-      </form>
-
-    </th>
-  </tr>
-  {% endfor %}
-</table>
-</div>
-
- 
-
-  <div class="form-row pt-2">
+  <div class="p-3 bg-light">
+    <h2 class="text-danger text-center mt-3">Balance Summary Today (<span id="today" style="color: violet;"></span>)</h2>
+    <h6 class="text-danger text-center mt-3">Last Transaction Date: {{last_transaction.date_start}}</h6>
+      {% csrf_token %}
+      <div class="mt-3 border">
+        <div class="table-responsive">
+          <table class="table table-sm table-success text-center table-bordered">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-danger">
+                <td class="align-middle">J-31</td>
+                <td>{{ seal_bl_sum }}</td>
+                <td>
+                  <form method="post" action="{% url 'balance' %}" class="d-inline">
+                    <input id="item_no" name="item_no" value="J-31" hidden>
+                    {% csrf_token %}
+                    <input type="submit" name="Search" value="View" class="btn btn-success btn-sm">
+                  </form>
+                </td>
+              </tr>
+              
+              {% for x in obj %}
+              <tr class="table-danger">
+                <td class="align-middle">{{ x.item }}</td>
+                <td>{{ x.balance }}</td>
+                <td>
+                  <form method="post" action="{% url 'balance' %}" class="d-inline">
+                    <input id="item_no" name="item_no" value="{{ x.item }}" hidden>
+                    {% csrf_token %}
+                    <input type="submit" name="Search" value="View" class="btn btn-success btn-sm">
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
   </div>
-</div>
- 
-</form>
+  
 </div>
 
-
-</div>
-
-        <script type="text/javascript">
-          //JS for Current Date of Test data
-          n =  new Date();
-          y = n.getFullYear();
-          m = n.getMonth() + 1;
-          d = n.getDate();
-        document.getElementById("today").innerHTML = d + "/" + m + "/" + y;
-        </script>
+<script type="text/javascript">
+  // JS for displaying the current date
+  const n = new Date();
+  const y = n.getFullYear();
+  const m = n.getMonth() + 1;
+  const d = n.getDate();
+  document.getElementById("today").innerHTML = `${d}/${m}/${y}`;
+</script>
 
 {% endblock %}
-

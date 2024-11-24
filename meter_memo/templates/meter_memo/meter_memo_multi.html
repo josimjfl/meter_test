@@ -9,7 +9,7 @@
 
 <!---for bangla unicode font--->
 <style>
-@import url('https://fonts.maateen.me/adorsho-lipi/font.css');
+    @import url('https://fonts.maateen.me/adorsho-lipi/font.css');
 </style>
 
 
@@ -40,7 +40,7 @@ table, th, td, thead {
 }
 
 .mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
-    padding: 2px;
+    padding: 1px;
 }
 
 .table-sign{
@@ -59,8 +59,21 @@ table, th, td, thead {
 <h6 style="text-align:center"></h6>
 <div class="col-12 row">
   <div class="col-md-4 col-sm-12 text-center"> <br>BREB form no: 576 <br> Standerd meter no: {{office.standered_meter}},  & kh: {{office.standered_meter.std_kh}} <br> Calibrarion volt: 240V,  amp: 10A & Multiplier: 1 </div>
-  <div class="col-md-4 col-sm-12 text-center"><b><a href="{% url 'test_input' %}" class="text-decoration-none">{{office.pbs.pbs_name}}</a></b> <br>{{ office.office_name }}<br>Meter Memo
+  <div class="col-md-4 col-sm-12 text-center"><b>
+      <a href="{% url 'test_input' %}" class="text-decoration-none">
+         {{office.pbs.pbs_name}}
+      </a></b><br>
+        {{ office.office_name }}<br>
+       <span> Meter Memo </span>
 
+      <div id="print_btn">
+      <button href="#" onClick='print_only_doc("e")' class="btn btn-sm btn-info">
+        Print
+      </button>
+      <noscript>
+        You need Javascript to use the previous link or use <a href="test_report_multi" target="_blank">Print</a>
+      </noscript>
+    </div>
   </div>
   <div class="col-md-4 col-sm-12 text-right"> <br>Date: <input style="width:100px; outline:none!important; border:0;outline:0;" value ="{{date}}" id="date"> <br> Reason for Test:<i> New/<b>Complain</b>/Periodic</i>
         <script type="text/javascript">
@@ -91,10 +104,10 @@ table, th, td, thead {
             </span>
         </div>
 
-
     </div>
 </div>
 <div class="table-responsive">
+{% if page_obj %}
 <table class="table table-striped mytable text-center w-100">
   <thead>
     <tr>
@@ -136,7 +149,7 @@ table, th, td, thead {
               Change
         {% endif %}
       </td>
-      <td style="font-family: 'AdorshoLipi', Arial, sans-serif !important;">{{data.remove_cause}}</td>
+      <td style="font-family: 'AdorshoLipi', Arial, sans-serif !important;">{% if data.remove_cause != None %}{{data.remove_cause}}{% endif %}</td>
       <td></td>
     </tr>
     {% endfor %}
@@ -147,18 +160,18 @@ table, th, td, thead {
 <table class="table-sign">
 <tr class="sign"></tr>
 <tr class="sign">
-  <td rowspan="3" colspan="4"><br><br>Return by<br>{{ profile.tested_by }}<br>{{profile.tested_designation}}</td>
+  <td rowspan="3" colspan="4">Return by</td>
   <td></td>
   <td colspan="6" rowspan="3"><br><br>Received by<br>{{ office.officeemp.tested_by.get_full_name }}<br>{{office.officeemp.tested_by.designation}}
   </td>
   <td></td>
-  <td colspan="4" rowspan="3"><br><br>Approved by<br>  {{office.officeemp.counter_sign_by.get_full_name }}<br> {{office.officeemp.counter_sign_by.designation}}
+  <td colspan="4" rowspan="3">Approved by<br>{% if office.officeemp.counter_sign_by.get_full_name %}  {{office.officeemp.counter_sign_by.get_full_name }} <br> {{office.officeemp.counter_sign_by.designation}} {% endif %}
   </td>
 </tr>
 </table>
-
-
-
+    {% else %}
+      <p class="pt-4 text-center text-danger">No Result Found</p>  
+    {% endif %}
 
 </div>
 {% endblock %}

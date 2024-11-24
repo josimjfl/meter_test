@@ -9,8 +9,24 @@
 
   <div class="row">
     <div class="form-group col-md-4">
-      <label for="inputEmail4">date</label>
-      <input type="date" class="form-control enter_btn" id="date" name="date_start" required>
+
+        <!-- Date Selection with Calendar and Navigation -->
+        <div class="mb-3">
+            <label for="jfldate" class="form-label pb-0 mb-0">Date</label>
+            <div class="d-flex align-items-center">
+               <!-- Previous Day Button -->
+              <button type="button" id="" class="prevDayBtn btn btn-danger me-2 rounded-circle">
+                    <i class="fas fa-arrow-left"></i>
+              </button>
+              <!-- Date Picker Input -->
+                    <input type="text" class="form-control w-50 text-center jfldate" id="jfldate" name="date_start"  required readonly>
+              <!-- Next Day Button -->
+              <button type="button" id="" class="nextDayBtn btn btn-danger ms-2 rounded-circle">
+                    <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+        </div>
+
     </div>
     <div class="form-group col-md-4">
         <label for="inputState">Ref</label>

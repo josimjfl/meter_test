@@ -1,190 +1,435 @@
 {% extends 'base.html' %}
 {% load static %}
-  {% block content %}
+{% block content %}
 
- <style type="text/css">
-
+<style type="text/css">
 
 .services {
-      background-image: url('{% static 'images/home_bg.jpg' %}');
-      background-position: center;
-      background-size: auto;
-      background-repeat: no-repeat;
-      background-size: cover;
-      height: 100%;
-    }
-
-
-.services a {
-  text-decoration: none;
+  background-image: url('{% static 'images/home_bg.jpg' %}');
+  background-position: left top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  overflow: auto; /* Allow scrolling on smaller screens */
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
+
 .services .service-box {
   text-align: center;
+  padding: 8px 8px; 
+  transition: all 0.3s ease-in-out; 
+  position: relative;
 }
+
+.services .service-box:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+}
+
 .services .service-box h2 {
+  font-size: 16px;
   color: #222;
-  font-size: 20px;
-  padding-top: 10px;
-  text-decoration: none;
-}
-.services a .service-box:hover h2 {
-  color: #FB0626;
-}
-.services .investor-box {
-    background-color: #168a40;
-    color: white;
-    background-position: center center;
-    padding: 20px;
-    width: 100%;
-    min-height: 70px;
-    display: block;
-    position: relative;
-    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2);
-}
-.services .investor-box h2 {
-  font-size: 20px;
-}
-.services .investor-box .flip-view {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  background-color: #3643ff;
-  left: -10%;
-  padding: 20px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  visibility: hidden;
-  opacity: 0;
-  transition: all ease-in-out 333ms;
-}
-.services .investor-box a {
-  color: #fff;
-  font-size: 20px;
+  margin-top: 8px;
   font-weight: 600;
 }
-.services .investor-box:hover .flip-view {
-    left: 0;
-    visibility: visible;
-    opacity: 1;
+
+.services .service-box i {
+  font-size: 40px; 
+  color: #FB0626;
+  margin-bottom: 10px;
+  transition: color 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
 
-.investor-box-text{
-    font-size: 18pt;
+.services .service-box:hover i {
+  color: #3643ff;
+  transform: scale(1.15);
 }
 
-i {
+.services .investor-box {
+  background-color: #FFF;
+  color: white;
+  padding: 10px; 
+  width: 100%;
+  min-width: 140px;
+  min-height: 80px;
+  display: block;
+  position: relative;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  margin-top: 10px;
+}
+
+.services .investor-box:hover {
+  background-color: #111;
+}
+
+.services .investor-box a {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.services .investor-box-text {
+  font-size: 14px;
+  margin-left: 10px;
+  color: #168a40; 
+  font-weight: bold;
+  display: inline-block; 
+  transition: color 0.3s ease-in-out;
+}
+
+.services .service-box:hover .investor-box-text {
+  color: #ff43ff; 
+}
+
+.services .ico_header {
   text-align: center;
-  font-size: 40pt;
+  font-size: 28px; 
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 20px;
 }
 
- </style>
+hr {
+  border-top: 2px solid #3643ff;
+  width: 50%;
+  margin: 20px auto;
+}
+
+
+.counter {
+            font-size: 3.0rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+.counter-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            min-width: 250px;
+            padding: 0.6rem 1rem;
+            margin:10px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+.counter-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+.counter-label {
+            font-size: 1.0rem;
+            font-weight: 600;
+            margin-top: 0.4rem;
+        }
+
+.bg-gradient-purple {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+        }
+
+.bg-gradient-orange {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+        }
+
+.bg-gradient-green {
+            background: linear-gradient(135deg, #07b550, #38ef7d);
+        }
+.bg-gradient-violet {
+            background: linear-gradient(135deg, #480082, #9834eb);
+        }
+
+
+.counter-container {
+            display: flex;
+            justify-content: space-between ;
+            flex-wrap: wrap;
+        }
+
+
+@media (max-width: 768px) {
+  .services .row .col-md-2 {
+    margin-bottom: 3px;
+  }
+
+  .services .ico_header {
+    font-size: 24px; 
+  }
+
+  .services .service-box h2 {
+    font-size: 14px; 
+  }
+
+  .services .service-box i {
+    font-size: 35px; 
+  }
+
+  .services .investor-box {
+    padding: 10px; 
+    min-height: 70px; 
+  }
+
+  .services .investor-box-text {
+    font-size: 12px; 
+    margin-left: 8px;
+  }
+
+  .services .service-box {
+    padding: 15px 10px; 
+  }
+
+  .services .col-md-2 {
+    flex: 0 0 60%; 
+    max-width: 45%;
+  }
+
+  .services .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .services .service-box {
+    margin-bottom: 5px; 
+    text-align: center;
+  }
+
+  /* Adjust Counter Cards for mobile */
+  .counter-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+
+  .counter-card {
+    flex: 0 0 40%; /* Adjusts for two cards per row */
+    margin: 5px 0px;
+    justify-content: center;
+    align-content: center;
+  }
+}
 
 
 
-<!--services-->
-        <div class="services pb-5" style="width: 100%">
-          <div class="container">
-            <div class="pt-5">
-              <h2 class="vc_custom_heading ico_header">Meter Testing Lab by Josim</h2>
-              <hr>
-              <div class="row col-md-12">
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">              
-                <div class="investor-box">
-                    <i class="fa-solid fa-pen-to-square"></i> <span class="investor-box-text">New Test Data</span>
-                    <div class="flip-view">
-                      <a href="{% url 'test_input' %}">Read More <i class="fa-solid fa-pen-to-square"></i></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
-                  <div class="investor-box">
-                    <i class="fa-solid fa-clipboard"></i> <span class="investor-box-text">Report</span>
-                    <div class="flip-view">
-                      <a href="{% url 'test_report_multi' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
-                  <div class="investor-box">
-                    <i class="fa-brands fa-searchengin"></i> <span class="investor-box-text">Single Report</span>
-                    <div class="flip-view">
-                      <a href="{% url 'test_report_single' '0'%}">Read More <i class="fas fa-chevron-circle-right"></i></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
-                  <div class="investor-box">
-                    <i class="fa-solid fa-magnifying-glass"></i> <span class="investor-box-text">Search</span>
-                    <div class="flip-view">
-                      <a href="{% url 'test_report_multi_search' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+/* for table list */
+.table-custom {
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .table-custom th {
+            background: #6c757d;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .table-custom td, 
+        .table-custom th {
+            padding: 0.5rem;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table-custom tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+.btn-action {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+        }
 
 
 
-          
-              <div class="row col-md-12">
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
-                  <div class="investor-box">
-                    <i class="fa-solid fa-paper-plane"></i> <span class="investor-box-text">Issue</span>
-                    <div class="flip-view">
-                      <a href="{% url 'issue_item' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
-                  <div class="investor-box">
-                    <i class="fa-solid fa-file-import"></i> <span class="investor-box-text">Meter Memo</span>
-                    <div class="flip-view">
-                      <a href="{% url 'meter_memo' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
-                  <div class="investor-box">
-                    <i class="fa-solid fa-scale-balanced"></i> <span class="investor-box-text">Balance</span>
-                    <div class="flip-view">
-                      <a href="{% url 'balance' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
-                  <div class="investor-box">
-                    <i class="fa-solid fa-book"></i> <span class="investor-box-text">Issue Register</span>
-                    <div class="flip-view">
-                      <a href="{% url 'meter_issue_list' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-             <hr>
-              <div class="row col-md-12">
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
-                  <div class="investor-box">
-                    <i class="fa-regular fa-hourglass-half"></i> <span class="investor-box-text">Panding </span> <span style="color: white; font-size: 30pt;" class="text-warning"> 25</span>
-                    <div class="flip-view">
-                      <a href="{% url 'issue_item' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3  border-primary shadow p-2 mb-1 bg-body rounded">
-                  <div class="investor-box">
-                    <i class="fa-solid fa-file-import"></i> <span class="investor-box-text">Meter Memo</span>
-                    <div class="flip-view">
-                      <a href="{% url 'meter_memo' %}">Read More <i class="fas fa-chevron-circle-right"></i></a>
-                    </div>
-                  </div>
-                </div>
+/* Trapezium container */
+.trapezium {
+            position: relative;
+            width: 200px;
+            height: 30px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            clip-path: polygon(0% 0%, 70% 0%, 100% 100%, 0% 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.0rem;
+            font-weight: bold;
+            border: 1px solid #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+        }
 
-              </div>
+
+
+
+</style>
+
+
+
+<!-- Services Section -->
+<div class="services pb-5">
+  <div class="container">
+
+    <div class="trapezium">
+        Status
+    </div>
+    <hr class="w-100 p-0 m-0">
+
+    <!-- Counter Section -->
+    <div class="counter-container col-12 pt-0">
+        <!-- Counter 1 -->
+        <a href="{% url request.user.role|lower|add:'_dashboard' %}" class="text-decoration-none">
+        <div class="counter-card bg-gradient-orange col-md-2 col-sm-6">
+            <div class="row">
+                <div class="col-4 fs-1">
+                    <i class="fa-solid fa-folder-open fa-2xl pt-5" style="color: #FFD43B;"></i>
+                </div>
+                <div class="col-8">
+                    <div class="counter" data-target="{{pending}}">0</div>
+                    <div class="counter-label">Your Pending</div>
+                </div>
             </div>
-          </div>
         </div>
-        <!--end services-->
+        </a>
+        <!-- Counter 2 -->
+        <div class="counter-card bg-gradient-green col-md-2 col-sm-6">
+            <div class="row">
+                <div class="col-3 fs-1">
+                    <i class="fa-regular fa-paper-plane fa-2xl pt-5" style="color: #9cffbe;"></i>
+                </div>
+                <div class="col-9">
+                    <div class="counter" data-target="{{request.user.office.pbs.pbs_code}}">0</div>
+                    <div class="counter-label">PBS Code</div>
+                </div>
+            </div>
+        </div>
+        <!-- Counter 3 -->
+        <div class="counter-card bg-gradient-purple col-md-2 col-sm-6">
+            <div class="row">
+                <div class="col-4 fs-1">
+                    <i class="fa-regular fa-clipboard fa-2xl pt-5" style="color: #a2b7fc;"></i>
+                </div>
+                <div class="col-8">
+                    <div class="counter" data-target="{{request.user.office.office_code}}">0</div>
+                    <div class="counter-label">Zonal Code</div>
+                </div>
+            </div>
+        </div>
 
-  {%endblock%}
+        <!-- Counter 4 -->
+        <div class="counter-card bg-gradient-violet col-md-2 col-sm-6">
+            <div class="row">
+                <div class="col-4 fs-1">
+                    <i class="fa-solid fa-screwdriver-wrench fa-2xl pt-5" style="color: #d1acfc;"></i>
+                </div>
+                <div class="col-8">
+                    <div class="counter" data-target="{{test_complete}}">0</div>
+                    <div class="counter-label">Completed Test</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+    </div>
+
+    <div class="trapezium">
+        Usefull Link 
+    </div>
+
+    <hr class="w-100 p-0 m-0">
+
+
+    <!-- Row of Services (6 items in one row) home useful link-->
+        {% include 'test_data/home_useful_link.html' %}
+    <!-- End Services Section -->
+
+
+
+    <div class="trapezium">
+        Pending
+    </div>
+    <hr class="w-100 p-0 m-0">
+
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th scope="col" class="py-2">ID</th>
+                        <th scope="col" class="py-2">Meter No</th>
+                        <th scope="col" class="py-2">Reading</th>
+                        <th scope="col" class="py-2">Account</th>
+                        <th scope="col" class="py-2">Result</th>
+                        <th scope="col" class="py-2">Date</th>
+                        <th scope="col" class="py-2">Print</th>
+                        <th scope="col" class="py-2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{last_pending.id}}</td>
+                        <td>{{last_pending.tested_meter_no}}</td>
+                        <td>{{last_pending.reading_as_found}}</td>
+                        <td>{{last_pending.book}}-{{last_pending.account}}</td>
+                        <td>{{last_pending.comments}}</td>
+                        <td>{{last_pending.created_date|date:"d-m-Y" }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary btn-action">Print</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-success btn-action">View</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center">
+          <!----make as "bs_dashboar" ---->
+            <a class="text-center btn btn-dark"
+               href="{% url request.user.role|lower|add:'_dashboard' %}">
+               See More Pending
+            </a>
+        </div>
+
+    </div>
+
+  </div>
+  {% include 'footer.html' %}
+
+
+
+<script>
+    // Counter Animation Logic
+    const counters = document.querySelectorAll('.counter');
+
+    counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        const increment = target / 200;
+
+        const updateCounter = () => {
+            const current = +counter.innerText;
+            if (current < target) {
+                counter.innerText = Math.ceil(current + increment);
+                setTimeout(updateCounter, 40); //slow fast time
+            } else {
+                counter.innerText = target;
+            }
+        };
+
+        updateCounter();
+    });
+</script>
+
+{% endblock %}

@@ -1,25 +1,7 @@
-    <!---<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>--->
-    <script>
-        function jfl_delete_alert(msg, gfg) {
-            var confirmBox = $("#del_container");
-            
-            /* Trace message to display */
-            confirmBox.find(".message").text(msg);
-            
-            /* Calling function */
-            confirmBox.find(".yes").unbind().click(function()
-            {
-            confirmBox.hide();
-            //location.reload(); //reload the page
-            });
-            confirmBox.find(".yes").click(gfg);
-            confirmBox.show();
-        }
-    </script>
+
+
     <style>
     
-
-        
         #del_container {
           display: none;
           position: fixed; /* Stay in place */
@@ -41,24 +23,38 @@
             padding: 14px 8px 8px;
             box-sizing: border-box;
             background-color: purple !important;
-            margin-left : 30%;
-            margin-right: 40%;
+            margin-left : 35%;
+            margin-right: 35%;
             border: 1px solid #888;
             width: 300PX;
             position: fixed;
             border: 3px solid white;
             text-align: center;
             font-size: 14pt;
+            justify-content: center;
+            align-content: center;
 
         }
 
-        
         /* Dialog box message decorating */
         #container .message {
-            text-align: left;
+            text-align: center;
             padding: 10px 30px;
         }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .modal_body {
+                font-size: 14px;
+                width: 97%;
+                margin: 10%;
+            }
+        }
+
+
     </style>
+
+
     <div id="del_container">
         <div class="modal_body">
             <div class="message">
@@ -68,3 +64,40 @@
         </div>
     </div>
 
+
+
+
+    <!---<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>--->
+    <script>
+        function jfl_delete_alert(msg, gfg) {
+            var confirmBox = $("#del_container");
+            
+            /* Trace message to display */
+            confirmBox.find(".message").text(msg);
+            
+            /* Calling function */
+            confirmBox.find(".yes").unbind().click(function()
+            {
+            confirmBox.hide();
+            //location.reload(); //reload the page
+            });
+            confirmBox.find(".yes").click(gfg);
+            confirmBox.show();
+        }
+
+        function jfl_alert(msg, gfg) {
+            var confirmBox = $("#del_container");
+            
+            /* Trace message to display */
+            confirmBox.find(".message").text(msg);
+            
+            /* Calling function */
+            confirmBox.find(".yes").unbind().click(function()
+            {
+            confirmBox.hide();
+            //location.reload(); //reload the page
+            });
+            confirmBox.find(".yes").click(gfg);
+            confirmBox.show();
+        }
+    </script>

@@ -85,7 +85,7 @@ def issue_ajax(request):
 				seal_bl = SealBalance.objects.filter(item=seal).aggregate(total=Sum(F('credit_qty') - F('debit_qty')))['total']
 				if seal_bl == None:
 					seal_bl = 0
-				print(seal_bl, "ssssssssssssssss")
+
 				if item_bl >= 1 and seal_bl >= float(total_j31):
 					#add to issue model
 					issue = IssueItem.objects.create(
@@ -124,7 +124,7 @@ def issue_ajax(request):
 						}					
 				else:
 					data = {"status":"failed", "message":"Failed, Balance nill or item not found."}
-					print("Balance is not sufficient.")
+
 					return JsonResponse(data, safe=False)
 
 
@@ -165,14 +165,13 @@ def issue_ajax(request):
 						}
 				else:
 					data = {"status":"failed", "message":"Failed, Balance not sufficient or item not found."}
-					print("balance nill")
 					return JsonResponse(data, safe=False)
 
 
 			else:
 				data = {"status":"failed", "message":"Failed, item not found."}
-				print('Balance nill or item_no not found.')
 				return JsonResponse(data, safe=False)
+
 		return JsonResponse(data, safe=False)
 
 
@@ -236,7 +235,6 @@ def update_issue_ajax(request):
 					#add all balance in one day.
 				else:
 					data = {"status":"failed", "message":"Failed, item not found."}
-					print('Balance nill or item_no not found.')
 					return JsonResponse(data, safe=False)
 
 
@@ -259,13 +257,11 @@ def update_issue_ajax(request):
 					#seal balance will not be changed.
 				else:
 					data = {"status":"failed", "message":"Failed, Balance is not sufficient."}
-					print("balance nill")
 					return JsonResponse(data, safe=False)
 
 
 			else:
 				data = {"status":"failed", "message":"Failed, item not found."}
-				print('Balance nill or item_no not found.')
 				return JsonResponse(data, safe=False)
 
 		data = {"status":"successfull",  "message":"Successfully Updated",}
@@ -273,7 +269,8 @@ def update_issue_ajax(request):
 
 
 
-
+@login_required
+@role_required(['admin', 'MT', 'MTS']) 
 def meter_issue_list(request):
 	item = Item.objects.all()
 	try:
@@ -290,7 +287,8 @@ def meter_issue_list(request):
 
 
 
-
+@login_required
+@role_required(['admin', 'MT', 'MTS']) 
 def seal_issue_list(request):
 	try:
 		seal_list=SealIssue.objects.filter(office=request.user.office)

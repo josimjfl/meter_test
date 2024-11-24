@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-danger mb-4">Delete Office</h2>
+        <p class="fw-bold">Are you sure you want to delete this record?</p>
+
+        <div class="mb-3">
+            <p><strong>Office:</strong> {{ office_emp.office }}</p>
+            <p><strong>Received By:</strong> {{ office_emp.received_by }}</p>
+        </div>
+
+        <form method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Confirm</button>    <a href="{% url 'office_emp_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+        
+    </div>
+</div>
+{% endblock %}

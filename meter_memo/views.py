@@ -2,10 +2,11 @@ from django.shortcuts import render
 from test_data.models import *
 from accounts.models import CustomUser, Standard_Meter
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
 
 
+@login_required
 def MeterMemo(request):
     profile = CustomUser.objects.filter(office=request.user.office).latest('id')
     office = Office.objects.get(id=request.user.office.id)

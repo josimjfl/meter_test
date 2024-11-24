@@ -1,5 +1,5 @@
 import datetime
-today=datetime.date.today().strftime("%Y-%m-%d")
+today=datetime.date.today().strftime("%d-%m-%Y")
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView, ListView, DetailView, View
 from django.views.generic.edit import UpdateView
@@ -16,10 +16,16 @@ from .forms import TestDataUpdateForm
 from django.contrib.auth.decorators import login_required
 from accounts.decorators import role_required
 from django.utils.decorators import method_decorator  #for class based view
+from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
+from datetime import datetime
+from django.db.models import Q
 
 
 
 
+@login_required
+@role_required(['admin', 'IT', 'MT', 'MTS'])          #For user Group test  
 def uploadData(request):
     res = {'error': True, 'msg': "Something went wrong."}
     allowed_files = ["csv", "xls", "xlsx", "xlsm", "xlsb"]
@@ -47,6 +53,8 @@ def uploadData(request):
         return JsonResponse(res, safe=False)
 
 
+
+@login_required
 def upload(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -54,8 +62,51 @@ def upload(request):
 
 
 
+@login_required
 def Home(request):
-    return render(request, 'test_data/home.html', {})
+    test_complete = Test_Data.objects.count()  # Total test data count
+    role = request.user.role  # Current user's role
+    pending = 0  # Default pending count
+    last_pending = None  # Default last pending entry
+
+    # Filter test data based on the user's role
+    if role in ['MTS', 'MT']:
+        test_data_queryset = Test_Data.objects.filter(
+            office=request.user.office,
+            checked_by__isnull=True
+        )
+    elif role in ['AGM', 'DGM']:
+        test_data_queryset = Test_Data.objects.filter(
+            office=request.user.office,
+            counter_sign_by__isnull=True,
+            checked_by__isnull=False
+        )
+    elif role in ['BS', 'BA']:
+        test_data_queryset = Test_Data.objects.filter(
+            office=request.user.office,
+            received_by__isnull=True,
+            counter_sign_by__isnull=False,
+            checked_by__isnull=False
+        )
+    else:
+        test_data_queryset = Test_Data.objects.none()  # Empty queryset for roles without specific rules
+
+    # Calculate pending count and get the latest entry if the queryset exists
+    pending = test_data_queryset.count()
+    last_pending = test_data_queryset.values(
+        'id', 'tested_meter_no', 'reading_as_found', 'book', 'account', 'comments', 'created_date'
+    ).latest('id') if test_data_queryset.exists() else None
+
+    # Render the template with context data
+    return render(request, 'test_data/home.html', {
+        'last_pending': last_pending,
+        'pending': pending,
+        'test_complete': test_complete,
+        'role': role,
+    })
+
+
+
     
 
 def mfg_res_dropdown(request):
@@ -76,24 +127,29 @@ def mfg_res_dropdown(request):
 @method_decorator(role_required(['MT', 'MTS', 'admin']), name='dispatch')
 class TestInputView(View):
     def get(self, *args, **kwargs):
-        mfg = Manufacturer.objects.filter(item_no=Item.objects.get(item_no="J-39"))
-        result = Results.objects.filter(items__item_no__icontains="J-39")
+        mfg = Manufacturer.objects.all()
+        result = Results.objects.all()
         item_no = Item.objects.all()
         date = today
         try:            
             test_data = Test_Data.objects.filter(office= self.request.user.office).latest('id')
         except:
-            return render(self.request,'test_data/test_input.html', {'mfg':mfg, 'results':result, 'date':date})
+            return render(self.request,'test_data/test_input.html', {'mfg':mfg, 'results':result, 'date':date, 'item_no':item_no, 'results':result, 'msg':"Welcome to Josim Uddin MT"})
 
         po = PurchaseOrder.objects.all()
         total_td= len(Test_Data.objects.all())
         pg=str(round(total_td//12))
         idpg=str(total_td %12)
         context ={
-            'mfg':mfg, 'item_no':item_no,
-            'results':result, 'date':date,
-            'test_data':test_data, "pg":pg, 'po':po,
-            "idpg":idpg, 'msg':"Welcome to Josim Uddin MT"}
+            'mfg':mfg,
+            'item_no':item_no,
+            'results':result, 
+            'date':date,
+            'test_data':test_data, 
+            "pg":pg, 'po':po,
+            "idpg":idpg, 
+            'msg':"Welcome to Josim Uddin MT"
+            }
 
         return render(self.request,'test_data/test_input.html', context)
 
@@ -195,8 +251,8 @@ class TestInputView(View):
             else:
                 td.created_by= self.request.user
                 td.updated_by= self.request.user
-                td.created_date=datetime.datetime.now()
-                td.updated_date=datetime.datetime.now()
+                td.created_date=datetime.now()
+                td.updated_date=datetime.now()
                 td.save()
                 #messages.success(self.request, 'Test Successful')
 
@@ -218,60 +274,146 @@ def ajax_load_result(request):
 def ajax_load_mfg(request):
     result_id = request.GET.get('mfgid')
     mfg = Manufacturer.objects.get(id=result_id)
-    return JsonResponse({'id':mfg.id, 'item_no':mfg.item_no.item_no, 'kh':mfg.kh, 'name':mfg.name, 'meter_class':mfg.meter_class, 'LL_TA':mfg.LL_TA, 'FL_TA':mfg.FL_TA, 'LL_rev':mfg.LL_rev, 'FL_rev':mfg.FL_rev, 'standerd_rev_req_ll':mfg.standerd_rev_req_ll,
-'standerd_rev_req_fl':mfg.standerd_rev_req_fl}, safe=False)         
+    return JsonResponse({'id':mfg.id, 
+        'item_no': mfg.item_no.item_no, 
+        'kh':mfg.kh, 
+        'name':mfg.name, 
+        'meter_class':mfg.meter_class, 
+        'LL_TA':mfg.LL_TA, 
+        'FL_TA':mfg.FL_TA, 
+        'LL_rev':mfg.LL_rev, 
+        'FL_rev':mfg.FL_rev, 
+        'standerd_rev_req_ll':mfg.standerd_rev_req_ll,
+        'standerd_rev_req_fl':mfg.standerd_rev_req_fl
+        }, safe=False)         
 
 
 
-def TestReportSingle(request, pk):
-    office = Office.objects.get(id=request.user.office.id)
-    user_id = request.user
-    custom_user=''
-    mts=''
-    agm=''
-
+@login_required
+def  test_report_list(request):
     if request.method == 'GET':
-        if pk != 0:
-            data = get_object_or_404(Test_Data, pk=pk, office=request.user.office)
+        page = int(request.GET.get('page', 1))  # Get the requested page number or default to 1
 
-            return render(request, 'test_data/test_report_single.html', {'office':office, 'data':data})
+        # Filter the queryset
+        posts = Test_Data.objects.filter(
+            office=request.user.office,
+            counter_sign_by__isnull=False,
+            checked_by__isnull=False
+        ).order_by('-id')
+
+        # Pagination setup
+        content_per_page = 5
+        paginator_obj = Paginator(posts, content_per_page)
+
+        try:
+            post_page = paginator_obj.page(page)
+        except EmptyPage:
+            post_page = paginator_obj.page(paginator_obj.num_pages)  # Return the last page if out of range
+
+        # Check if the request is an AJAX request
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            # Serialize data for JSON response
+            serialized_data = [
+                {
+                    "id": obj.id,
+                    "meter_no": obj.tested_meter_no,
+                    "reading": obj.reading_as_found,
+                    "book" : obj.book,
+                    "account": obj.account,
+                    "result": obj.comments,
+                    "print_counter": obj.print_counter,
+                    "date": obj.counter_sign_date.strftime('%Y-%m-%d') if obj.counter_sign_date else None,
+                }
+                for obj in post_page
+            ]
+            return JsonResponse({
+                "content": serialized_data,
+                "total_pages": paginator_obj.num_pages,
+            })
+
+        # Render the full page for non-AJAX requests
+        context = {
+            "posts": post_page,
+        }
+        return render(request, 'test_data/test_report_list.html', context)
+
+
+
+@login_required
+def TestReportSingle(request, pk=None):
+    # Fetch user's office and user
+    office = Office.objects.get(id=request.user.office.id)
+    user = request.user
+
+    # Process GET request
+    if request.method == 'GET':
+        book = request.GET.get('book')
+        account = request.GET.get('account')
+
+        # Retrieve Test_Data
+        if pk is not None:
+            data = get_object_or_404(Test_Data, pk=pk, office=office)
+        elif book and account:
+            data = get_object_or_404(Test_Data, book=book, account=account, office=office)
         else:
             return render(request, 'test_data/test_report_single_input.html')
 
+        # Update data if user has required role
+        if user.role in ['BS', 'BA']:
+            Test_Data.objects.filter(pk=data.id).update(
+                received_by=user.id,
+                received_date=datetime.now(),
+                print_counter=data.print_counter + 1
+            )
 
-    if request.method=='POST':
+        return render(request, 'test_data/test_report_single.html', {'office': office, 'data': data})
+
+    # Process POST request
+    elif request.method == 'POST':
         test_id = request.POST.get('test_id')
-        book= request.POST.get('book')
+        book = request.POST.get('book')
         account = request.POST.get('account')
-        if test_id != None:
-            data = get_object_or_404(Test_Data, pk=test_id, office=request.user.office)
 
-        elif book != None and account !=None:
-            data = get_object_or_404(Test_Data, book=book, account=account)
-            
+        # Retrieve Test_Data
+        if test_id:
+            data = get_object_or_404(Test_Data, pk=test_id, office=office)
+        elif book and account:
+            data = get_object_or_404(Test_Data, book=book, account=account, office=office)
         else:
             return render(request, 'test_data/test_report_single_input.html')
 
-        return render(request, 'test_data/test_report_single.html', {'office':office, 'data':data})
+        # Update data if user has required role
+        if user.role in ['BS', 'BA']:
+            Test_Data.objects.filter(pk=data.id).update(
+                received_by=user.id,
+                received_date=datetime.now(),
+                print_counter=data.print_counter + 1
+            )
+
+        return render(request, 'test_data/test_report_single.html', {'office': office, 'data': data})
+
 
 
 
 @login_required(login_url="login")
+@role_required(['admin', 'IT', 'MT', 'MTS', 'AGM', 'DGM'])          #For user Group test
 def TestReportMulti(request):
-    custom_user = CustomUser.objects.get(id=request.user.id)
     office = Office.objects.get(id=request.user.office.id)
-    """except Exception as e:
-        return render(request, 'test_data/no_permission.html')
-    """
-    test_data = Test_Data.objects.filter(office= request.user.office).order_by('id')
 
-    paginator = Paginator(test_data, 12) # Show 25 contacts per page.
+    test_data = Test_Data.objects.filter(office=request.user.office)
+
+    # Pagination
+    paginator = Paginator(test_data, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    date = datetime.date.today().strftime("%d-%m-%Y")
 
-    return render(request, 'test_data/test_report_multi.html',
-        {'test_data':test_data, 'page_obj': page_obj, 'date':date, 'office':office})
+    return render(request, 'test_data/test_report_multi.html', {
+        'test_data': test_data, 
+        'page_obj': page_obj, 
+        'office': office
+    })
+
+
 
 
 def TestReportMultiSearch(request):
@@ -281,56 +423,78 @@ def TestReportMultiSearch(request):
         latest_test = None
     return render(request, 'test_data/test_report_multi_search.html', {"latest_test":latest_test})
 
+
+
+from datetime import datetime
+
+@login_required
 def report_search(request):
-    if request.method=="GET":
+    if request.method == "GET":
         search_option = request.GET.get('search_option')
         search_value = request.GET.get('search_value')
-        book= request.GET.get('book')
-        account= request.GET.get('account')
-        if search_option != None:
-            #for dynamic search
+        book = request.GET.get('book')
+        account = request.GET.get('account')
+        f_date = request.GET.get('fromdate')
+        t_date = request.GET.get('todate')
+        fromid = request.GET.get('fromid')
+        toid = request.GET.get('toid')
+
+        # Initialize an empty queryset
+        test_data = Test_Data.objects.none()
+
+        # Filtering logic
+        if search_option and search_value:
             variable_column = search_option
             search_type = 'icontains'
-            filt = variable_column + '__' + search_type
+            filt = f"{variable_column}__{search_type}"
+            test_data = Test_Data.objects.filter(
+                office=request.user.office, **{filt: search_value}
+            )
+        elif book and account:
+            test_data = Test_Data.objects.filter(
+                office=request.user.office, book=book, account=account
+            )
+        elif f_date and t_date:
             try:
-                test_data = Test_Data.objects.filter(office=request.user.office, **{filt: search_value})
-            except Test_Data.DoesNotExist:
-                test_data = None
-        elif book != None and account != None:
-            book= request.GET.get('book')
-            account= request.GET.get('account')
-            test_data=Test_Data.objects.filter(office=request.user.office, book=book, account=account)
-        else:
-            fromdate = request.GET.get('fromdate')
-            todate = request.GET.get('todate')
-            if fromdate != None:
-                try:
-                    test_data = Test_Data.objects.filter(office=request.user.office, created_date__range=[fromdate,todate]).order_by('id')
-                except Test_Data.DoesNotExist:
-                    test_data = None
-            else:
-                fromid = request.GET.get('fromid')
-                toid = request.GET.get('toid')
-                test_data = Test_Data.objects.filter(office=request.user.office, id__range=[fromid,toid]).order_by('id')
+                fromdate = datetime.strptime(f_date, '%d-%m-%Y').date()
+                todate = datetime.strptime(t_date, '%d-%m-%Y').date()
+                test_data = Test_Data.objects.filter(
+                    office=request.user.office, created_date__range=[fromdate, todate]
+                )
+            except ValueError:
+                pass
+        elif fromid and toid:
+            test_data = Test_Data.objects.filter(
+                office=request.user.office, id__range=[fromid, toid]
+            )
 
-        count_pay=len(test_data)      #to get sum of data row or quantity
+        # Count rows
+        count_pay = test_data.count()
 
+        # Office standard meter
         office = OfficeEmp.objects.get(office=request.user.office)
         std = office.standered_meter
 
-        paginator = Paginator(test_data, 12) # Show 25 contacts per page.
+        # Pagination
+        paginator = Paginator(test_data, 12)  # 12 items per page
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        return render(request, 'test_data/test_report_multi.html',
-            {'test_data':test_data, 'page_obj': page_obj, 'std':std})
+        # Preserve query parameters
+        query_params = request.GET.copy()
+        query_params.pop('page', None)  # Exclude 'page' parameter
+        query_string = query_params.urlencode()
 
-        """
-        if 'list' in request.GET:
-            return render(request, "pathology/lazer_report.html", context)
-        elif 'search' in request.GET:
-            return render(request, "test_data/test_report_multi_search.html", context)
-        """
+        return render(request, 'test_data/test_report_multi.html', {
+            'test_data': page_obj.object_list,
+            'page_obj': page_obj,
+            'std': std,
+            'count_pay': count_pay,
+            'query_string': query_string,
+        })
+
+
+
 @method_decorator(role_required(['MT', 'MTS', 'admin']), name='dispatch')
 class Register(View):
     def get(self, *args, **kwargs):
@@ -369,47 +533,78 @@ class Register(View):
 
 
 
+
+
 def about(request):
     return render(request, 'test_data/about.html')
 
 
 
 
-@login_required(login_url="login")
+from datetime import datetime
+
+@login_required
 def ThreePhraseInv(request):
     if request.method == "GET":
-        try:
-            latest_test = Test_Data.objects.filter(office= request.user.office).latest('id')
-        except Test_Data.DoesNotExist:
-            latest_test = None
-        return render(request, 'test_data/three_phrase_inv_search.html', {"latest_test":latest_test})
+        f_date = request.GET.get('fromdate')
+        t_date = request.GET.get('todate')
+        fromid = request.GET.get('fromid')
+        toid = request.GET.get('toid')
 
+        # Initialize an empty queryset
+        test_data = Test_Data.objects.none()
 
-    if request.method == "POST":
-        fromdate = request.POST.get('fromdate')
-        todate = request.POST.get('todate')
-        if fromdate != None and todate != None:
+        # Debugging: Check the received GET parameters
+        print(f"fromdate: {f_date}, todate: {t_date}, fromid: {fromid}, toid: {toid}")
+
+        # Filtering logic
+        if f_date and t_date:
             try:
-                test_data = Test_Data.objects.filter(office=request.user.office, remark="পরীক্ষার জন্য বিআরইবিতে প্রেরণ প্রক্রিয়াধীন।", created_date__range=[fromdate,todate]).order_by('id')
-            except Test_Data.DoesNotExist:
-                test_data = None
+                # Convert string dates to datetime objects
+                fromdate = datetime.strptime(f_date, '%d-%m-%Y').date()
+                todate = datetime.strptime(t_date, '%d-%m-%Y').date()
+
+                test_data = Test_Data.objects.filter(
+                    office=request.user.office, created_date__range=[fromdate, todate]
+                )
+            except ValueError:
+                print("Invalid date format.")
+        elif fromid and toid:
+            test_data = Test_Data.objects.filter(
+                office=request.user.office, id__range=[fromid, toid]
+            )
+
         else:
-            fromid = request.POST.get('fromid')
-            toid = request.POST.get('toid')
-            try:
-                test_data = Test_Data.objects.filter(office=request.user.office, remark="পরীক্ষার জন্য বিআরইবিতে প্রেরণ প্রক্রিয়াধীন।", id__range=[fromid,toid]).order_by('id')
-            except Test_Data.DoesNotExist:
-                test_data = None
-            
+            print("No filter provided.")
+            return render(request, 'test_data/three_phrase_inv_search.html')
 
-        count_pay=len(test_data)      #to get sum of data row or quantity
+        # Count the number of records found
+        count_pay = test_data.count()
 
-        paginator = Paginator(test_data, 12) # Show 25 contacts per page.
+        # Get office standard meter
+        officeE = OfficeEmp.objects.get(office=request.user.office)
+        std = officeE.standered_meter
+
+        office = Office.objects.get(id=request.user.office.id)
+
+        # Pagination logic
+        paginator = Paginator(test_data, 12)  # 12 items per page
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        return render(request, 'test_data/three_phrase_inv.html',{'test_data':test_data, 'page_obj': page_obj})
+        # Preserve other query parameters except for 'page'
+        query_params = request.GET.copy()
+        query_params.pop('page', None)  # Remove the 'page' parameter
+        query_string = query_params.urlencode()  # Create query string
 
+        return render(request, 'test_data/three_phrase_inv.html', {
+            'test_data': page_obj.object_list,
+            'page_obj': page_obj,
+            'std': std,
+            'count_pay': count_pay,
+            'query_string': query_string,
+            'office': office,
+        })
 
 
 
@@ -425,18 +620,11 @@ class TestUpdateView(UpdateView):
 
 
 
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-
-
 @csrf_exempt
+@login_required
+@role_required(['admin', 'MT', 'MTS'])          #For user Group test
 def update_test_data(request, pk):
     td = get_object_or_404(Test_Data, pk=pk, office= request.user.office)
-    print(td)
-
-
     mfg = Manufacturer.objects.filter(item_no=Item.objects.get(item_no="J-39"))
     result = Results.objects.filter(items__item_no__icontains="J-39")
     item_no = Item.objects.all()
@@ -505,3 +693,8 @@ def update_test_data(request, pk):
         "idpg":idpg, 'msg':"Welcome to Josim Uddin MT"
     }
     return render(request, 'test_data/test_input_edit.html', context)
+
+
+
+
+# All right reserved by josimmsc@gmail.com as Josim Uddin

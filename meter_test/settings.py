@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-q28ee!-vj3g+#6q*62x^@a8ha5b*7_*oe1bcf0r#oabfh^v13&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "192.168.1.88", "192.168.100.88", "127.0.0.1", "192.168.0.110"]
+ALLOWED_HOSTS = ["localhost", "192.168.43.28", "192.168.100.88", "127.0.0.1", "192.168.0.111"]
 
 
 # Application definition
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'employee',
     'import_export', #For export table and import table
     'adminsortable2',   # For sort item in django admin
+    'tools'            # for font and others tools
 ]
 
 
@@ -69,7 +70,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-      #custom middlewares for all page login by Josim
+     #custom middlewares for all page login by Josim
     'meter_test.custom_middleware.CheckUser'
 ]
 
@@ -99,7 +100,7 @@ WSGI_APPLICATION = 'meter_test.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -110,6 +111,8 @@ DATABASES = {
 
 
 """
+
+
 DATABASES = {
 
     'default': {
@@ -119,9 +122,13 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD':'Roll9202463',
         'PORT': '3306',
+        'OPTIONS': {
+            'ssl': {'disabled': True},
+        },
 
     }
 }
+"""
 
 
 # Password validation
@@ -158,7 +165,8 @@ USE_TZ = True
 
 
 
-
+"""
+# For Debaug True
 STATIC_URL = "static/"
 STATIC_ROOT = "/static/"
 
@@ -166,8 +174,23 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = "/media/"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+"""
+
+
+STATIC_URL = "/static/"  # URL for static files
+
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Directory where static files will be collected
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Local static files
+]
+
+MEDIA_URL = "/media/"  # URL for media files
+MEDIA_ROOT = BASE_DIR / "media"  # Directory for media files
+
 
 
 # Default primary key field type
@@ -180,5 +203,21 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # for custom login view
 LOGIN_URL = 'login'
 
+# After login redirect to home
+LOGIN_REDIRECT_URL = '/'
 
 
+
+#To control session to timeout login after inactivity logout
+# Session timeout in seconds
+SESSION_COOKIE_AGE = 6000  # 10 minutes (300 seconds)
+
+# Optional: Force session to expire when the browser is closed
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Set the session to be cleared when inactive for a certain period
+SESSION_IDLE_TIMEOUT = 900  # 10 minutes
+
+
+
+# All right reserved by josimmsc@gmail.com as Josim Uddin

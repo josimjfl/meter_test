@@ -2,73 +2,167 @@
 {% load static %}
 
 {% block content %}
+<style>
+    /* Custom styles */
+    .report-card {
+        border: none;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 30px;
+        margin-left: 50px;
+        margin-right: 50px;
+        background-color: #fff;
+    }
+    .report-card-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        color: #fff;
+        padding: 8px;
+        border-radius: 12px 12px 0 0;
+    }
+    .report-card-body {
+        padding: 10px 50px;
+    }
+    .report-form .form-group {
+        margin-bottom: 15px;
+    }
+    .report-form .btn {
+        width: 100%;
+        font-size: 1rem;
+    }
+    /* Header colors for different cards */
+    .bg-report-date { background-color: #ff6b6b; }
+    .bg-report-id { background-color: #ffa502;}
+    .bg-report-account { background-color: #1e90ff; }
+    .bg-report-select { background-color: #0fab6a; }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .report-form .form-group label {
+            margin-bottom: 5px;
+        }
+        .report-form .form-group input, 
+        .report-form .form-group select {
+            width: 100%;
+        }
 
+        .report-card {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
 
-<div class="container pt-2">
+        .report-card-body {
+        padding: 10px 10px;
+    }
+    }
+</style>
 
-<div class="card">
-  <div class="card-header bg-dark text-white">
-    Report by Date
-  </div>
-  <div class="card-body bg-info text-dark">
-    <form method="get" action="{% url 'report_search' %}">
-    From : <input type="date" name="fromdate" id="fromdate_payment" class="form-control-sm" style="margin: 0px" required>
-    To : <input type="date" name="todate" class="form-control-sm" id="date" required>
-    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
-  </form>
-  </div>
+<div class="container py-4 bg-light">
+    <div class="row">
+        <!-- Report by Date -->
+        <div class="col-lg-6 col-md-6 col-12">
+            <div class="card report-card">
+                <div class="report-card-header bg-report-date">Report by Date</div>
+                <div class="card-body report-card-body">
+                    <form method="get" action="{% url 'report_search' %}" class="report-form">
+                        <div class="form-group">
+                            <label class="form-label">From Date:</label>
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="btn-sm btn-success rounded-left prevDayBtn">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <input type="text" class="form-control jfldate mx-2 text-center" name="fromdate" required readonly>
+                                <button type="button" class="btn-sm btn-light rounded-right nextDayBtn">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">To Date:</label>
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="btn-sm btn-light rounded-left prevDayBtn">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <input type="text" class="form-control jfldate mx-2 text-center" name="todate" required readonly>
+                                <button type="button" class="btn-sm btn-light rounded-right nextDayBtn">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" name="search" class="btn btn-danger font-weight-bold">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+      <!-- Report by ID -->
+        <div class="col-lg-6 col-md-6">
+            <div class="card report-card">
+                <div class="report-card-header bg-report-id">Report by ID</div>
+                <div class="card-body report-card-body">
+                    <form method="get" action="{% url 'report_search' %}" class="report-form">
+                        <div class="form-group">
+                            <label for="fromid">From ID:</label>
+                            <input type="text" name="fromid" id="fromid" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="toid">To ID:</label>
+                            <input type="text" name="toid" id="toid" class="form-control" value="{{ latest_test.id }}" required>
+                        </div>
+                        <button type="submit" name="search" class="btn btn-warning font-weight-bold">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report by Account -->
+        <div class="col-lg-6 col-md-6">
+            <div class="card report-card">
+                <div class="report-card-header bg-report-account">Report by Account</div>
+                <div class="card-body report-card-body">
+                    <form method="get" action="{% url 'report_search' %}" class="report-form">
+                        <div class="form-group">
+                            <label for="book">Book:</label>
+                            <input type="text" name="book" id="book" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="account">Account:</label>
+                            <input type="text" name="account" id="account" class="form-control" required>
+                        </div>
+                        <button type="submit" name="search" class="btn btn-info font-weight-bold">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report by Select -->
+        <div class="col-lg-6 col-md-6">
+            <div class="card report-card">
+                <div class="report-card-header bg-report-select">Report by Select</div>
+                <div class="card-body report-card-body">
+                    <form method="get" action="{% url 'report_search' %}" class="report-form">
+                        <div class="form-group">
+                            <label for="search_option">Search By:</label>
+                            <select name="search_option" id="search_option" class="form-control" required>
+                                <option value="" disabled selected>-- Select Option --</option>
+                                <option value="tested_meter_no">Meter</option>
+                                <option value="cmo">CMO</option>
+                                <option value="book">Book</option>
+                                <option value="account">Account</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="search_value">Number:</label>
+                            <input type="text" name="search_value" id="search_value" class="form-control" required>
+                        </div>
+                        <button type="submit" name="search" class="btn btn-success font-weight-bold">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-<div class="card my-4">
-  <div class="card-header bg-dark text-white">
-    Report by ID
-  </div>
-  <div class="card-body bg-info text-dark ">
-    <form method="get" action="{% url 'report_search' %}">
-    From : <input type="text" name="fromid" id="fromid" class="form-control-sm" style="width: 80px" required>
-    To : <input type="text" name="toid" class="form-control-sm" id="toid" value="{{ latest_test.id }}"  style="width: 80px" required>
-    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
-  </form>
-  </div>
+    </div>
 </div>
-
-
-<div class="card my-4">
-  <div class="card-header bg-dark text-white">
-    Report by Account
-  </div>
-  <div class="card-body bg-info text-dark ">
-    <form method="get" action="{% url 'report_search' %}">
-    Book: <input type="text" name="book" id="fromid" class="form-control-sm" style="width: 80px" required>
-    Account: <input type="text" name="account" id="fromid" class="form-control-sm" style="width: 80px" required>
-    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
-  </form>
-  </div>
-</div>
-
-
-
-<div class="card my-4">
-  <div class="card-header bg-dark text-white">
-    Report by Select
-  </div>
-  <div class="card-body bg-info text-dark ">
-    <form method="get" action="{% url 'report_search' %}">
-    By : <select class="form-control-sm" name="search_option" id="search_option" required>
-              <option value="">--select--</option>
-              <option value="tested_meter_no">Meter</option>
-              <option value="cmo">CMO</option>
-              <option value="book">Book</option>
-              <option value="account">Account</option>
-            </select>
-
-    Number : <input type="text" name="search_value" id="search_value" class="form-control-sm" style="width: 100px" required>
-    <button type="submit" name="search" class="btn-sm btn-success text-center font-weight-bold mx-2" id="searchbuttonpayment">Search</button>
-  </form>
-  </div>
-</div>
-
-</div>
-
 {% endblock %}

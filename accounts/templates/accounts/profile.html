@@ -36,8 +36,10 @@
     <tr>
       <th scope="row"><label for="groups">Actions</label></th>
       <td colspan="2">
-      	<a href="#" class="btn btn-warning">Change Password</a>
-      	<a href="{% url 'profile_update' %}" class="btn btn-warning">Office Setup</a>
+      	<a href="{% url 'password_change' %}" class="btn btn-warning mb-2">Change Password</a>
+        <a href="{% url 'profile_update' %}" class="btn btn-warning mb-2">Profile</a>
+        <a href="{% url 'standard_meter_list' %}" class="btn btn-warning mb-2">Standerd Meter</a>
+      	<a href="{% url 'office_emp_list' %}" class="btn btn-danger mb-2">Office Setup</a>
       </td>
     </tr>
   </tbody>

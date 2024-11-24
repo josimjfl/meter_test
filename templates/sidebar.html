@@ -1,0 +1,124 @@
+
+
+<style type="text/css">
+    .sidebar a {
+      text-shadow: 3px 3px 10px #acb0ae;
+    }
+
+   .list-group-item {
+      text-shadow: 3px 3px 10px #acb0ae;
+      background-color: green;
+    }
+</style>
+
+
+
+
+<div class="d-flex">
+
+    <!-- Sidebar -->
+    <div class="border-right bg-light rounded sidebar" id="sidebar">
+      <div class="list-group list-group-flush">
+        <noscript></noscript>
+        <!-- For selected current page menu show bg -->
+        {% with url_name=request.resolver_match.url_name %}
+
+
+    {% if user.is_authenticated %}
+        {% if request.user.role == "MT" or request.user.role == "MTS" or request.user.role == "admin" or request.user.role == "IT" %}
+        <a href="{% url 'home'%}" class="py-1 list-group-item list-group-item-action {% if url_name == 'home' %} bg-info {%else%} bg-light {% endif %}">Home</a>
+        <a href="{% url 'home' %}{{request.user.role|lower}}_dashboard" class="py-1 list-group-item list-group-item-action {% if url_name == request.user.role|lower|add:'_dashboard' %} bg-info {%else%} bg-light {% endif %}">Dashboard</a>
+        <a href="{% url 'test_input'%}" class="py-1 list-group-item list-group-item-action {% if url_name == 'test_input' %} bg-info {%else%} bg-light {% endif %}">New Test</a>   
+        <a href="{% url 'test_report_multi'%}" class="py-1 list-group-item list-group-item-action {% if url_name == 'test_report_multi' %} bg-info {%else%} bg-light {% endif %}">Report</a>
+        <a href="{% url 'test_report_list' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'test_report_list' %} bg-info {%else%} bg-light {% endif %}">Test Report</a>
+        <a href="{% url 'test_report_multi_search'%}" class="py-1 list-group-item list-group-item-action {% if url_name == 'test_report_multi_search' %} bg-info {%else%} bg-light {% endif %}">Search</a>
+
+
+        <span class="collapse_btn1 py-1 list-group-item list-group-item-action {% if url_name == 'issue_item' and url_name == 'meter_issue_list' and url_name == 'issue_seal' and url_name == 'seal_issue_list' %} bg-info {%else%} bg-light {% endif %}" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Issue <i class="fa-solid fa-caret-down" style="align-items: right; font-size: 17px;"></i>
+        </span>
+        <div class="collapse_menu1 ml-4 p-1 {% if url_name != 'issue_item' and url_name != 'meter_issue_list' and url_name != 'issue_seal' and url_name != 'seal_issue_list' %} collapse {%else%} bg-light {% endif %}" id="collapseExample">
+          <a href="{% url 'issue_item' %}" class=" py-1 list-group-item list-group-item-action {% if url_name == 'issue_item' %} bg-info {%else%} bg-secondary text-white {% endif %}">Meter Issue</a>
+          <a href="{% url 'issue_seal' %}" class=" py-1 list-group-item list-group-item-action {% if url_name == 'issue_seal' %} bg-info {%else%} bg-secondary text-white {% endif %}">Seal Issue</a>
+          <a href="{% url 'meter_issue_list' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'meter_issue_list' %} bg-info {%else%} bg-secondary text-white {% endif %}">Meter Issue Register</a>
+          <a href="{% url 'seal_issue_list' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'seal_issue_list' %} bg-info {%else%} bg-secondary text-white {% endif %}">Seal Issue Register</a>
+        </div>
+
+
+        <a href="{% url 'meter_memo' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'meter_memo' %} bg-info {%else%} bg-light {% endif %}">Meter Memo</a>
+
+
+        <span class="collapse_btn2 py-1 list-group-item list-group-item-action {% if url_name == 'qtyj39' %} bg-info {%else%} bg-light {% endif %}" data-bs-toggle="collapse" href="#collapseBalance" role="button" aria-expanded="false" aria-controls="collapseBalance">
+          Balance Reg <i class="fa-solid fa-caret-down" style="align-items: right; font-size: 17px;"></i>
+        </span>
+
+        <div class="collapse_menu2 {% if url_name != 'balance' and url_name != 'receive_item' and url_name != 'issue_item_to_bl' %} collapse {%else%} bg-white {% endif %} ml-4 p-1" id="collapseBalance">
+          <a href="{% url 'balance' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'balance' %} bg-info {%else%} bg-secondary text-white {% endif %}">Balance</a>
+          <a href="{% url 'receive_item' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'receive_item' %} bg-info {%else%} bg-secondary text-white {% endif %}">Recive Item</a>
+          <a href="{% url 'issue_item_to_bl' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'issue_item_to_bl' %} bg-info {%else%} bg-secondary text-white {% endif %}">Send Item</a>
+        </div>
+
+        <a href="{% url 'register' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'register' %} bg-info {%else%} bg-light {% endif %}">Despass Reg</a>
+        <a href="{% url 'damage_meter' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'damage_meter' %} bg-info {%else%} bg-light {% endif %}">Damage Meter</a>
+        <a href="{% url 'three_phrase_inv' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'three_phrase_inv' %} bg-info {%else%} bg-light {% endif %}">3Ph Meter Inv</a>
+        <a href="{% url 'add_employee' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'add_employee' %} bg-info {%else%} bg-light {% endif %}">Employee</a>
+        <a href="{% url 'profile' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'profile' %} bg-info {%else%} bg-light {% endif %}">Setup</a>
+        <a href="{% url 'about' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'about' %} bg-info {%else%} bg-light {% endif %}">about</a>
+        <a href="{% url 'logout' %}"class="py-1 list-group-item list-group-item-action {% if url_name == 'logout' %} bg-info {%else%} bg-light {% endif %}">Logout</a>
+
+        {% elif request.user.role == 'AGM' or request.user.role == 'DGM' %}
+
+        <a href="{% url 'home'%}" class="py-1 list-group-item list-group-item-action {% if url_name == 'home' %} bg-info {%else%} bg-light {% endif %}">Home</a>
+        <a href="{% url 'home' %}{{request.user.role|lower}}_dashboard" class="py-1 list-group-item list-group-item-action {% if url_name == request.user.role|lower|add:'_dashboard' %} bg-info {%else%} bg-light {% endif %}">Dashboard</a> 
+        <a href="{% url 'test_report_multi'%}" class="py-1 list-group-item list-group-item-action {% if url_name == 'test_report_multi' %} bg-info {%else%} bg-light {% endif %}">Report</a>
+        <a href="{% url 'test_report_list' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'test_report_list' %} bg-info {%else%} bg-light {% endif %}">Test Report</a>
+        <a href="{% url 'test_report_multi_search'%}" class="py-1 list-group-item list-group-item-action {% if url_name == 'test_report_multi_search' %} bg-info {%else%} bg-light {% endif %}">Search</a>
+
+
+        <span class="collapse_btn1 py-1 list-group-item list-group-item-action {% if url_name == 'issue_item' and url_name == 'meter_issue_list' and url_name == 'issue_seal' and url_name == 'seal_issue_list' %} bg-info {%else%} bg-light {% endif %}" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Issue <i class="fa-solid fa-caret-down" style="align-items: right; font-size: 17px;"></i>
+        </span>
+        <div class="collapse_menu1 ml-4 p-1 {% if url_name != 'issue_item' and url_name != 'meter_issue_list' and url_name != 'issue_seal' and url_name != 'seal_issue_list' %} collapse {%else%} bg-light {% endif %}" id="collapseExample">
+          <a href="{% url 'issue_item' %}" class=" py-1 list-group-item list-group-item-action {% if url_name == 'issue_item' %} bg-info {%else%} bg-secondary text-white {% endif %}">Meter Issue</a>
+          <a href="{% url 'issue_seal' %}" class=" py-1 list-group-item list-group-item-action {% if url_name == 'issue_seal' %} bg-info {%else%} bg-secondary text-white {% endif %}">Seal Issue</a>
+          <a href="{% url 'meter_issue_list' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'meter_issue_list' %} bg-info {%else%} bg-secondary text-white {% endif %}">Meter Issue Register</a>
+          <a href="{% url 'seal_issue_list' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'seal_issue_list' %} bg-info {%else%} bg-secondary text-white {% endif %}">Seal Issue Register</a>
+        </div>
+
+
+        <span class="collapse_btn2 py-1 list-group-item list-group-item-action {% if url_name == 'qtyj39' %} bg-info {%else%} bg-light {% endif %}" data-bs-toggle="collapse" href="#collapseBalance" role="button" aria-expanded="false" aria-controls="collapseBalance">
+          Balance Reg <i class="fa-solid fa-caret-down" style="align-items: right; font-size: 17px;"></i>
+        </span>
+
+        <div class="collapse_menu2 {% if url_name != 'balance' and url_name != 'receive_item' and url_name != 'issue_item_to_bl' %} collapse {%else%} bg-white {% endif %} ml-4 p-1" id="collapseBalance">
+          <a href="{% url 'balance' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'balance' %} bg-info {%else%} bg-secondary text-white {% endif %}">Balance</a>
+          <a href="{% url 'receive_item' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'receive_item' %} bg-info {%else%} bg-secondary text-white {% endif %}">Recive Item</a>
+          <a href="{% url 'issue_item_to_bl' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'issue_item_to_bl' %} bg-info {%else%} bg-secondary text-white {% endif %}">Send Item</a>
+        </div>
+        <a href="{% url 'add_employee' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'add_employee' %} bg-info {%else%} bg-light {% endif %}">Employee</a>
+        <a href="{% url 'profile' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'profile' %} bg-info {%else%} bg-light {% endif %}">Setup</a>
+        <a href="{% url 'about' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'about' %} bg-info {%else%} bg-light {% endif %}">about</a>
+        <a href="{% url 'logout' %}"class="py-1 list-group-item list-group-item-action {% if url_name == 'logout' %} bg-info {%else%} bg-light {% endif %}">Logout</a>
+
+        {% else %}
+
+        <a href="{% url 'home' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'home' %} bg-info {%else%} bg-light {% endif %}">Home</a>
+        <a href="{% url 'home' %}{{request.user.role|lower}}_dashboard" class="py-1 list-group-item list-group-item-action {% if url_name == request.user.role|lower|add:'_dashboard' %} bg-info {%else%} bg-light {% endif %}">Dashboard</a>
+        <a href="{% url 'test_report_list' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'test_report_list' %} bg-info {%else%} bg-light {% endif %}">Test Report</a>
+        <a href="{% url 'profile' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'profile' %} bg-info {%else%} bg-light {% endif %}">Setup</a>
+        <a href="{% url 'about' %}" class="py-1 list-group-item list-group-item-action {% if url_name == 'about' %} bg-info {%else%} bg-light {% endif %}">about</a>
+        <a href="{% url 'logout' %}"class="py-1 list-group-item list-group-item-action {% if url_name == 'logout' %} bg-info {%else%} bg-light {% endif %}">Logout</a>
+
+        {% endif %}
+
+      {% else %}
+        <a href="{% url 'login' %}"class="py-1 list-group-item list-group-item-action {% if url_name == 'login' %} bg-info {%else%} bg-light {% endif %}">Login</a>
+      {% endif %} 
+
+        <small class="m-2 text-success text-center">The software is created by josimmsc@gmail.com</small>
+      </div>
+
+      {% endwith %} 
+
+      <div>
+
+      </div>
+ </div>

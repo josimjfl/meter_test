@@ -9,6 +9,7 @@ from django.conf import settings
 #from django.conf.urls import url
  
 urlpatterns = [
+    path('', views.Home, name= 'home'),
     path('', include('test_data.urls')),
     path('', include('accounts.urls')),
     path('', include('balance_reg.urls')),
@@ -17,8 +18,9 @@ urlpatterns = [
     path('', include('dashboard.urls')),
     path('', include('issue_item.urls')),
     path('', include('employee.urls')),
+    path('tools/', include('tools.urls')),
     path('admin/', admin.site.urls),
-    path('', views.Home, name= 'home'),
+   
 
 
 
@@ -34,12 +36,13 @@ if settings.DEBUG:  # for image field
 
 
 
-
+"""
 #To remove of off side navbar of django Admin
 from django.contrib import admin
 admin.autodiscover()
 admin.site.enable_nav_sidebar = False
 
+"""
 
 #404 and 500 custom page handler
 handler404 = 'meter_test.views.handler404' #Not found
